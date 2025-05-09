@@ -1,6 +1,55 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* 滚动条样式 - 基本样式应用于所有设备 */
+html {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(156, 163, 175, 0.3) transparent; /* Firefox */
+}
+
+/* 暗色模式基本滚动条样式 */
+.dark html {
+  scrollbar-color: rgba(75, 85, 99, 0.4) transparent; /* Firefox 暗色模式 */
+}
+
+/* 适用于支持::-webkit-scrollbar的浏览器（Chrome, Safari, Edge等） */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.3);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.5);
+}
+
+/* 暗色模式滚动条样式 */
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(75, 85, 99, 0.4);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(75, 85, 99, 0.6);
+}
+
+/* 仅在非触摸设备和较大屏幕上应用强制滚动条 */
+@media (pointer: fine) and (min-width: 768px) {
+  html {
+    /* 强制显示垂直滚动条，防止页面内容跳动 */
+    overflow-y: scroll;
+    /* 为滚动条预留空间，避免内容跳动 */
+    padding-right: calc(100vw - 100%);
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

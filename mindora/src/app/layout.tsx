@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getMindoraIconDataURL } from "@/components/ui/MindoraIconSVG";
+import DOMProtection from "@/components/layout/DOMProtection";
 
 // 移除 Google Fonts 导入，使用系统字体代替
 // import { Inter } from "next/font/google";
@@ -44,6 +45,7 @@ export default function RootLayout({
       <body
         className={`min-h-screen flex flex-col antialiased bg-dots`}
       >
+        <DOMProtection />
         <div className="floating-shapes">
           <div className="floating-shape w-64 h-64 top-[-2%] left-[15%] opacity-30" style={{ animationDuration: '15s' }}></div>
           <div className="floating-shape w-96 h-96 top-[20%] right-[-5%] opacity-20" style={{ animationDuration: '25s' }}></div>

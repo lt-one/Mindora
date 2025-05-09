@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { 
   BarChart2, 
   BookOpen, 
@@ -32,6 +35,13 @@ export default function BlogStats({
   totalTags,
   popularTags = [],
 }: BlogStatsProps) {
+  const [currentDate, setCurrentDate] = useState("");
+
+  // 使用useEffect在客户端设置日期
+  useEffect(() => {
+    setCurrentDate(new Date().toLocaleDateString());
+  }, []);
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
       {/* 文章统计卡片 */}
@@ -135,7 +145,7 @@ export default function BlogStats({
           </div>
         </CardContent>
         <CardFooter className="flex justify-end pt-3 text-xs text-gray-500 dark:text-gray-400">
-          数据更新于 {new Date().toLocaleDateString()}
+          {currentDate ? `数据更新于 ${currentDate}` : "数据加载中..."}
         </CardFooter>
       </Card>
 
