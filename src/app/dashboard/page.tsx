@@ -126,12 +126,12 @@ export default function DashboardPage() {
           <TabsContent value="overview" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Card>
-                <CardHeader>
+                {/* <CardHeader>
                   <CardTitle>市场概览</CardTitle>
                   <CardDescription>
                     主要指数和市场整体状态
                   </CardDescription>
-                </CardHeader>
+                </CardHeader> */}
                 <CardContent>
                   {isLoading ? (
                     <Skeleton className="h-[300px] w-full rounded-lg" />
@@ -142,23 +142,34 @@ export default function DashboardPage() {
               </Card>
               
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle>分时走势图</CardTitle>
-                    <CardDescription>实时价格走势监控</CardDescription>
+                <CardHeader className="flex flex-col space-y-2">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <CardTitle>分时走势图</CardTitle>
+                      <CardDescription>实时价格走势监控</CardDescription>
+                    </div>
                   </div>
-                  <Select value={selectedStock} onValueChange={setSelectedStock}>
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="选择股票" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {commonStocks.map(stock => (
-                        <SelectItem key={stock.symbol} value={stock.symbol}>
-                          {stock.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  
+                  <div className="overflow-x-auto border-t pt-2">
+                    <Tabs
+                      value={selectedStock}
+                      onValueChange={(value) => value && setSelectedStock(value)}
+                      className="w-auto"
+                    >
+                      <TabsList className="h-7 inline-flex w-auto bg-muted/50">
+                        {commonStocks.map((stock) => (
+                          <TabsTrigger
+                            key={stock.symbol}
+                            value={stock.symbol}
+                            className="px-2 py-0.5 h-7 text-xs whitespace-nowrap data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                            disabled={isLoading}
+                          >
+                            {stock.name}
+                          </TabsTrigger>
+                        ))}
+                      </TabsList>
+                    </Tabs>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   {isLoading ? (

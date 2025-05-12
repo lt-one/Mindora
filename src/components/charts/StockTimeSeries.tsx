@@ -910,7 +910,7 @@ export default function StockTimeSeries({
         )}
           
         {/* 图表区域 */}
-        <div className="w-full h-[850px] relative"> 
+        <div className="w-full h-[855px] relative"> 
           {isLoading && !stockData ? (
             <div className="absolute inset-0 flex items-center justify-center">
               <Skeleton className="w-full h-full" />
