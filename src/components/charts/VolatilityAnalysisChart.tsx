@@ -7,6 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Skeleton } from '@/components/ui/skeleton';
 import * as echarts from 'echarts';
 import { getKLineData } from '@/lib/data/china-stock-api';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
+import { RefreshCw } from "lucide-react";
 
 interface VolatilityAnalysisChartProps {
   symbol: string;
@@ -326,35 +330,82 @@ export default function VolatilityAnalysisChart({
           <CardTitle>波动率分析 - {symbol}</CardTitle>
           <CardDescription className="mt-1">股票价格波动性的历史变化趋势</CardDescription>
         </div>
-        <div className="flex items-center space-x-2">
-          <Select value={period} onValueChange={handlePeriodChange}>
-            <SelectTrigger className="w-[90px]">
-              <SelectValue placeholder="周期" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="daily">日K</SelectItem>
-              <SelectItem value="weekly">周K</SelectItem>
-              <SelectItem value="monthly">月K</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={windowSize} onValueChange={handleWindowChange}>
-            <SelectTrigger className="w-[90px]">
-              <SelectValue placeholder="窗口" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">10天</SelectItem>
-              <SelectItem value="20">20天</SelectItem>
-              <SelectItem value="30">30天</SelectItem>
-              <SelectItem value="60">60天</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button 
-            variant="outline" 
-            size="sm" 
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="space-y-1">
+            <span className="text-xs text-muted-foreground">周期:</span>
+            <Tabs
+              value={period}
+              onValueChange={(value) => value && handlePeriodChange(value)}
+              className="w-auto"
+            >
+              <TabsList className="h-7 bg-muted/50">
+                <TabsTrigger 
+                  value="daily" 
+                  className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  日K
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="weekly" 
+                  className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  周K
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="monthly" 
+                  className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  月K
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+          
+          <div className="space-y-1">
+            <span className="text-xs text-muted-foreground">窗口:</span>
+            <Tabs
+              value={windowSize}
+              onValueChange={(value) => value && handleWindowChange(value)}
+              className="w-auto"
+            >
+              <TabsList className="h-7 bg-muted/50">
+                <TabsTrigger 
+                  value="10" 
+                  className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  10
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="20" 
+                  className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  20
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="30" 
+                  className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  30
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="60" 
+                  className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  60
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+          
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-7 w-7 mt-5" 
             onClick={handleRefresh}
             disabled={isLoading}
           >
-            刷新
+            <RefreshCw className={cn("h-3 w-3", isLoading && "animate-spin")} />
+            <span className="sr-only">刷新</span>
           </Button>
         </div>
       </CardHeader>

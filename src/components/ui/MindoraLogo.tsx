@@ -21,8 +21,8 @@ const MindoraLogo: React.FC<MindoraLogoProps> = ({
 }) => {
   const textSizeClasses = {
     sm: "text-lg",
-    md: "text-xl",
-    lg: "text-2xl",
+    md: "text-xl md:text-2xl",
+    lg: "text-2xl md:text-3xl",
   };
 
   return (
@@ -31,12 +31,12 @@ const MindoraLogo: React.FC<MindoraLogoProps> = ({
         {/* Glow effect - enhanced aurora effect */}
         <div
           className={cn(
-            "absolute -inset-[2px] rounded-md opacity-75 blur-lg",
+            "absolute -inset-[3px] rounded-md opacity-80 blur-lg",
             variant === "default" 
               ? "bg-gradient-to-r from-violet-600 via-cyan-400 to-blue-500" 
               : "bg-gradient-to-r from-violet-500 to-blue-500"
           )}
-          style={{ width: size + 4, height: size + 4 }}
+          style={{ width: size + 6, height: size + 6 }}
         />
 
         {/* Logo container */}
@@ -60,7 +60,7 @@ const MindoraLogo: React.FC<MindoraLogoProps> = ({
               strokeWidth="4"
               strokeLinecap="round"
               strokeLinejoin="round"
-              opacity="0.3"
+              opacity="0.4"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
               transition={{ duration: 2, ease: "easeOut" }}
@@ -109,14 +109,14 @@ const MindoraLogo: React.FC<MindoraLogoProps> = ({
           <motion.div 
             className="absolute inset-0 rounded-md bg-gradient-to-b from-transparent to-violet-950/20 overflow-hidden"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.5 }}
+            animate={{ opacity: 0.7 }}
             transition={{ duration: 1 }}
           >
             <motion.div 
-              className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-500/10 to-transparent"
+              className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-500/20 to-transparent"
               animate={{ 
                 y: [size, -size], 
-                opacity: [0, 0.4, 0],
+                opacity: [0, 0.5, 0],
                 scale: [0.8, 1.2]
               }}
               transition={{ 
@@ -131,17 +131,27 @@ const MindoraLogo: React.FC<MindoraLogoProps> = ({
       </div>
 
       {showText && (
-        <motion.span
-          className={cn(
-            "font-bold tracking-tight text-foreground",
-            textSizeClasses[textSize]
-          )}
+        <motion.div
+          className="relative"
           initial={{ opacity: 0, x: -5 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Mindora
-        </motion.span>
+          <motion.span
+            className={cn(
+              "font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-blue-500",
+              textSizeClasses[textSize]
+            )}
+          >
+            Mindora
+          </motion.span>
+          <motion.div 
+            className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-blue-500 via-purple-400 to-blue-500 rounded-full"
+            initial={{ width: "0%" }}
+            animate={{ width: "100%" }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          />
+        </motion.div>
       )}
     </div>
   );

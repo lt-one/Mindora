@@ -10,6 +10,7 @@ import * as echarts from 'echarts';
 import { cn } from '@/lib/utils';
 import { formatPrice, formatChange, formatChangePercent, calculateChangePercent } from '@/lib/utils';
 import logger from '@/lib/logger';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface TimeSeriesDataPoint {
   time: string;
@@ -909,7 +910,7 @@ export default function StockTimeSeries({
         )}
           
         {/* 图表区域 */}
-        <div className="w-full h-[915px] relative"> 
+        <div className="w-full h-[850px] relative"> 
           {isLoading && !stockData ? (
             <div className="absolute inset-0 flex items-center justify-center">
               <Skeleton className="w-full h-full" />
@@ -923,64 +924,80 @@ export default function StockTimeSeries({
           )}
         </div>
         
-        {/* 添加MACD指标控制按钮 */}
-        <div className="px-4 py-2 border-t flex justify-between items-center bg-gray-50 dark:bg-gray-800">
-          <div className="text-xs font-medium">技术指标控制:</div>
-          <div className="flex gap-2">
-            <button
-              className={`px-2 py-1 text-xs rounded ${visibleIndicators.macd ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700'}`}
-              onClick={() => setVisibleIndicators(prev => ({ ...prev, macd: !prev.macd }))}
-              title="MACD柱状图表示多空力量对比，红色柱代表多头占优，绿色柱代表空头占优"
+        {/* 添加MACD指标控制按钮 - 合并为单一Tabs组件 */}
+        <div className="px-4 py-3 border-t bg-gray-50 dark:bg-gray-800">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div className="text-xs font-medium mb-2 sm:mb-0">技术指标控制:</div>
+            <Tabs
+              className="w-full sm:w-auto"
+              value="indicators"
+              defaultValue="indicators"
             >
-              MACD柱
-            </button>
-            <button
-              className={`px-2 py-1 text-xs rounded ${visibleIndicators.dif ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700'}`}
-              onClick={() => setVisibleIndicators(prev => ({ ...prev, dif: !prev.dif }))}
-              title="DIF是快速线(12日与26日EMA的差值)，反应价格短期变化"
-            >
-              DIF (快线)
-            </button>
-            <button
-              className={`px-2 py-1 text-xs rounded ${visibleIndicators.dea ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700'}`}
-              onClick={() => setVisibleIndicators(prev => ({ ...prev, dea: !prev.dea }))}
-              title="DEA是慢速线(DIF的9日EMA)，反应价格中期趋势，DIF与DEA交叉常被视为买卖信号"
-            >
-              DEA (慢线)
-            </button>
+              <TabsList className="h-8 w-full sm:w-auto grid grid-cols-3 gap-1 bg-transparent">
+                <TabsTrigger 
+                  value={visibleIndicators.macd ? "macd-on" : "macd-off"}
+                  onClick={() => setVisibleIndicators(prev => ({ ...prev, macd: !prev.macd }))}
+                  className="px-2 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                  title="MACD柱状图表示多空力量对比，红色柱代表多头占优，绿色柱代表空头占优"
+                >
+                  MACD柱 {visibleIndicators.macd ? '✓' : ''}
+                </TabsTrigger>
+                <TabsTrigger 
+                  value={visibleIndicators.dif ? "dif-on" : "dif-off"}
+                  onClick={() => setVisibleIndicators(prev => ({ ...prev, dif: !prev.dif }))}
+                  className="px-2 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                  title="DIF是快速线(12日与26日EMA的差值)，反应价格短期变化"
+                >
+                  DIF快线 {visibleIndicators.dif ? '✓' : ''}
+                </TabsTrigger>
+                <TabsTrigger 
+                  value={visibleIndicators.dea ? "dea-on" : "dea-off"}
+                  onClick={() => setVisibleIndicators(prev => ({ ...prev, dea: !prev.dea }))}
+                  className="px-2 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                  title="DEA是慢速线(DIF的9日EMA)，反应价格中期趋势，DIF与DEA交叉常被视为买卖信号"
+                >
+                  DEA慢线 {visibleIndicators.dea ? '✓' : ''}
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
         </div>
         
-        {/* 数据说明 */}
-        <div className="mt-1 p-2 text-xs flex justify-between items-center border-t bg-slate-50 dark:bg-slate-900">
-          <span>数据来源: 东方财富</span>
-          <div className="flex flex-wrap gap-2 items-center">
-            <div className="flex items-center gap-1">
-              <span className="inline-block h-2 w-2 rounded-full bg-rose-500"></span>
-              <span>上涨</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
-              <span>下跌</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="inline-block h-2 w-10 bg-rose-500"></span>
-              <span>MACD红柱(多头)</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="inline-block h-2 w-10 bg-emerald-500"></span>
-              <span>MACD绿柱(空头)</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="inline-block h-2 w-10" style={{backgroundColor: '#f1c40f'}}></span>
-              <span>DIF(黄线)</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="inline-block h-2 w-10" style={{backgroundColor: '#8e44ad'}}></span>
-              <span>DEA(紫线)</span>
+        {/* 数据说明 - 优化布局 */}
+        <div className="p-3 text-xs border-t bg-slate-50 dark:bg-slate-900">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div className="mb-2 sm:mb-0">数据来源: 东方财富</div>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-x-3 gap-y-1 items-center">
+              <div className="flex items-center gap-1">
+                <span className="inline-block h-2 w-2 rounded-full bg-rose-500"></span>
+                <span>上涨</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+                <span>下跌</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="inline-block h-2 w-5 bg-rose-500"></span>
+                <span>MACD红柱</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="inline-block h-2 w-5 bg-emerald-500"></span>
+                <span>MACD绿柱</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="inline-block h-2 w-5" style={{backgroundColor: '#f1c40f'}}></span>
+                <span>DIF线</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="inline-block h-2 w-5" style={{backgroundColor: '#8e44ad'}}></span>
+                <span>DEA线</span>
+              </div>
             </div>
           </div>
-          <span>交易时段: 9:30-11:30, 13:00-15:00</span>
+          <div className="mt-1 text-center text-muted-foreground">
+            交易时段: 9:30-11:30, 13:00-15:00
+          </div>
         </div>
       </CardContent>
     </Card>

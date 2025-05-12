@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowUpIcon, ArrowDownIcon, SearchIcon, BarChart3Icon, PieChartIcon, RefreshCwIcon } from 'lucide-react';
 import { HOT_STOCKS } from '@/lib/data/china-stock-api';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 // 排序标准选项
 const sortOptions = [
@@ -265,7 +266,7 @@ export default function DataAnalysis() {
     <div className="space-y-4">
       {/* 工具栏 */}
       <div className="flex flex-col md:flex-row justify-between gap-4">
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-wrap items-center gap-2">
           <div className="relative w-full max-w-sm">
             <SearchIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -276,18 +277,26 @@ export default function DataAnalysis() {
             />
           </div>
           
-          <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-36">
-              <SelectValue placeholder="排序方式" />
-            </SelectTrigger>
-            <SelectContent>
-              {sortOptions.map(option => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="space-y-1">
+            <span className="text-xs text-muted-foreground">排序:</span>
+            <Tabs
+              value={sortBy}
+              onValueChange={(value) => value && setSortBy(value)}
+              className="w-auto"
+            >
+              <TabsList className="h-7 bg-muted/50">
+                {sortOptions.map(option => (
+                  <TabsTrigger
+                    key={option.value}
+                    value={option.value}
+                    className="px-2 h-6 text-xs whitespace-nowrap"
+                  >
+                    {option.label}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          </div>
         </div>
         
         <div className="flex items-center space-x-2">

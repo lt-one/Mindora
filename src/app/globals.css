@@ -20,7 +20,9 @@ body {
   height: 100%;
   /* 设置网站整体内容的缩放 */
   transform-origin: top left;
-  zoom: 0.75; /* 兼容性更好的缩放方法 */
+  transform: scale(0.75); /* 使用transform替代zoom以获得更好的兼容性 */
+  width: 133.33%; /* 补偿缩放，1/0.75约等于1.3333 */
+  height: 133.33%;
 }
 
 /* 图标和SVG元素的尺寸调整 */
@@ -83,7 +85,7 @@ html {
     /* 强制显示垂直滚动条，防止页面内容跳动 */
     overflow-y: scroll;
     /* 为滚动条预留空间，避免内容跳动 */
-    padding-right: calc(100vw - 100%);
+    padding-right: calc(30vw - 100%);
   }
 }
 

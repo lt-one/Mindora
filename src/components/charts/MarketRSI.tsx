@@ -10,6 +10,8 @@ import { RefreshCcw, AlertTriangle, Info } from 'lucide-react';
 import * as echarts from 'echarts';
 import type { ECharts, EChartsOption, LineSeriesOption, BarSeriesOption } from 'echarts';
 import { HOT_STOCKS } from '@/lib/data/china-stock-api';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { cn } from "@/lib/utils";
 
 // 颜色设置
 const colors = {
@@ -490,29 +492,65 @@ export default function MarketRSI({ className, title = '市场RSI分析', days =
         <div className="flex justify-between items-center">
           <CardTitle>{title}</CardTitle>
           <div className="flex items-center space-x-2">
-            <Select value={period} onValueChange={handlePeriodChange}>
-              <SelectTrigger className="w-28">
-                <SelectValue placeholder="选择周期" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="30">最近30天</SelectItem>
-                <SelectItem value="60">最近60天</SelectItem>
-                <SelectItem value="90">最近90天</SelectItem>
-                <SelectItem value="180">最近180天</SelectItem>
-                <SelectItem value="365">最近1年</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Button 
-              variant="outline" 
-              size="icon"
-              className="h-9 w-9"
-              onClick={() => fetchMarketRSIData()}
-              disabled={isLoading}
-            >
-              <RefreshCcw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-              <span className="sr-only">刷新</span>
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="space-y-1">
+                <span className="text-xs text-muted-foreground">周期:</span>
+                <Tabs
+                  value={period}
+                  onValueChange={(value) => value && handlePeriodChange(value)}
+                  className="w-auto"
+                >
+                  <TabsList className="h-7 bg-muted/50">
+                    <TabsTrigger 
+                      value="30" 
+                      className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm" 
+                      disabled={isLoading}
+                    >
+                      30天
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="60" 
+                      className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm" 
+                      disabled={isLoading}
+                    >
+                      60天
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="90" 
+                      className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm" 
+                      disabled={isLoading}
+                    >
+                      90天
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="180" 
+                      className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm" 
+                      disabled={isLoading}
+                    >
+                      180天
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="365" 
+                      className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm" 
+                      disabled={isLoading}
+                    >
+                      1年
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
+              
+              <Button 
+                variant="outline" 
+                size="icon"
+                className="h-7 w-7 mt-5"
+                onClick={() => fetchMarketRSIData()}
+                disabled={isLoading}
+              >
+                <RefreshCcw className={cn("h-3 w-3", isLoading && "animate-spin")} />
+                <span className="sr-only">刷新</span>
+              </Button>
+            </div>
           </div>
         </div>
       </CardHeader>
@@ -538,7 +576,7 @@ export default function MarketRSI({ className, title = '市场RSI分析', days =
           </div>
         )}
         
-        <div className="h-[530px] w-full relative">
+        <div className="h-[585px] w-full relative">
           {isLoading ? (
             <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
               <Skeleton className="h-[90%] w-[95%] rounded-lg" />
@@ -568,7 +606,7 @@ export default function MarketRSI({ className, title = '市场RSI分析', days =
           <div ref={chartRef} className="h-full w-full" />
         </div>
         
-        <div className="mt-3 text-xs text-gray-500">
+        <div className="mt-3 text-s text-gray-500">
           <p>* RSI数据基于市场中{data?.stockCount || '多只'}股票的平均涨跌幅计算</p>
           <p>* RSI &gt; 70: 市场可能超买; RSI &lt; 30: 市场可能超卖; 其他区间为中性</p>
         </div>

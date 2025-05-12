@@ -65,7 +65,7 @@ const Navbar = () => {
           <div className="flex items-center h-16 mx-0">
             <div className="flex items-center">
               {/* Logo占位符 */}
-              <div className="h-8 w-40"></div>
+              <div className="h-10 w-44"></div>
             </div>
             <div className="flex-1"></div>
           </div>
@@ -89,14 +89,14 @@ const Navbar = () => {
       
       {/* 移除container类使导航栏扩展到屏幕边缘 */}
       <div className="w-full px-2 sm:px-3 lg:px-4">
-        <div className="flex items-center h-14 mx-0">
+        <div className="flex items-center h-16 mx-0">
           {/* 左侧Logo区域 */}
           <div className="flex items-center">
             <Link 
               href="/" 
               className="flex items-center group"
             >
-              <MindoraLogo size={36} textSize="sm" />
+              <MindoraLogo size={46} textSize="md" />
             </Link>
           </div>
 
@@ -140,12 +140,6 @@ const Navbar = () => {
               <div className="flex items-center border-l border-blue-100/60 dark:border-blue-800/40 pl-1 ml-1">
                 <button 
                   className="p-2 rounded-full text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-100/60 dark:hover:bg-blue-800/40 transition-all duration-300"
-                  aria-label="搜索"
-                >
-                  <Search className="w-5 h-5" />
-                </button>
-                <button 
-                  className="p-2 rounded-full text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-100/60 dark:hover:bg-blue-800/40 transition-all duration-300"
                   onClick={toggleTheme}
                   aria-label={isDarkMode ? "切换到亮色模式" : "切换到暗色模式"}
                 >
@@ -165,31 +159,17 @@ const Navbar = () => {
               
               {/* 社交媒体图标 */}
               <div className="flex space-x-2 mr-4">
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+                <a href="https://github.com/lt-one" target="_blank" rel="noopener noreferrer"
                   className="p-1.5 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
                   aria-label="GitHub">
                   <Github className="w-4 h-4" />
                 </a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
+                <a href="https://space.bilibili.com/51125264" target="_blank" rel="noopener noreferrer"
                   className="p-1.5 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
-                  aria-label="Twitter">
+                  aria-label="Bilibili">
                   <Twitter className="w-4 h-4" />
                 </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
-                  className="p-1.5 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
-                  aria-label="LinkedIn">
-                  <Linkedin className="w-4 h-4" />
-                </a>
               </div>
-              
-              {/* 登录/注册按钮 */}
-              <Link 
-                href="/login" 
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm font-medium rounded-full hover:from-blue-600 hover:to-indigo-700 hover:shadow-md transition-all duration-300"
-              >
-                <UserCircle className="w-4 h-4" />
-                <span>登录</span>
-              </Link>
             </div>
 
             {/* 移动端：操作按钮和菜单按钮 */}
@@ -197,12 +177,6 @@ const Navbar = () => {
               <div className="flex items-center bg-blue-50/50 dark:bg-blue-900/20 rounded-full border border-blue-100/50 dark:border-blue-800/30 shadow-sm">
                 <button 
                   className="p-2 rounded-full text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-100/60 dark:hover:bg-blue-800/40 transition-all duration-300"
-                  aria-label="搜索"
-                >
-                  <Search className="w-5 h-5" />
-                </button>
-                <button 
-                  className="p-2 rounded-full text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-100/60 dark:hover:bg-blue-800/40 transition-all duration-300 ml-1"
                   onClick={toggleTheme}
                   aria-label={isDarkMode ? "切换到亮色模式" : "切换到暗色模式"}
                 >

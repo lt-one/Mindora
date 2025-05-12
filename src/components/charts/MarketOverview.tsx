@@ -9,6 +9,10 @@ import * as echarts from 'echarts';
 import { formatPrice, formatChange, formatChangePercent } from '@/lib/utils';
 import { MAJOR_INDICES } from '@/lib/data/china-stock-api';
 import { Button } from '@/components/ui/button';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { cn } from "@/lib/utils"
+import { RefreshCw } from "lucide-react"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // 指数颜色映射
 const indexColors = {
@@ -492,8 +496,19 @@ export default function MarketOverview() {
       chartInstance.current.dispose();
     }
     
-    // 创建新的图表实例
-    chartInstance.current = echarts.init(chartRef.current);
+    // 获取容器的实际尺寸
+    const container = chartRef.current;
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
+    
+    // 创建新的图表实例，指定精确尺寸
+    chartInstance.current = echarts.init(container, null, {
+      width: containerWidth,
+      height: containerHeight,
+      devicePixelRatio: window.devicePixelRatio
+    });
+    
+    // 应用图表选项
     chartInstance.current.setOption(chartOptions);
     
     // 添加视图切换动画效果
@@ -503,59 +518,92 @@ export default function MarketOverview() {
       animationEasing: 'cubicOut'
     });
     
-    // 响应窗口大小变化
+    // 响应窗口大小变化和缩放变化
     const handleResize = () => {
-      if (chartInstance.current) {
-        chartInstance.current.resize();
-        
-        // 根据窗口宽度调整布局
-        const smallScreen = window.innerWidth < 640;
-        if (smallScreen) {
-          // 小屏幕布局调整
-          chartInstance.current.setOption({
-            legend: {
-              orient: 'horizontal',
-              right: 'center',
-              top: 30,
-              itemGap: 8,
-              itemWidth: 8,
-              itemHeight: 8,
-              textStyle: {
-                fontSize: 10
-              }
-            },
-            grid: {
-              top: 70 // 为图例留更多空间
+      if (!chartInstance.current || !chartRef.current) return;
+      
+      // 重新获取容器尺寸
+      const container = chartRef.current;
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      
+      // 调整图表尺寸
+      chartInstance.current.resize({
+        width: width,
+        height: height
+      });
+      
+      // 根据窗口宽度调整布局
+      const smallScreen = window.innerWidth < 640;
+      if (smallScreen) {
+        // 小屏幕布局调整
+        chartInstance.current.setOption({
+          legend: {
+            orient: 'horizontal',
+            right: 'center',
+            top: 30,
+            itemGap: 8,
+            itemWidth: 8,
+            itemHeight: 8,
+            textStyle: {
+              fontSize: 10
             }
-          });
-        } else {
-          // 大屏幕布局调整
-          chartInstance.current.setOption({
-            legend: {
-              orient: 'horizontal',
-              right: 'center',
-              top: 30,
-              itemGap: 20,
-              textStyle: {
-                fontSize: 12
-              }
-            },
-            grid: {
-              top: 60
+          },
+          grid: {
+            top: 70 // 为图例留更多空间
+          }
+        });
+      } else {
+        // 大屏幕布局调整
+        chartInstance.current.setOption({
+          legend: {
+            orient: 'horizontal',
+            right: 'center',
+            top: 30,
+            itemGap: 20,
+            textStyle: {
+              fontSize: 12
             }
-          });
-        }
+          },
+          grid: {
+            top: 60
+          }
+        });
       }
     };
     
+    // 添加事件监听
     window.addEventListener('resize', handleResize);
-    handleResize(); // 初始调整
+    
+    // 特别为CSS transform缩放情况添加MutationObserver
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (
+          mutation.type === 'attributes' && 
+          (mutation.attributeName === 'style' || mutation.attributeName === 'class')
+        ) {
+          // 延迟执行以确保DOM变化已完成
+          setTimeout(handleResize, 50);
+          break;
+        }
+      }
+    });
+    
+    // 监视body元素的style和class变化，可能影响transform
+    observer.observe(document.body, { 
+      attributes: true, 
+      attributeFilter: ['style', 'class'] 
+    });
+    
+    // 初始调整
+    handleResize();
     
     return () => {
       if (chartInstance.current) {
         chartInstance.current.dispose();
       }
       window.removeEventListener('resize', handleResize);
+      observer.disconnect();
     };
   }, [chartOptions, indicesData, isLoading]);
   
@@ -925,49 +973,53 @@ export default function MarketOverview() {
   
   return (
     <div className="space-y-6">
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-4 ">
         {/* 市场概览标题和工具栏 */}
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold">市场概览</h2>
+        <div className="flex justify-between items-center border-b border-gray-200 pb-2">
+          <div >
+            <h3 className="text-2xl font-bold mt-3"  >市场概览</h3>
+            <p className="text-sm text-muted-foreground ">主要指数和市场状态</p>
+          </div>
+          
           <div className="flex items-center gap-3">
-            {/* 视图切换按钮组 */}
-            <div className="border rounded-md overflow-hidden flex">
-              <button
-                className={`px-3 py-1 text-sm transition-colors ${
-                  viewType === 'percent' ? 'bg-primary text-white' : 'bg-background'
-                }`}
-                onClick={() => setViewType('percent')}
-              >
-                涨跌幅
-              </button>
-              <button
-                className={`px-3 py-1 text-sm transition-colors ${
-                  viewType === 'price' ? 'bg-primary text-white' : 'bg-background'
-                }`}
-                onClick={() => setViewType('price')}
-              >
-                价格
-              </button>
-            </div>
+            {/* 视图切换按钮组 - 移到右侧 */}
+            <Tabs
+              defaultValue={viewType}
+              value={viewType}
+              onValueChange={(value) => {
+                if (value === 'percent' || value === 'price') {
+                  setViewType(value);
+                }
+              }}
+              className="w-auto"
+            >
+              <TabsList className="h-8 bg-muted/50" >
+                <TabsTrigger 
+                  value="percent" 
+                  className="px-2 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  涨跌幅
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="price" 
+                  className="px-2 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  价格
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
             
             {/* 刷新按钮 */}
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={refreshData}
+            <Button
+              variant="outline"
+              size="icon"
               disabled={isRefreshing}
+              onClick={refreshData}
+              className="h-8 w-8"
             >
-              <RefreshCwIcon 
-                className={`h-4 w-4 mr-1 ${isRefreshing ? 'animate-spin' : ''}`}
-              /> 
-              刷新
+              <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
+              <span className="sr-only">刷新数据</span>
             </Button>
-            
-            {/* 最后更新时间 */}
-            <div className="text-sm text-muted-foreground flex items-center">
-              <ClockIcon className="h-4 w-4 mr-1" />
-              {lastUpdated ? `${lastUpdated}` : ''}
-            </div>
           </div>
         </div>
         
@@ -977,6 +1029,35 @@ export default function MarketOverview() {
             {refreshNotice}
           </div>
         )}
+        
+        {/* 指数选择Tabs - 横向滚动容器 */}
+        <div className="relative">
+          <div className="overflow-x-auto pb-2 -mx-1 px-1">
+            <Tabs
+              defaultValue={activeSymbol || MAJOR_INDICES[0].symbol}
+              value={activeSymbol || undefined}
+              onValueChange={(value) => {
+                if (value) {
+                  setActiveSymbol(value);
+                  handleCardClick(value);
+                }
+              }}
+              className="w-full"
+            >
+              <TabsList className="h-8 inline-flex w-auto bg-muted/50">
+                {MAJOR_INDICES.map(index => (
+                  <TabsTrigger
+                    key={index.symbol}
+                    value={index.symbol}
+                    className="px-2 h-7 text-xs whitespace-nowrap data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                  >
+                    {index.name}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          </div>
+        </div>
         
         {/* 图表容器 */}
         <div className="h-[300px] w-full rounded-lg border relative shadow-sm">

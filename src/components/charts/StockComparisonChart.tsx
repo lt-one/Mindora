@@ -3,10 +3,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import * as echarts from 'echarts';
 import { getKLineData, MAJOR_INDICES, HOT_STOCKS } from '@/lib/data/china-stock-api';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
+import { RefreshCw } from "lucide-react";
 
 // 预设股票组合
 const STOCK_GROUPS = {
@@ -325,39 +328,117 @@ export default function StockComparisonChart({
           <CardTitle>股票对比</CardTitle>
           <CardDescription className="mt-1">多只股票相对表现对比分析</CardDescription>
         </div>
-        <div className="flex items-center space-x-2">
-          <Select value={stockGroup} onValueChange={handleGroupChange}>
-            <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="股票组合" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="indices">主要指数</SelectItem>
-              <SelectItem value="banks">银行股</SelectItem>
-              <SelectItem value="technology">科技股</SelectItem>
-              <SelectItem value="consumer">消费股</SelectItem>
-              <SelectItem value="energy">能源股</SelectItem>
-              <SelectItem value="hotStocks">热门股票</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={period} onValueChange={handlePeriodChange}>
-            <SelectTrigger className="w-[80px]">
-              <SelectValue placeholder="周期" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7">7天</SelectItem>
-              <SelectItem value="30">30天</SelectItem>
-              <SelectItem value="90">90天</SelectItem>
-              <SelectItem value="180">180天</SelectItem>
-              <SelectItem value="365">1年</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button 
-            variant="outline" 
-            size="sm" 
+        <div className="flex flex-wrap items-center gap-2">
+          {/* 股票组合选择 */}
+          <div className="space-y-1">
+            <span className="text-xs text-muted-foreground">股票组合:</span>
+            <div className="overflow-x-auto">
+              <Tabs
+                value={stockGroup}
+                onValueChange={(value) => value && handleGroupChange(value)}
+                className="w-full"
+              >
+                <TabsList className="h-7 inline-flex w-auto bg-muted/50">
+                  <TabsTrigger 
+                    value="indices" 
+                    className="px-2 py-0.5 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                  >
+                    主要指数
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="banks" 
+                    className="px-2 py-0.5 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                  >
+                    银行股
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="technology" 
+                    className="px-2 py-0.5 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                  >
+                    科技股
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="consumer" 
+                    className="px-2 py-0.5 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                  >
+                    消费股
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="energy" 
+                    className="px-2 py-0.5 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                  >
+                    能源股
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="hotStocks" 
+                    className="px-2 py-0.5 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                  >
+                    热门股票
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+          </div>
+          
+          {/* 周期选择 */}
+          <div className="space-y-1">
+            <span className="text-xs text-muted-foreground">周期:</span>
+            <Tabs
+              value={period}
+              onValueChange={(value) => value && setPeriod(value)}
+              className="w-auto"
+            >
+              <TabsList className="h-7 bg-muted/50">
+                <TabsTrigger 
+                  value="1d" 
+                  className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  1日
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="1w" 
+                  className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  1周
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="1m" 
+                  className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  1月
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="3m" 
+                  className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  3月
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="6m" 
+                  className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  6月
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="1y" 
+                  className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                >
+                  1年
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+          
+          {/* 刷新按钮 */}
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-7 w-7 mt-5" 
             onClick={handleRefresh}
             disabled={isLoading}
           >
-            刷新
+            <RefreshCw className={cn("h-3 w-3", isLoading && "animate-spin")} />
+            <span className="sr-only">刷新</span>
           </Button>
         </div>
       </CardHeader>

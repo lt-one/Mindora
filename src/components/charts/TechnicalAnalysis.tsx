@@ -16,6 +16,8 @@ import { HelpCircle, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { HOT_STOCKS } from '@/lib/data/china-stock-api';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // 颜色设置
 const colors = {
@@ -51,7 +53,7 @@ const indicatorOptions = [
 export default function TechnicalAnalysis() {
   const [stockSymbol, setStockSymbol] = useState(HOT_STOCKS[0].symbol);
   const [stockName, setStockName] = useState(HOT_STOCKS[0].name);
-  const [period, setPeriod] = useState('14'); // 默认为14，这是RSI常用的周期
+  const [period, setPeriod] = useState('20'); // 默认为20日周期，适用于所有指标
   const [indicator, setIndicator] = useState('K线');
   const [klineData, setKlineData] = useState<any[] | null>(null);
   const [technicalData, setTechnicalData] = useState<any | null>(null);
@@ -61,16 +63,10 @@ export default function TechnicalAnalysis() {
   const chartRef = useRef<HTMLDivElement>(null);
   const [forceRefresh, setForceRefresh] = useState(false);
   
-  // 当指标变化时，设置对应的默认周期
+  // 当指标变化时使用默认周期
   useEffect(() => {
-    // 根据选择的指标设置合适的默认周期
-    if (indicator === 'RSI') {
-      setPeriod('14'); // RSI默认使用14日周期
-    } else if (indicator === 'MA') {
-      setPeriod('20'); // MA默认使用20日周期
-    } else if (indicator === 'MACD') {
-      setPeriod('20'); // MACD默认使用20日周期
-    }
+    // 所有指标使用相同的默认周期
+    setPeriod('20'); 
   }, [indicator]);
   
   // 获取K线数据
@@ -1111,9 +1107,68 @@ export default function TechnicalAnalysis() {
           }
           
           // 非RSI指标的提示信息
+          // 检查是否有K线数据，如果有，优先显示K线数据的详细信息
+          const klineParam = params.find((param: any) => param.seriesName === 'K线');
+          const volumeParam = params.find((param: any) => param.seriesName === '成交量');
+          
+          if (klineParam && indicator !== 'MACD') {
+            // 获取完整的K线数据
+            const dataIndex = klineParam.dataIndex;
+            if (dataIndex >= 0 && dataIndex < filteredKlineData.length) {
+              const item = filteredKlineData[dataIndex];
+              const open = item.open.toFixed(2);
+              const close = item.close.toFixed(2);
+              const high = item.high.toFixed(2);
+              const low = item.low.toFixed(2);
+              const volume = item.volume;
+              const change = (item.close - item.open).toFixed(2);
+              const changePercent = ((item.close - item.open) / item.open * 100).toFixed(2);
+              
+              const isUp = item.close >= item.open;
+              const priceColor = isUp ? colors.upColor : colors.downColor;
+              const volColor = volumeParam ? volumeParam.color : '#8ecaee';
+              
+              // 使用纵向排列方式显示K线数据
+              tooltipContent += `
+                <div style="padding:3px 0; border-bottom:1px solid #555; margin-bottom:5px;">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <span style="color:${priceColor}; font-weight:bold;">开盘价:</span>
+                    <span style="color:${priceColor}; font-weight:bold;">${open}</span>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <span style="color:${priceColor}; font-weight:bold;">收盘价:</span>
+                    <span style="color:${priceColor}; font-weight:bold;">${close}</span>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <span style="color:${priceColor};">最高价:</span>
+                    <span style="color:${priceColor};">${high}</span>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <span style="color:${priceColor};">最低价:</span>
+                    <span style="color:${priceColor};">${low}</span>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <span style="color:${priceColor};">涨跌额:</span>
+                    <span style="color:${priceColor};">${change}</span>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <span style="color:${priceColor};">涨跌幅:</span>
+                    <span style="color:${priceColor};">${changePercent}%</span>
+                  </div>
+                </div>
+              `;
+            }
+          }
+          
+          // 显示其他指标
           params.forEach((param: any) => {
-              const value = param.data;
-              if (value !== null && value !== '-') {
+            // 跳过K线和成交量，因为已经在上面单独处理过了
+            if (param.seriesName === 'K线' || param.seriesName === '成交量') {
+              return;
+            }
+              
+            const value = param.data;
+            if (value !== null && value !== '-') {
               // 根据指标类型使用不同颜色
               let color = param.color;
               let prefix = '';
@@ -1559,103 +1614,85 @@ export default function TechnicalAnalysis() {
           {/* 控制面板 */}
           <div className="flex flex-wrap justify-between items-center gap-2 mb-3">
             <div className="flex flex-wrap items-center gap-2">
-              <Select
-                value={stockSymbol}
-                onValueChange={handleStockChange}
-                disabled={isLoading}
-              >
-                <SelectTrigger className="w-[180px] h-9">
-              <SelectValue placeholder="选择股票" />
-            </SelectTrigger>
-            <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>热门股票</SelectLabel>
-                    {HOT_STOCKS.map((stock) => (
-                      <SelectItem 
-                        key={stock.symbol} 
-                        value={stock.symbol}
-                      >
-                  {stock.name} ({stock.symbol})
-                </SelectItem>
-              ))}
-                  </SelectGroup>
-            </SelectContent>
-          </Select>
+              {/* 股票选择改为使用Tabs */}
+              <div className="space-y-1">
+                <span className="text-xs font-medium ml-2">热门股票：</span>
+                <div className="overflow-x-auto">
+                  <Tabs
+                    value={stockSymbol}
+                    onValueChange={(value) => value && handleStockChange(value)}
+                    className="w-full"
+                  >
+                    <TabsList className="h-7 inline-flex w-auto bg-muted/50">
+                      {HOT_STOCKS.map((stock) => (
+                        <TabsTrigger
+                          key={stock.symbol}
+                          value={stock.symbol}
+                          className="px-2 py-0.5 h-7 text-xs whitespace-nowrap data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                          disabled={isLoading}
+                        >
+                          {stock.name}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </Tabs>
+                </div>
+              </div>
               
-              <Select
-                value={indicator}
-                onValueChange={setIndicator}
-                disabled={isLoading}
-              >
-                <SelectTrigger className="w-[120px] h-9">
-                  <SelectValue placeholder="选择指标" />
-            </SelectTrigger>
-            <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="K线">K线</SelectItem>
-                    <SelectItem value="MA">均线</SelectItem>
-                    <SelectItem value="MACD">MACD</SelectItem>
-                    <SelectItem value="RSI">RSI</SelectItem>
-                  </SelectGroup>
-            </SelectContent>
-          </Select>
-          
-              {indicator === 'MA' && (
-                <Select
-                  value={period}
-                  onValueChange={setPeriod}
-                  disabled={isLoading}
+              {/* 指标选择改为使用Tabs */}
+              <div className="space-y-1">
+                <span className="text-xs font-medium ml-2">指标：</span>
+                <Tabs
+                  value={indicator}
+                  onValueChange={(value) => value && setIndicator(value)}
+                  className="w-auto"
                 >
-                  <SelectTrigger className="w-[100px] h-9">
-                    <SelectValue placeholder="周期" />
-            </SelectTrigger>
-            <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="5">5日</SelectItem>
-                      <SelectItem value="10">10日</SelectItem>
-                      <SelectItem value="20">20日</SelectItem>
-                      <SelectItem value="30">30日</SelectItem>
-                      <SelectItem value="60">60日</SelectItem>
-                    </SelectGroup>
-            </SelectContent>
-          </Select>
-              )}
-              
-              {indicator === 'RSI' && (
-                <Select
-                  value={period}
-                  onValueChange={setPeriod}
-                  disabled={isLoading}
-                >
-                  <SelectTrigger className="w-[100px] h-9">
-                    <SelectValue placeholder="周期" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="6">6日</SelectItem>
-                      <SelectItem value="14">14日</SelectItem>
-                      <SelectItem value="21">21日</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              )}
+                  <TabsList className="h-7 bg-muted/50">
+                    <TabsTrigger 
+                      value="K线" 
+                      className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                    >
+                      K线
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="MA" 
+                      className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                    >
+                      MA
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="MACD" 
+                      className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                    >
+                      MACD
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="RSI" 
+                      className="px-2 h-6 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
+                    >
+                      RSI
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
+            </div>
+            
+            {/* 刷新按钮 */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => {
+                setForceRefresh(true);
+                fetchTechnicalData();
+              }}
+              disabled={isLoading}
+            >
+              <RefreshCw className={cn("h-4 w-4", isLoading && "animate-spin")} />
+              <span className="sr-only">刷新</span>
+            </Button>
+          </div>
           
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => {
-                  setForceRefresh(true);
-              fetchTechnicalData();
-            }}
-            disabled={isLoading}
-                className="h-9"
-          >
-                <RefreshCw size={16} className={cn("mr-2", isLoading && "animate-spin")} />
-                刷新数据
-          </Button>
-        </div>
-      </div>
-      
           {/* 图表容器 */}
           <div className="h-[550px] w-full relative mt-2">
             {isLoading ? (

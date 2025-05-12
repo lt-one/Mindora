@@ -114,7 +114,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-[90vh] flex items-start -mt-16 pt-0 pb-16 md:pb-24 overflow-hidden">
+    <section className="relative min-h-[110vh] flex items-start -mt-8 pt-0 pb-20 md:pb-32 overflow-hidden">
       {/* 背景渐变 */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-indigo-950 -z-10"></div>
       
@@ -197,7 +197,7 @@ const HeroSection = () => {
                 </div>
                 <div className="ml-4 text-xs text-gray-400">Mindora_features.py</div>
               </div>
-              <div className="pt-6 pb-4 px-4 font-mono text-xs sm:text-sm text-gray-300 dark:text-gray-200 overflow-y-auto h-[240px] sm:h-[280px] md:h-[320px] scrollbar-thin">
+              <div className="pt-7 pb-5 px-5 font-mono text-xs sm:text-sm text-gray-300 dark:text-gray-200 overflow-y-auto h-[280px] sm:h-[320px] md:h-[380px] scrollbar-thin">
                 <style jsx>{`
                   .scrollbar-thin::-webkit-scrollbar {
                     width: 4px;
@@ -237,9 +237,9 @@ const HeroSection = () => {
         <div ref={nextSectionRef} className="mt-8 mb-8 pt-4 border-t border-gray-100 dark:border-gray-800">
           <h3 className="text-lg md:text-xl font-semibold text-center mb-4 md:mb-6 text-gray-800 dark:text-gray-200">我的专业领域与技术栈</h3>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
             {/* 数据分析专长 */}
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-4 md:p-6 rounded-lg">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-5 md:p-7 rounded-lg shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center mb-3">
                 <div className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-blue-500 rounded-full mr-3">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-5 md:w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -257,7 +257,7 @@ const HeroSection = () => {
             </div>
             
             {/* 舆情监测专长 */}
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 p-4 md:p-6 rounded-lg">
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 p-5 md:p-7 rounded-lg shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center mb-3">
                 <div className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-purple-500 rounded-full mr-3">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-5 md:w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -272,7 +272,7 @@ const HeroSection = () => {
             </div>
             
             {/* AI产品开发 */}
-            <div className="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/30 dark:to-amber-800/30 p-4 md:p-6 rounded-lg">
+            <div className="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/30 dark:to-amber-800/30 p-5 md:p-7 rounded-lg shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center mb-3">
                 <div className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-amber-500 rounded-full mr-3">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-5 md:w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
