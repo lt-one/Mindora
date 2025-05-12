@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mindora - 个人网站项目
 
-## Getting Started
+## 项目概述
+Mindora是一个功能丰富的个人网站项目，包含多种模块，展示个人作品集、技术博客、数据可视化能力以及前端开发技术。该项目旨在成为个人展示平台，同时也是实用性与美观性并重的Web应用示例。
 
-First, run the development server:
+## 核心功能
+- **个人项目展示**：展示个人开发的项目作品集
+- **技术博客**：分享前端开发、数据可视化等技术文章
+- **数据仪表盘**：展示数据分析和可视化能力
+- **Todo应用**：个人任务管理工具
+- **好站分享**：优质网站资源收集与推荐
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 技术栈
+- **框架**：Next.js 14 (App Router)
+- **UI库**：Tailwind CSS, shadcn/ui
+- **状态管理**：Zustand
+- **数据库**：MySQL (Prisma ORM)
+- **部署**：Vercel
+
+## 项目结构
+```
+mindbreak/
+├── prisma/          # 数据库模型定义
+├── public/          # 静态资源
+└── src/
+    ├── app/         # 页面组件 (Next.js App Router结构)
+    ├── components/  # UI组件
+    ├── lib/         # 工具函数和API
+    └── styles/      # 全局样式
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 安装与运行
+```bash
+# 安装依赖
+npm install
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# 数据库迁移
+npx prisma migrate dev
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# 开发环境运行
+npm run dev
 
-## Learn More
+# 构建项目
+npm run build
 
-To learn more about Next.js, take a look at the following resources:
+# 生产环境运行
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 特色亮点
+1. 采用最新的Next.js 14 App Router架构
+2. 结合Server Components和Client Components的最佳实践
+3. 响应式设计，支持多种设备浏览
+4. 数据可视化展示与交互能力
+5. 干净整洁的代码组织和模块化设计
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 许可证
+MIT 
