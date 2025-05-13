@@ -924,42 +924,36 @@ export default function StockTimeSeries({
           )}
         </div>
         
-        {/* 添加MACD指标控制按钮 - 合并为单一Tabs组件 */}
+        {/* 添加MACD指标控制按钮 - 使用图例样式 */}
         <div className="px-4 py-3 border-t bg-gray-50 dark:bg-gray-800">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-            <div className="text-xs font-medium mb-2 sm:mb-0">技术指标控制:</div>
-            <Tabs
-              className="w-full sm:w-auto"
-              value="indicators"
-              defaultValue="indicators"
-            >
-              <TabsList className="h-8 w-full sm:w-auto grid grid-cols-3 gap-1 bg-transparent">
-                <TabsTrigger 
-                  value={visibleIndicators.macd ? "macd-on" : "macd-off"}
-                  onClick={() => setVisibleIndicators(prev => ({ ...prev, macd: !prev.macd }))}
-                  className="px-2 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
-                  title="MACD柱状图表示多空力量对比，红色柱代表多头占优，绿色柱代表空头占优"
-                >
-                  MACD柱 {visibleIndicators.macd ? '✓' : ''}
-                </TabsTrigger>
-                <TabsTrigger 
-                  value={visibleIndicators.dif ? "dif-on" : "dif-off"}
-                  onClick={() => setVisibleIndicators(prev => ({ ...prev, dif: !prev.dif }))}
-                  className="px-2 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
-                  title="DIF是快速线(12日与26日EMA的差值)，反应价格短期变化"
-                >
-                  DIF快线 {visibleIndicators.dif ? '✓' : ''}
-                </TabsTrigger>
-                <TabsTrigger 
-                  value={visibleIndicators.dea ? "dea-on" : "dea-off"}
-                  onClick={() => setVisibleIndicators(prev => ({ ...prev, dea: !prev.dea }))}
-                  className="px-2 h-7 text-xs data-[state=active]:bg-primary/15 data-[state=active]:text-primary data-[state=active]:font-medium data-[state=active]:shadow-sm"
-                  title="DEA是慢速线(DIF的9日EMA)，反应价格中期趋势，DIF与DEA交叉常被视为买卖信号"
-                >
-                  DEA慢线 {visibleIndicators.dea ? '✓' : ''}
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
+            <div className="text-xs font-medium mb-2 sm:mb-0">技术指标:</div>
+            <div className="flex flex-wrap gap-4">
+              <div 
+                className="flex items-center gap-1.5 cursor-pointer" 
+                onClick={() => setVisibleIndicators(prev => ({ ...prev, macd: !prev.macd }))}
+                title="MACD柱状图表示多空力量对比，红色柱代表多头占优，绿色柱代表空头占优"
+              >
+                <div className={`w-3 h-3 rounded-sm border ${visibleIndicators.macd ? 'bg-rose-500 border-rose-600' : 'bg-transparent border-gray-400'}`}></div>
+                <span className={`text-xs ${visibleIndicators.macd ? 'text-rose-500 font-medium' : 'text-gray-500'}`}>MACD柱</span>
+              </div>
+              <div 
+                className="flex items-center gap-1.5 cursor-pointer" 
+                onClick={() => setVisibleIndicators(prev => ({ ...prev, dif: !prev.dif }))}
+                title="DIF是快速线(12日与26日EMA的差值)，反应价格短期变化"
+              >
+                <div className={`w-3 h-3 rounded-sm border ${visibleIndicators.dif ? 'bg-yellow-400 border-yellow-500' : 'bg-transparent border-gray-400'}`} style={{backgroundColor: visibleIndicators.dif ? '#f1c40f' : 'transparent'}}></div>
+                <span className={`text-xs ${visibleIndicators.dif ? 'font-medium' : 'text-gray-500'}`} style={{color: visibleIndicators.dif ? '#f1c40f' : ''}}>DIF线</span>
+              </div>
+              <div 
+                className="flex items-center gap-1.5 cursor-pointer" 
+                onClick={() => setVisibleIndicators(prev => ({ ...prev, dea: !prev.dea }))}
+                title="DEA是慢速线(DIF的9日EMA)，反应价格中期趋势，DIF与DEA交叉常被视为买卖信号"
+              >
+                <div className={`w-3 h-3 rounded-sm border ${visibleIndicators.dea ? 'bg-purple-500 border-purple-600' : 'bg-transparent border-gray-400'}`} style={{backgroundColor: visibleIndicators.dea ? '#8e44ad' : 'transparent'}}></div>
+                <span className={`text-xs ${visibleIndicators.dea ? 'font-medium' : 'text-gray-500'}`} style={{color: visibleIndicators.dea ? '#8e44ad' : ''}}>DEA线</span>
+              </div>
+            </div>
           </div>
         </div>
         

@@ -313,7 +313,7 @@ const FeaturedProjects = () => {
                     transition: { duration: 0.3 } 
                   }}
                 >
-                  <Link href={`/projects/${project.slug}`}>
+                  <Link href={`/projects/${project.slug}`} className="block cursor-pointer">
                     <div
                       className="group h-full flex flex-col bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-gray-700"
                     >
@@ -366,6 +366,73 @@ const FeaturedProjects = () => {
                   </Link>
                 </motion.div>
               ))}
+            </motion.div>
+
+            {/* 普通项目卡片 */}
+            <motion.div 
+              className="mt-12"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-8 flex items-center">
+                <Bookmark className="w-5 h-5 mr-2 text-blue-500" />
+                更多项目
+              </h3>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {projectsData.filter(project => !project.featured).map((project) => (
+                  <motion.div key={project.id} variants={itemVariants}>
+                    <Link href={`/projects/${project.slug}`} className="block group cursor-pointer">
+                      <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 flex flex-col h-full">
+                        <div className="relative h-56 overflow-hidden">
+                          <div className="absolute inset-0 bg-gradient-to-r opacity-80"
+                               style={{
+                                 backgroundImage: `linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%)`,
+                               }}
+                          />
+                          <Image
+                            src={project.image}
+                            alt={project.title}
+                            className="object-cover transform group-hover:scale-105 transition-transform duration-500"
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 50vw"
+                          />
+                          <div className="absolute bottom-0 left-0 p-6 text-white z-10">
+                            <h4 className="text-2xl font-bold mb-2">{project.title}</h4>
+                            <div className="flex space-x-2">
+                              {project.tags.map(tag => (
+                                <span key={tag} className="text-xs font-medium bg-black/30 backdrop-blur-sm px-2 py-1 rounded">
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="p-6 flex-grow">
+                          <p className="text-gray-600 dark:text-gray-300 mb-6">
+                            {project.description}
+                          </p>
+                          <div className="flex justify-between items-center">
+                            <div className="flex space-x-2">
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r ${project.highlightColor} text-white`}>
+                                项目详情
+                              </span>
+                            </div>
+                            <div className="flex space-x-2">
+                              <span className="inline-flex items-center text-blue-600 dark:text-blue-400 font-medium">
+                                查看项目
+                                <ChevronRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
           </>
         )}

@@ -51,7 +51,16 @@ const Navbar = () => {
   };
 
   // 检查链接是否为当前活跃页面
-  const isActive = (path: string): boolean => pathname === path;
+  const isActive = (path: string): boolean => {
+    // 精确匹配主路径
+    if (pathname === path) return true;
+    
+    // 对于子路径，检查是否以父路径开头
+    // 例如：/after-scene/books 应该激活 /after-scene 导航项
+    if (path !== '/' && pathname.startsWith(path + '/')) return true;
+    
+    return false;
+  };
 
   // 防止水合不匹配，先返回一个骨架UI直到客户端挂载完成
   if (!mounted) {
@@ -112,7 +121,7 @@ const Navbar = () => {
                   { href: "/blog", label: "博客" },
                   { href: "/dashboard", label: "数据仪表盘" },
                   { href: "/good-sites", label: "好站分享" },
-                  { href: "/reviews", label: "散场之后" },
+                  { href: "/after-scene", label: "散场之后" },
                   { href: "/todo", label: "Todo应用" },
                   { href: "/about", label: "关于" },
                   { href: "/contact", label: "联系" }
@@ -205,7 +214,7 @@ const Navbar = () => {
               { href: "/blog", label: "博客" },
               { href: "/dashboard", label: "数据仪表盘" },
               { href: "/good-sites", label: "好站分享" },
-              { href: "/reviews", label: "散场之后" },
+              { href: "/after-scene", label: "散场之后" },
               { href: "/todo", label: "Todo应用" },
               { href: "/about", label: "关于" },
               { href: "/contact", label: "联系" }

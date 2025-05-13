@@ -69,7 +69,7 @@ const LatestPosts = () => {
               key={post.id}
               className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow hover:shadow-lg transition-shadow group"
             >
-              <Link href={`/blog/${post.slug}`}>
+              <Link href={`/blog/${post.slug}`} className="block cursor-pointer">
                 <div className="relative h-48 w-full overflow-hidden">
                   <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
                   <Image

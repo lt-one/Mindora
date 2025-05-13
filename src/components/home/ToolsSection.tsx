@@ -188,7 +188,7 @@ const ToolsSection = () => {
             {toolsData.map((tool) => (
               <motion.div key={tool.id} variants={itemVariants}>
                 <Link href={tool.link}>
-                  <div className="group h-full flex flex-col bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700 relative hover:translate-y-[-8px]">
+                  <div className="group h-full flex flex-col bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700 relative hover:translate-y-[-8px] cursor-pointer">
                     {/* 卡片顶部装饰光效 */}
                     <div className="absolute -top-24 -right-24 w-40 h-40 bg-blue-200 dark:bg-blue-800 rounded-full opacity-20 blur-2xl group-hover:opacity-30 transition-opacity"></div>
                     

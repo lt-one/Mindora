@@ -206,9 +206,9 @@ export default function DashboardPage() {
               
               <Card>
                 <CardHeader>
-                  <CardTitle>盘口深度分析</CardTitle>
+                  <CardTitle>波动率分析及股票对比</CardTitle>
                   <CardDescription>
-                    实时买卖盘口数据深度分析
+                  股票价格波动性及股票相对表现对比
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
