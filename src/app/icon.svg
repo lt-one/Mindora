@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    rect.background {
+      fill: #020617;
+      stroke: #1E293B;
+      stroke-width: 1;
+      rx: 4;
+    }
+    path.glow {
+      stroke: url(#mindora-glow);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.4;
+    }
+    path.main {
+      stroke: url(#mindora-gradient);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    @media (prefers-color-scheme: dark) {
+      rect.background { fill: #020617; stroke: #1E293B; }
+      #mindora-gradient stop:nth-child(1) { stop-color: #9C5CF6; }
+      #mindora-gradient stop:nth-child(2) { stop-color: #22D3EE; }
+      #mindora-gradient stop:nth-child(3) { stop-color: #3B82F6; }
+      #mindora-glow stop:nth-child(1) { stop-color: #C4B5FD; }
+      #mindora-glow stop:nth-child(2) { stop-color: #7DD3FC; }
+      #mindora-glow stop:nth-child(3) { stop-color: #93C5FD; }
+    }
+    @media (prefers-color-scheme: light) {
+      rect.background { fill: #0F172A; stroke: #334155; }
+      #mindora-gradient stop:nth-child(1) { stop-color: #7C3AED; }
+      #mindora-gradient stop:nth-child(2) { stop-color: #0EA5E9; }
+      #mindora-gradient stop:nth-child(3) { stop-color: #2563EB; }
+      #mindora-glow stop:nth-child(1) { stop-color: #A78BFA; }
+      #mindora-glow stop:nth-child(2) { stop-color: #38BDF8; }
+      #mindora-glow stop:nth-child(3) { stop-color: #60A5FA; }
+    }
+  </style>
+  
+  <!-- Background with rounded corners -->
+  <rect class="background" x="0" y="0" width="24" height="24" />
+  
+  <!-- Glow effect -->
+  <path class="glow" d="M6 5L6 19L9 16L12 19L15 16L18 19V5" />
+  
+  <!-- Main path -->
+  <path class="main" d="M6 5L6 19L9 16L12 19L15 16L18 19V5" />
+  
+  <defs>
+    <linearGradient
+      id="mindora-gradient"
+      x1="6"
+      y1="5"
+      x2="18"
+      y2="19"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop offset="0%" />
+      <stop offset="50%" />
+      <stop offset="100%" />
+    </linearGradient>
+    <linearGradient
+      id="mindora-glow"
+      x1="6"
+      y1="5"
+      x2="18"
+      y2="19"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop offset="0%" />
+      <stop offset="50%" />
+      <stop offset="100%" />
+    </linearGradient>
+  </defs>
+</svg> 
