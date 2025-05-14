@@ -91,13 +91,16 @@ const getBookReview = (slug: string) => {
   return review;
 };
 
-// 动态生成元数据
+// 修改参数类型为 Promise
+type Params = Promise<{ slug: string }>;
+
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Params;
 }): Promise<Metadata> {
-  const review = getBookReview(params.slug);
+  const { slug } = await params;
+  const review = getBookReview(slug);
   if (!review) {
     return {
       title: '未找到 | 书页留思',
@@ -110,12 +113,9 @@ export async function generateMetadata({
   };
 }
 
-export default function BookReviewPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const review = getBookReview(params.slug);
+export default async function BookReviewPage({ params }: { params: Params }) {
+  const { slug } = await params;
+  const review = getBookReview(slug);
   
   if (!review) {
     notFound();
