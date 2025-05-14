@@ -116,7 +116,7 @@ export default function DashboardPage() {
         </div>
 
         <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-4 mb-3">
+          <TabsList className="flex justify-center gap-2 mb-3">
             <TabsTrigger value="overview">市场概览</TabsTrigger>
             <TabsTrigger value="hot-stocks">热门股票</TabsTrigger>
             <TabsTrigger value="technical">技术分析</TabsTrigger>

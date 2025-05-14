@@ -77,7 +77,7 @@ export const tags: BlogTag[] = [
  */
 export const author: BlogAuthor = {
   name: 'Mindora',
-  avatar: '/images/avatars/Mindora.jpg',
+  avatar: '/images/avatars/avatar.png',
   bio: '前端开发者，热爱数据可视化和交互设计，致力于创造优美且实用的web应用。',
   social: {
     twitter: 'https://twitter.com/Mindora',

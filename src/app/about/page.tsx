@@ -41,7 +41,7 @@ export default function AboutPage() {
     email: "1636678670@qq.com",
     phone: "19256680512",
     location: "广东省广州市",
-    avatar: "/images/avatars/mindbreak.jpg",
+    avatar: "/images/avatars/avatar.png",
     summary: "具备扎实的数据分析与编程基础，熟悉Python、SQL及主流数据工具，能够独立完成数据采集、清洗、分析与可视化。日均处理产品数据5000+条，具备AI辅助开发和自动化脚本能力，善于用技术提升工作效率。拥有良好的产品思维和团队协作精神，学习能力强，能快速适应新环境并推动项目高效落地。",
   };
 
