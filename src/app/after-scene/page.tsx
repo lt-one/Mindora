@@ -24,7 +24,9 @@ import {
   ChevronRight,
   Bookmark,
   ThumbsUp,
-  Sparkles
+  Sparkles,
+  User,
+  FileText
 } from 'lucide-react';
 
 
@@ -91,358 +93,231 @@ export default function AfterScenePage() {
       {/* 页面网格装饰 */}
       <div className="absolute inset-0 bg-grid-primary/5 bg-[size:20px_20px] pointer-events-none"></div>
       
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 md:py-12 mt-8 relative">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 md:py-8 mt-4 relative">
         {/* 页面标题和描述 - 整合"关于"部分内容 */}
-        <div className="text-center mb-16 relative">
-          <div className="flex items-center justify-center space-x-6 mb-6">
-            <div className="relative w-12 h-12 flex items-center justify-center">
-              <div className="absolute inset-0 bg-blue-100 dark:bg-blue-900/30 rounded-full animate-ping opacity-20"></div>
-              <BookOpen className="w-8 h-8 text-blue-500" />
-            </div>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500 dark:from-primary dark:to-blue-400">
+        <div className="text-center mb-10 relative">
+          <div className="flex items-center justify-center space-x-4 mb-3">
+                          <div className="relative mt-6 w-12 h-12 flex items-center justify-center">
+                <div className="absolute inset-0 bg-blue-100 dark:bg-blue-900/30 rounded-full animate-ping opacity-20"></div>
+                <BookOpen className="w-6 h-6 text-blue-500" />
+              </div>
+          <h1 className="text-3xl md:text-5xl mt-6 font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500 dark:from-primary dark:to-blue-400">
             散场之后
           </h1>
-            <div className="relative w-12 h-12 flex items-center justify-center">
+            <div className="relative mt-6 w-10 h-10 flex items-center justify-center">
               <div className="absolute inset-0 bg-red-100 dark:bg-red-900/30 rounded-full animate-ping opacity-20 animation-delay-700"></div>
-              <Film className="w-8 h-8 text-red-500" />
+              <Film className="w-6 h-6 text-red-500" />
             </div>
           </div>
           
-          <p className="mt-2 text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-1 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             在这里，记录那些阅读与观影后留存于心的思考，分享对文字与影像的感悟
           </p>
           
-          <div className="flex justify-center mt-6 mb-8">
-            <div className="bg-muted/50 dark:bg-muted/20 rounded-lg px-4 py-3 max-w-2xl text-sm text-center italic text-muted-foreground">
+          <div className="flex justify-center mt-3 mb-4">
+            <div className="bg-muted/50 dark:bg-muted/20 rounded-lg px-3 py-2 max-w-2xl text-xs text-center italic text-muted-foreground">
               <Quote className="inline-block h-3 w-3 mr-1 mb-1" />
               <span>每一次阅读与观影都不仅是消遣，而是一场与作者、导演的思想对话，一次审美与思考的锤炼</span>
               <Quote className="inline-block h-3 w-3 ml-1 mb-1 rotate-180" />
             </div>
           </div>
           
-          <Separator className="mx-auto w-1/3 my-6 bg-gradient-to-r from-primary/30 via-primary to-primary/30" />
+          <Separator className="mx-auto w-1/3 my-3 bg-gradient-to-r from-primary/30 via-primary to-primary/30" />
         </div>
 
-        {/* 介绍卡片区域 - 使用错位设计 */}
-        <div className="w-full max-w-7xl mx-auto relative mb-32">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 via-transparent to-red-50/50 dark:from-blue-950/30 dark:via-transparent dark:to-red-950/30 rounded-3xl -rotate-1 transform scale-105 blur-sm"></div>
-          
-          {/* 书页留思卡片 - 向左错位 */}
-          <div className="relative z-10 pl-0 md:pl-12 lg:pl-24 mb-24">
-            <div className="absolute -left-4 top-1/4 w-32 border-t border-blue-200 dark:border-blue-800"></div>
-            <div 
-              className="block cursor-pointer transform hover:-translate-y-1 transition-all duration-300 max-w-3xl ml-auto"
-              onClick={() => handleCardClick('/after-scene/books')}
-            >
-              <Card className="overflow-hidden border-2 hover:border-primary/50 transition-all duration-300 group hover:shadow-xl shadow-md">
-                <div className="flex flex-col md:flex-row">
-                  <div className="relative w-full md:w-2/5 h-64 md:h-auto bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center opacity-80 group-hover:opacity-60 transition-opacity duration-500">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="w-32 h-32 text-primary/30 transform group-hover:scale-110 transition-transform duration-500"
+        {/* 主要内容卡片区域 */}
+        <div className="w-full max-w-7xl mx-auto">
+          <div className="flex flex-col space-y-20 mb-20">
+            {/* 书页留思 - 3D书籍设计 */}
+            <div className="relative">
+              <div className="flex items-center">
+                {/* 左侧3D书籍展示区域 */}
+                <div className="w-5/12 pr-6 relative" onClick={() => handleCardClick('/after-scene/books')}>
+                  <div className="relative perspective-1000 transform-gpu transition-all duration-500 hover:scale-105 cursor-pointer h-80">
+                    {/* 书本阴影效果 */}
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/5 h-4 bg-black/20 dark:bg-black/40 blur-md rounded-full"></div>
+                    
+                    {/* 书脊阴影和装饰 */}
+                    <div className="absolute left-0 top-0 h-full w-12 bg-gradient-to-r from-blue-900/40 to-transparent transform skew-y-12 -translate-x-3 rounded-l-md"></div>
+                    
+                    {/* 书的封面 */}
+                    <div 
+                      className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-700 rounded-r-md rounded-b-md border-t border-r border-b border-blue-300 dark:border-blue-900 shadow-xl transform rotate-y-5 rotateX-5 group-hover:rotate-y-30"
+                      style={{ 
+                        transformStyle: 'preserve-3d',
+                        transform: 'rotateY(25deg) rotateX(5deg)'
+                      }}
                     >
-                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                    </svg>
+                      {/* 封面纹理效果 */}
+                      <div className="absolute inset-0 bg-[url('/svg-images/paper-texture.svg')] opacity-10"></div>
+                      
+                      <div className="absolute inset-0 overflow-hidden rounded-r-md rounded-b-md">
+                        {/* 封面背景图 */}
+                        <div className="absolute inset-0 bg-cover bg-center opacity-80" style={{ backgroundImage: `url(${featuredBook.coverImage})` }}></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-800/60 to-blue-700/30"></div>
+                        
+                        {/* 书本封面设计 */}
+                        <div className="absolute top-0 left-0 right-0 p-5 flex flex-col items-center">
+                          <div className="w-16 h-1 bg-gold-300 dark:bg-gold-500 rounded mb-3"></div>
+                        </div>
+                        
+                        <div className="absolute top-1/3 left-0 right-0 flex flex-col items-center">
+                          <h3 className="text-2xl font-serif font-bold mb-2 text-white text-center px-4 tracking-wide">书页留思</h3>
+                          <div className="w-12 h-0.5 bg-white/60 rounded mb-2"></div>
+                          <p className="text-sm opacity-90 text-white/90 text-center px-4">阅读，思考，感悟</p>
+                        </div>
+                      </div>
+                      
+                      {/* 书脊 */}
+                      <div 
+                        className="absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-blue-800 to-blue-600 rounded-l-sm transform-gpu origin-left"
+                        style={{ 
+                          transform: 'rotateY(-25deg) translateX(-95%)',
+                          transformStyle: 'preserve-3d'
+                        }}
+                      >
+                        <div className="h-full flex items-center justify-center relative">
+                          {/* 书脊装饰 */}
+                          <div className="absolute top-6 left-0 right-0 flex justify-center">
+                            <div className="w-6 h-0.5 bg-gold-300 dark:bg-gold-500"></div>
+                          </div>
+                          <div className="absolute bottom-6 left-0 right-0 flex justify-center">
+                            <div className="w-6 h-0.5 bg-gold-300 dark:bg-gold-500"></div>
+                          </div>
+                          
+                          {/* 移除书脊文字 */}
+                        </div>
+                      </div>
+                      
+                      {/* 书页效果 - 增强多层次感 */}
+                      <div className="absolute top-0.5 bottom-0.5 -right-1 w-1 bg-blue-50/30 dark:bg-white/20 rounded"></div>
+                      <div className="absolute top-1 bottom-1 -right-2 w-0.5 bg-blue-50/20 dark:bg-white/10 rounded"></div>
+                      <div className="absolute top-1.5 bottom-1.5 -right-3 w-0.5 bg-blue-50/10 dark:bg-white/5 rounded"></div>
+                      
+                      {/* 移除书页翻折效果 */}
                   </div>
                   </div>
-                  <div className="w-full md:w-3/5 p-6">
-                    <div className="flex justify-between items-center mb-4">
-                      <h2 className="text-3xl font-serif font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">书页留思</h2>
-                      <Badge className="font-medium bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 shadow-sm">
-                        阅读感悟
-                      </Badge>
                 </div>
-                  <p className="text-muted-foreground mb-6">
+                
+                {/* 右侧内容区域 */}
+                <div className="w-7/12 pl-8 py-4 bg-gradient-to-r from-blue-50/70 to-transparent dark:from-blue-950/20 dark:to-transparent rounded-r-xl">
+                  <div className="mb-1 flex items-center">
+                    <h2 className="text-2xl font-serif font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mr-3">书页留思</h2>
+                    <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">阅读感悟</Badge>
+                  </div>
+                  
+                  <div className="flex items-center text-sm text-muted-foreground mb-3">
+                    <BookOpen className="h-3 w-3 mr-1 text-blue-500" />
+                    <span className="font-medium">阅读体验:</span>
+                    <span className="ml-1 text-xs">探索世界，拓展视野，滋养心灵</span>
+                  </div>
+                  
+                  <p className="text-sm text-muted-foreground mb-4">
                     这里记录阅读旅程的点滴感悟，探索文字如何塑造思维，分享那些改变我们的书籍。沉浸在字里行间，发现思想的智慧与力量。
                   </p>
-                    <div className="flex justify-between items-end">
-                  <div className="inline-flex items-center text-primary hover:underline">
-                    浏览全部书评
-                    <ArrowRight className="ml-1 h-4 w-4" />
-                  </div>
-                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
-                    进入书页留思
-                  </Button>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </div>
-            </div>
-
-          {/* 光影随想卡片 - 向右错位 */}
-          <div className="relative z-10 pr-0 md:pr-12 lg:pr-24">
-            <div className="absolute -right-4 top-1/4 w-32 border-t border-red-200 dark:border-red-800"></div>
-            <div 
-              className="block cursor-pointer transform hover:-translate-y-1 transition-all duration-300 max-w-3xl"
-              onClick={() => handleCardClick('/after-scene/movies')}
-            >
-              <Card className="overflow-hidden border-2 hover:border-primary/50 transition-all duration-300 group hover:shadow-xl shadow-md">
-                <div className="flex flex-col-reverse md:flex-row">
-                  <div className="w-full md:w-3/5 p-6">
-                    <div className="flex justify-between items-center mb-4">
-                      <h2 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-red-600">光影随想</h2>
-                      <Badge className="font-medium bg-gradient-to-r from-orange-600 to-red-600 text-white border-0 shadow-sm">
-                        影视评论
-                      </Badge>
-                    </div>
-                    <p className="text-muted-foreground mb-6">
-                      这里分享观影后的情感共鸣与批判思考，探讨电影如何通过视听语言讲述故事，传递理念。在光影交错中，体验多元的人生与情感。
-                    </p>
-                    <div className="flex justify-between items-end">
-                      <div className="inline-flex items-center text-primary hover:underline">
-                        浏览全部影评
-                        <ArrowRight className="ml-1 h-4 w-4" />
-                      </div>
-                      <Button className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white">
-                        进入光影随想
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="relative w-full md:w-2/5 h-64 md:h-auto bg-gradient-to-r from-orange-50 to-red-50 dark:from-gray-900 dark:to-red-950 overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center opacity-80 group-hover:opacity-60 transition-opacity duration-500">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="w-32 h-32 text-primary/30 transform group-hover:scale-110 transition-transform duration-500"
+                  
+                  <div className="flex justify-end items-center">
+                    <Button 
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                      onClick={(e) => handleButtonClick(e, '/after-scene/books')}
                     >
-                      <path d="M21 2v20M3 16v4M3 12v1M3 7v1M17 2v20M12 2v20M7 2v20" />
-                      <path d="M17 16h4M12 12h9M7 7h12M3 3h4" />
-                    </svg>
-                  </div>
+                      进入书页留思
+                    </Button>
                   </div>
                 </div>
-              </Card>
+                  </div>
             </div>
+
+            {/* 光影随想 - 投影仪设计 */}
+            <div className="relative">
+              <div className="flex items-center flex-row-reverse">
+                {/* 右侧投影仪展示区域 */}
+                <div className="w-5/12 pl-6 relative" onClick={() => handleCardClick('/after-scene/movies')}>
+                  <div className="relative perspective-1000 transform-gpu transition-all duration-500 hover:scale-105 cursor-pointer h-72">
+                    {/* 投影仪主体 */}
+                    <div 
+                      className="absolute inset-0 bg-gradient-to-br from-red-900/70 to-red-950/90 rounded-lg shadow-xl overflow-hidden"
+                      style={{ 
+                        transformStyle: 'preserve-3d',
+                        transform: 'rotateY(-15deg) rotateX(5deg)'
+                      }}
+                    >
+                      {/* 投影机镜头效果 */}
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-gradient-to-r from-orange-300 to-orange-100 rounded-full border-2 border-orange-400 shadow-inner shadow-orange-300/50 z-10"></div>
+                      
+                      {/* 投影画面 */}
+                      <div className="absolute inset-0 flex items-center justify-center p-5">
+                        <div className="w-full h-full relative overflow-hidden rounded border-4 border-red-800/50 bg-black/50">
+                          <div className="absolute inset-0 bg-cover bg-center opacity-80" style={{ backgroundImage: `url(${featuredMovie.coverImage})` }}></div>
+                          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-red-950/90"></div>
+                          
+                          {/* 胶片效果条纹 */}
+                          <div className="absolute inset-0 overflow-hidden opacity-20">
+                            <div className="h-full w-full flex flex-col justify-between">
+                              {Array.from({ length: 10 }).map((_, i) => (
+                                <div key={i} className="h-px bg-white"></div>
+                              ))}
             </div>
           </div>
 
-        {/* 带波浪分隔器的中间区域 */}
-        <div className="relative py-6 my-12">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-dashed border-gray-200 dark:border-gray-800"></div>
-          </div>
-          <div className="relative flex justify-center">
-            <div className="px-6 py-2 bg-gradient-to-r from-blue-50 via-background to-red-50 dark:from-blue-950/30 dark:via-background dark:to-red-950/30 rounded-full border shadow-sm">
-              <div className="flex items-center space-x-2">
-                <Sparkles className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium">精选内容</span>
-                <Sparkles className="h-4 w-4 text-primary" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 引言区域 - 集成部分"关于"内容 */}
-        <div className="mb-12 bg-gradient-to-r from-blue-50/50 via-purple-50/30 to-red-50/50 dark:from-blue-950/20 dark:via-purple-950/10 dark:to-red-950/20 rounded-xl p-5 shadow-sm">
-          <div className="flex items-center space-x-4 mb-3">
-            <MessageCircle className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-medium">对话与思考</h3>
-          </div>
-          <p className="text-sm text-muted-foreground mb-0 leading-relaxed">
-            「散场之后」是记录文化消费体验与思考的个人空间，通过结构化的内容组织，为访客提供有价值的文化内容推荐和思考启发。在信息碎片化的当下，希望提供一方沉淀思想的净土。
-          </p>
-        </div>
-
-        {/* 精选内容预览区域 - 左右布局 */}
-        <div className="mb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
-            {/* 精选书评 - 左侧 */}
-            <div className="lg:col-span-6 group">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-medium flex items-center">
-                  <BookOpen className="mr-2 h-5 w-5 text-blue-500" />
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">书页留思: 最新精选</span>
-                </h3>
-                <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-                  {featuredBook.publishedAt}
-                </Badge>
-              </div>
-              
-                <div 
-                className="block cursor-pointer rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-blue-100/50 dark:border-blue-900/30 relative group"
-                  onClick={() => handleCardClick(`/after-scene/books/${featuredBook.slug}`)}
-                >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                
-                <div className="flex flex-col md:flex-row">
-                  <div className="md:w-2/5 relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 to-purple-500/30 opacity-30"></div>
-                      <Image
-                        src={featuredBook.coverImage}
-                        alt={featuredBook.title}
-                      width={300}
-                      height={200}
-                      className="w-full h-full object-cover"
-                      />
-                      <div className="absolute top-2 right-2">
-                      <Badge className="font-medium bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 shadow-sm px-3 py-1">
-                          {featuredBook.category}
-                        </Badge>
+                          <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                            <h3 className="text-xl font-bold mb-1 line-clamp-1">光影随想</h3>
+                            <p className="text-sm opacity-90 line-clamp-2">影像，思索，感悟</p>
+                          </div>
+                          
+                          {/* 移除影评标签 */}
+                          
+                          {/* 播放图标 */}
+                          <div className="absolute inset-0 flex items-center justify-center opacity-50 hover:opacity-80 transition-opacity">
+                            <div className="w-12 h-12 rounded-full bg-red-500/50 flex items-center justify-center">
+                              <Play className="h-6 w-6 text-white fill-current" />
                       </div>
                           </div>
-                  
-                  <div className="p-5 md:w-3/5">
-                    <h4 className="font-bold text-lg mb-2 line-clamp-1">{featuredBook.title}</h4>
-                    <div className="flex items-center text-sm text-muted-foreground mb-3">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      <span className="mr-3">{featuredBook.author}</span>
-                      <Star className="h-4 w-4 text-yellow-500" />
-                      <Star className="h-4 w-4 text-yellow-500" />
-                      <Star className="h-4 w-4 text-yellow-500" />
-                      <Star className="h-4 w-4 text-yellow-500" />
-                      <Star className="h-4 w-4 text-yellow-500" />
-                    </div>
-                    
-                    <blockquote className="border-l-3 border-blue-500/30 pl-3 italic text-muted-foreground my-3 text-sm line-clamp-2">
-                        "{featuredBook.quote}"
-                      </blockquote>
-                    
-                    <div className="flex justify-end items-center mt-4">
-                          <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="text-xs gap-1 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                            onClick={(e) => handleButtonClick(e, `/after-scene/books/${featuredBook.slug}`)}
-                          >
-                            阅读完整书评
-                        <ChevronRight className="h-3 w-3" />
-                          </Button>
                         </div>
                       </div>
+                      
+                      {/* 投影光线效果 */}
+                      <div className="absolute -right-24 top-1/2 -translate-y-1/2 w-24 h-12 bg-gradient-to-r from-orange-500/40 to-transparent transform skew-y-12 -translate-y-6 blur-sm"></div>
+                        </div>
+                    
+                    {/* 投影仪底座 */}
+                    <div 
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-2 bg-red-950 rounded-full shadow-lg opacity-50"
+                    ></div>
+                      </div>
                 </div>
-                </div>
-              </div>
-
-            {/* 精选影评 - 右侧 */}
-            <div className="lg:col-span-6 group">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-medium flex items-center">
-                  <Film className="mr-2 h-5 w-5 text-red-500" />
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-red-600">光影随想: 最新精选</span>
-                </h3>
-                <Badge className="bg-gradient-to-r from-orange-600 to-red-600 text-white">
-                  {featuredMovie.duration}分钟
-                </Badge>
-              </div>
-              
-                <div 
-                className="block cursor-pointer rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-red-100/50 dark:border-red-900/30 relative group"
-                  onClick={() => handleCardClick(`/after-scene/movies/${featuredMovie.slug}`)}
-                >
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 
-                <div className="flex flex-col md:flex-row">
-                  <div className="md:w-2/5 relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-orange-500/30 to-red-500/30 opacity-30"></div>
-                      <Image
-                        src={featuredMovie.coverImage}
-                        alt={featuredMovie.title}
-                      width={300}
-                      height={200}
-                      className="w-full h-full object-cover"
-                      />
-                      <div className="absolute top-2 right-2">
-                      <Badge className="font-medium bg-gradient-to-r from-orange-600 to-red-600 text-white border-0 shadow-sm px-3 py-1">
-                          {featuredMovie.category}
-                        </Badge>
+                {/* 左侧内容区域 */}
+                <div className="w-7/12 pr-8 py-4 bg-gradient-to-l from-red-50/70 to-transparent dark:from-red-950/20 dark:to-transparent rounded-l-xl">
+                  <div className="mb-1 flex items-center">
+                    <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-red-600 mr-3">光影随想</h2>
+                    <Badge className="bg-gradient-to-r from-orange-600 to-red-600 text-white">影视评论</Badge>
+              </div>
+
+                  <div className="flex items-center text-sm text-muted-foreground mb-3">
+                    <Film className="h-3 w-3 mr-1 text-red-500" />
+                    <span className="font-medium">观影收获:</span>
+                    <span className="ml-1 text-xs">感知艺术，共情故事，引发思考</span>
                       </div>
-                          </div>
                   
-                  <div className="p-5 md:w-3/5">
-                    <h4 className="font-bold text-lg mb-2 line-clamp-1">{featuredMovie.title}</h4>
-                    <div className="flex items-center text-sm text-muted-foreground mb-3">
-                      <Clock className="h-4 w-4 mr-1" />
-                      <span className="mr-3">{featuredMovie.director}</span>
-                      <Star className="h-4 w-4 text-yellow-500" />
-                      <Star className="h-4 w-4 text-yellow-500" />
-                      <Star className="h-4 w-4 text-yellow-500" />
-                      <Star className="h-4 w-4 text-yellow-500" />
-                      <Star className="h-4 w-4 text-yellow-500 opacity-50" />
-                    </div>
-                    
-                    <blockquote className="border-l-3 border-red-500/30 pl-3 italic text-muted-foreground my-3 text-sm line-clamp-2">
-                        "{featuredMovie.quote}"
-                      </blockquote>
-                    
-                    <div className="flex justify-end items-center mt-4">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    这里分享观影后的情感共鸣与批判思考，探讨电影如何通过视听语言讲述故事，传递理念。在光影交错中，体验多元的人生与情感。
+                  </p>
+                  
+                  <div className="flex justify-end items-center">
                           <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="text-xs gap-1 hover:bg-red-50 dark:hover:bg-red-900/20"
-                            onClick={(e) => handleButtonClick(e, `/after-scene/movies/${featuredMovie.slug}`)}
+                      className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white"
+                      onClick={(e) => handleButtonClick(e, '/after-scene/movies')}
                           >
-                            阅读完整影评
-                        <ChevronRight className="h-3 w-3" />
+                      进入光影随想
                           </Button>
                         </div>
-                      </div>
-                </div>
                 </div>
               </div>
             </div>
           </div>
 
-        {/* 推荐阅读和观影列表 */}
-        <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-blue-50/50 dark:bg-blue-950/20 rounded-xl p-5 border border-blue-100 dark:border-blue-900/20 shadow-sm">
-            <h3 className="text-lg font-medium mb-4 flex items-center">
-              <BookOpen className="mr-2 h-5 w-5 text-blue-500" />
-              热门阅读推荐
-            </h3>
-            <ul className="space-y-2">
-              {recommendedItems.filter(item => item.type === 'book').map((item, index) => (
-                <li key={index} className="flex items-center justify-between p-2 rounded-lg hover:bg-blue-100/50 dark:hover:bg-blue-900/20 transition-colors">
-                  <div className="flex items-center">
-                    <span className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-xs font-medium text-blue-800 dark:text-blue-200 mr-3">
-                      {index + 1}
-                    </span>
-                    <div>
-                      <p className="font-medium text-sm">{item.title}</p>
-                      <p className="text-xs text-muted-foreground">{item.author}</p>
-                    </div>
-                  </div>
-                  <ThumbsUp className="h-4 w-4 text-blue-500" />
-                </li>
-              ))}
-            </ul>
-            </div>
-        
-          <div className="bg-red-50/50 dark:bg-red-950/20 rounded-xl p-5 border border-red-100 dark:border-red-900/20 shadow-sm">
-            <h3 className="text-lg font-medium mb-4 flex items-center">
-              <Film className="mr-2 h-5 w-5 text-red-500" />
-              热门观影推荐
-            </h3>
-            <ul className="space-y-2">
-              {recommendedItems.filter(item => item.type === 'movie').map((item, index) => (
-                <li key={index} className="flex items-center justify-between p-2 rounded-lg hover:bg-red-100/50 dark:hover:bg-red-900/20 transition-colors">
-                  <div className="flex items-center">
-                    <span className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center text-xs font-medium text-red-800 dark:text-red-200 mr-3">
-                      {index + 1}
-                    </span>
-                    <div>
-                      <p className="font-medium text-sm">{item.title}</p>
-                      <p className="text-xs text-muted-foreground">{item.director}</p>
-                    </div>
-                  </div>
-                  <ThumbsUp className="h-4 w-4 text-red-500" />
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* 内容区域结束 */}
         </div>
       </div>
     </div>

@@ -102,7 +102,7 @@ export default function MoviesPage() {
           {/* 页面顶部区域 - 重新设计 */}
           <div className="relative">
             {/* 返回按钮 - 独立定位，更加醒目 */}
-            <div className="mb-6">
+            <div className="mb-3">
               <Button 
                 variant="outline" 
                 size="sm" 
