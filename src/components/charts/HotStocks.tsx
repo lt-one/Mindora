@@ -388,7 +388,21 @@ export default function HotStocks() {
   };
   
   if (error) {
-    return <div className="text-center text-red-500 py-4">加载失败: {error}</div>;
+    return (
+      <div className="flex flex-col items-center py-8 bg-gray-50 dark:bg-gray-900 rounded-lg border">
+        <div className="text-red-500 text-lg font-medium mb-4">加载失败: {error}</div>
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={fetchHotStocks}
+          disabled={isLoading}
+          className="flex items-center gap-2"
+        >
+          <RefreshCwIcon className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+          {isLoading ? '加载中...' : '刷新重试'}
+        </Button>
+      </div>
+    );
   }
   
   return (

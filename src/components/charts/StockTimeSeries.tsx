@@ -814,7 +814,19 @@ export default function StockTimeSeries({
           <CardDescription>{symbol}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center text-red-500 py-4">加载失败: {error}</div>
+          <div className="flex flex-col items-center py-4">
+            <div className="text-center text-red-500 mb-4">加载失败: {error}</div>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={fetchTimeSeriesData}
+              disabled={isLoading}
+              className="flex items-center gap-2"
+            >
+              <RefreshCwIcon className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+              {isLoading ? '加载中...' : '刷新重试'}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     );
