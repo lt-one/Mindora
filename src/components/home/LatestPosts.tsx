@@ -1,74 +1,100 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CalendarIcon, Clock } from "lucide-react";
+import { CalendarIcon, Clock, ArrowRight, Tag } from "lucide-react";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // 示例博客文章数据
 const postsData = [
   {
     id: "1",
-    title: "舆情监测中的AI大模型应用实践",
-    slug: "ai-sentiment-analysis",
-    excerpt: "探讨如何利用AI大模型提升舆情监测效率，分享实际项目中的提示词工程设计经验和数据处理流程优化方法。",
-    featuredImage: "/images/blog/ai-sentiment-analysis.png",
+    title: "大学反思：四年成长路的关键转折点",
+    slug: "university-reflection",
+    excerpt: "分享我在大学四年间的学习经历、成长转折点以及对未来职业发展的思考。如何在大学期间找到自己的方向和兴趣所在。",
+    featuredImage: "/images/placeholders/site-placeholder.jpg/university-reflection.png",
     publishedAt: "2023-12-15",
     readingTime: "8 分钟",
-    categories: ["舆情分析"],
-    tags: ["AI大模型", "舆情监测", "提示词工程"],
+    categories: ["个人成长"],
+    tags: ["大学生活", "职业规划", "自我成长"],
   },
   {
     id: "2",
-    title: "脑机接口技术在智能家居中的应用前景",
-    slug: "brain-interface-smart-home",
-    excerpt: "分享脑机接口项目的研发经验，探讨脑电信号如何实现智能家居控制，以及这一技术在未来生活场景中的潜力。",
-    featuredImage: "/images/blog/brain-interface.png",
+    title: "为什么选择换赛道：从传统行业到AI数据分析",
+    slug: "career-path-change",
+    excerpt: "详述我从传统行业转向AI数据分析领域的决策过程、面临的挑战以及转型过程中的经验教训与实用建议。",
+    featuredImage: "/images/placeholders/site-placeholder.jpg/career-change.png",
     publishedAt: "2023-11-20",
     readingTime: "10 分钟",
-    categories: ["脑机接口"],
-    tags: ["智能家居", "脑电信号", "交互技术"],
+    categories: ["职业发展"],
+    tags: ["职业转型", "数据分析", "AI行业"],
   },
   {
     id: "3",
-    title: "数据可视化设计：从数字到洞察",
-    slug: "data-visualization-design",
-    excerpt: "分享数据可视化的设计原则和最佳实践，如何选择合适的图表类型，以及通过视觉设计提升数据理解和决策效率。",
-    featuredImage: "/images/blog/data-visualization.png",
+    title: "第一份工作总结复盘：成长与挑战",
+    slug: "first-job-review",
+    excerpt: "回顾我的第一份数据分析工作，分享职场新人的适应过程、技能提升历程以及如何从错误中学习和成长的实践经验。",
+    featuredImage: "/images/placeholders/site-placeholder.jpg/first-job.png",
     publishedAt: "2023-10-10",
     readingTime: "12 分钟",
-    categories: ["数据分析"],
-    tags: ["数据可视化", "Tableau", "设计原则"],
+    categories: ["职业发展"],
+    tags: ["职场经验", "数据分析师", "自我提升"],
   },
   {
     id: "4",
-    title: "产品设计中的数据驱动决策",
-    slug: "data-driven-product-design",
-    excerpt: "如何将数据分析融入产品设计流程，通过舆情数据、用户反馈和市场趋势分析指导产品迭代和功能优化。",
-    featuredImage: "/images/blog/product-design.png",
+    title: "建站目的及过程分享：从想法到实现",
+    slug: "website-building-journey",
+    excerpt: "详细记录个人网站从构思到上线的全过程，包括技术选型、设计决策、遇到的问题及解决方案，以及个人建站的经验与技巧。",
+    featuredImage: "/images/placeholders/site-placeholder.jpg/website-building.png",
     publishedAt: "2023-09-05",
     readingTime: "7 分钟",
-    categories: ["产品设计"],
-    tags: ["数据驱动", "用户体验", "产品迭代"],
+    categories: ["技术分享"],
+    tags: ["网站开发", "Next.js", "个人项目"],
   },
 ];
 
+// 获取所有分类
+const allCategories = [...new Set(postsData.map(post => post.categories[0]))];
+
 const LatestPosts = () => {
+  const [activeCategory, setActiveCategory] = useState("all");
+  
+  // 根据分类过滤文章
+  const filteredPosts = activeCategory === "all" 
+    ? postsData 
+    : postsData.filter(post => post.categories.includes(activeCategory));
+
   return (
     <section className="py-16 bg-white dark:bg-gray-800">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+        <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
             最新文章
           </h2>
           <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            分享我在数据分析、AI应用和产品设计领域的见解与经验
+            分享个人成长历程、职业发展思考、技术探索与AI工具使用心得，记录从校园到职场的点滴感悟
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-          {postsData.map((post) => (
-            <article
-              key={post.id}
-              className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow hover:shadow-lg transition-shadow group"
-            >
+        {/* 分类过滤器 */}
+        <div className="flex justify-center mb-8">
+          <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory}>
+            <TabsList>
+              <TabsTrigger value="all">全部文章</TabsTrigger>
+              {allCategories.map(category => (
+                <TabsTrigger key={category} value={category}>{category}</TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          {filteredPosts.map((post) => (
+            <Card key={post.id} className="group overflow-hidden h-full flex flex-col hover:shadow-lg transition-all duration-300">
               <Link href={`/blog/${post.slug}`} className="block cursor-pointer">
                 <div className="relative h-48 w-full overflow-hidden">
                   <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
@@ -79,50 +105,62 @@ const LatestPosts = () => {
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   />
-                  <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-2 py-1 m-2 rounded">
-                    {post.categories[0]}
-                  </div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-3 space-x-4">
-                    <div className="flex items-center">
-                      <CalendarIcon className="w-4 h-4 mr-1" />
-                      <time dateTime={post.publishedAt}>{post.publishedAt}</time>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="w-4 h-4 mr-1" />
-                      <span>{post.readingTime}</span>
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    {post.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 line-clamp-3 mb-4">
-                    {post.excerpt}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {post.tags.slice(0, 2).map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2.5 py-0.5 rounded"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                  <div className="absolute top-0 right-0 m-3">
+                    <Badge variant="secondary" className="bg-blue-500 hover:bg-blue-600 text-white">
+                      {post.categories[0]}
+                    </Badge>
                   </div>
                 </div>
               </Link>
-            </article>
+
+              <CardHeader className="p-4 pb-0">
+                <CardTitle className="text-lg md:text-xl font-semibold line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                </CardTitle>
+              </CardHeader>
+              
+              <CardContent className="p-4 flex-grow">
+                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-3 space-x-4">
+                  <div className="flex items-center">
+                    <CalendarIcon className="w-4 h-4 mr-1" />
+                    <time dateTime={post.publishedAt}>{post.publishedAt}</time>
+                  </div>
+                  <div className="flex items-center">
+                    <Clock className="w-4 h-4 mr-1" />
+                    <span>{post.readingTime}</span>
+                  </div>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 line-clamp-3 text-sm">
+                  {post.excerpt}
+                </p>
+              </CardContent>
+              
+              <CardFooter className="p-4 pt-0 flex flex-wrap gap-2 justify-between items-center">
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.slice(0, 2).map((tag) => (
+                    <Badge variant="outline" key={tag} className="text-xs">
+                      <Tag className="h-3 w-3 mr-1" />{tag}
+                    </Badge>
+                  ))}
+                </div>
+                <Button variant="ghost" size="sm" asChild className="text-blue-600 dark:text-blue-400 p-0 h-auto">
+                  <Link href={`/blog/${post.slug}`}>
+                    阅读更多
+                    <ArrowRight className="ml-1 h-3 w-3" />
+                  </Link>
+                </Button>
+              </CardFooter>
+            </Card>
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <Link
-            href="/blog"
-            className="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-base font-medium rounded-md text-gray-800 dark:text-white bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-          >
-            浏览更多文章
-          </Link>
+        <div className="text-center mt-10">
+          <Button variant="outline" asChild>
+            <Link href="/blog" className="flex items-center space-x-2">
+              <span>浏览更多文章</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

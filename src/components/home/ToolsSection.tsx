@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, useInView } from "framer-motion";
 import { 
   ArrowRight, 
   BarChart2, 
@@ -10,8 +9,12 @@ import {
   PieChart, 
   Compass,
   Sparkles,
-  Zap
+  Zap,
+  LightbulbIcon
 } from "lucide-react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 // 模拟数据 - 未来可从API获取
 const toolsData = [
@@ -20,8 +23,7 @@ const toolsData = [
     title: "舆情分析仪表盘",
     description: "全网品牌提及监测和情感分析工具，支持实时预警和趋势可视化",
     icon: <BarChart2 className="w-6 h-6 text-blue-500" />,
-    color: "from-blue-500 to-indigo-700",
-    gradient: "conic-gradient(at bottom left, rgb(59, 130, 246), rgb(79, 70, 229))",
+    color: "blue",
     link: "/dashboard",
     status: "5000+",
     statusLabel: "日均数据处理",
@@ -31,8 +33,7 @@ const toolsData = [
     title: "AI提示词生成器",
     description: "根据需求智能生成提示词模板，提升大模型输出质量和效率",
     icon: <Brain className="w-6 h-6 text-purple-500" />,
-    color: "from-purple-500 to-purple-800",
-    gradient: "conic-gradient(at top right, rgb(168, 85, 247), rgb(107, 33, 168))",
+    color: "purple",
     link: "/tools/prompt-generator",
     status: "65%",
     statusLabel: "效率提升",
@@ -42,8 +43,7 @@ const toolsData = [
     title: "数据可视化模板",
     description: "多种数据图表模板，一键生成专业数据报告和可视化展示",
     icon: <PieChart className="w-6 h-6 text-green-500" />,
-    color: "from-green-500 to-emerald-700",
-    gradient: "conic-gradient(at center right, rgb(16, 185, 129), rgb(5, 150, 105))",
+    color: "green",
     link: "/tools/visualization",
     status: "25+",
     statusLabel: "图表类型",
@@ -53,193 +53,157 @@ const toolsData = [
     title: "产品体验设计导航",
     description: "整合用户洞察和数据分析，辅助产品设计决策和用户体验优化",
     icon: <Compass className="w-6 h-6 text-red-500" />,
-    color: "from-red-500 to-rose-700",
-    gradient: "conic-gradient(at top center, rgb(244, 63, 94), rgb(159, 18, 57))",
+    color: "red",
     link: "/tools/product-design",
     status: "20+",
     statusLabel: "产品迭代案例",
   },
 ];
 
-// 装饰元素数据
-const decorations = [
-  { top: "5%", left: "10%", size: 8, delay: 0, duration: 8 },
-  { top: "15%", right: "10%", size: 12, delay: 1, duration: 10 },
-  { top: "40%", right: "15%", size: 16, delay: 0.5, duration: 7 },
-  { top: "60%", left: "5%", size: 10, delay: 2, duration: 9 },
-  { top: "80%", right: "20%", size: 14, delay: 1.5, duration: 11 },
-];
+// 获取卡片颜色样式
+const getCardStyles = (color: string) => {
+  const styles: Record<string, {
+    background: string;
+    border: string;
+    shadow: string;
+  }> = {
+    blue: {
+      background: "bg-blue-50 dark:bg-blue-950/40",
+      border: "border-blue-100 dark:border-blue-900",
+      shadow: "shadow-blue-100/30 dark:shadow-blue-900/20"
+    },
+    purple: {
+      background: "bg-purple-50 dark:bg-purple-950/40",
+      border: "border-purple-100 dark:border-purple-900",
+      shadow: "shadow-purple-100/30 dark:shadow-purple-900/20"
+    },
+    green: {
+      background: "bg-green-50 dark:bg-green-950/40",
+      border: "border-green-100 dark:border-green-900",
+      shadow: "shadow-green-100/30 dark:shadow-green-900/20"
+    },
+    red: {
+      background: "bg-red-50 dark:bg-red-950/40",
+      border: "border-red-100 dark:border-red-900",
+      shadow: "shadow-red-100/30 dark:shadow-red-900/20"
+    }
+  };
+  return styles[color] || styles.blue;
+};
+
+// 获取徽章颜色样式
+const getBadgeStyles = (color: string) => {
+  const styles: Record<string, string> = {
+    blue: "bg-blue-500 hover:bg-blue-600 text-white",
+    purple: "bg-purple-500 hover:bg-purple-600 text-white",
+    green: "bg-green-500 hover:bg-green-600 text-white",
+    red: "bg-red-500 hover:bg-red-600 text-white"
+  };
+  return styles[color] || styles.blue;
+};
 
 const ToolsSection = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (isInView) {
-      setIsVisible(true);
-    }
-  }, [isInView]);
+    setMounted(true);
+  }, []);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 12,
-      },
-    },
-  };
-
-  // 为装饰元素创建动画
-  const DecorativeElement = ({ top, left, right, size, delay, duration }: any) => (
-    <motion.div
-      className="absolute z-0 rounded-full opacity-50 blur-xl bg-gradient-to-r from-blue-400 to-purple-500"
-      style={{ 
-        top, 
-        left, 
-        right, 
-        width: `${size}rem`,
-        height: `${size}rem`,
-      }}
-      initial={{ scale: 0.8, opacity: 0.3 }}
-      animate={{ 
-        scale: [0.8, 1.2, 0.8], 
-        opacity: [0.3, 0.7, 0.3],
-      }}
-      transition={{
-        repeat: Infinity,
-        repeatType: "reverse",
-        duration,
-        delay,
-        ease: "easeInOut"
-      }}
-    />
-  );
+  // 避免水合不匹配
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <section
       id="tools-section"
-      ref={sectionRef}
       className="py-20 relative overflow-hidden bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800"
     >
-      {/* 背景装饰元素 */}
-      {decorations.map((props, index) => (
-        <DecorativeElement key={index} {...props} />
-      ))}
+      {/* 轻量级背景装饰 */}
+      <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-200/30 dark:bg-blue-900/20 rounded-full filter blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-purple-200/30 dark:bg-purple-900/20 rounded-full filter blur-3xl"></div>
       
-      {/* 背景网格 - 暗色模式下可见 */}
-      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]" 
-           style={{ 
-             backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zm0-20h20v20H20V0zM0 20h20v20H0V20z'/%3E%3C/g%3E%3C/svg%3E\")",
-             backgroundSize: "30px 30px"
-           }}>
-      </div>
-
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: -20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.1 }}
-        >
-          <div className="inline-flex items-center justify-center space-x-2 mb-4">
-            <Sparkles className="w-5 h-5 text-blue-500" />
-            <span className="text-sm font-semibold text-blue-600 tracking-wider uppercase dark:text-blue-400">功能工具</span>
-            <Sparkles className="w-5 h-5 text-blue-500" />
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center gap-2 mb-2">
+            <LightbulbIcon className="h-5 w-5 text-blue-500" />
+            <h2 className="text-sm font-medium text-blue-600 tracking-wider uppercase dark:text-blue-400">
+              功能工具
+            </h2>
+            <LightbulbIcon className="h-5 w-5 text-blue-500" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
+          
+          <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             数据分析工具
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          </h3>
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             专业的数据分析和AI辅助工具，帮助你从数据中发现洞察，优化决策流程
           </p>
-          <motion.div 
-            className="mt-6"
-            initial={{ scaleX: 0 }}
-            animate={isVisible ? { scaleX: 1 } : {}}
-            transition={{ duration: 1, delay: 0.5 }}
-          >
-            <div className="h-1 w-24 bg-gradient-to-r from-blue-600 to-indigo-600 rounded mx-auto"></div>
-          </motion.div>
-        </motion.div>
+        </div>
 
-        {isVisible && (
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            {toolsData.map((tool) => (
-              <motion.div key={tool.id} variants={itemVariants}>
-                <Link href={tool.link}>
-                  <div className="group h-full flex flex-col bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700 relative hover:translate-y-[-8px] cursor-pointer">
-                    {/* 卡片顶部装饰光效 */}
-                    <div className="absolute -top-24 -right-24 w-40 h-40 bg-blue-200 dark:bg-blue-800 rounded-full opacity-20 blur-2xl group-hover:opacity-30 transition-opacity"></div>
-                    
-                    <div
-                      className="p-6 flex items-center justify-between"
-                      style={{ background: tool.gradient }}
-                    >
-                      <div className="p-3 bg-white/20 backdrop-blur-sm rounded-lg shadow-inner">
-                        {tool.icon}
-                      </div>
-                      <div className="bg-white/20 backdrop-blur-sm rounded-full py-1 px-3 shadow-inner">
-                        <span className="text-white text-sm font-medium">
-                          {tool.status} {tool.statusLabel}
-                        </span>
-                      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          {toolsData.map((tool) => {
+            const cardStyles = getCardStyles(tool.color);
+            const badgeStyles = getBadgeStyles(tool.color);
+            
+            return (
+              <Card 
+                key={tool.id} 
+                className={`overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${cardStyles.background} ${cardStyles.border} ${cardStyles.shadow}`}
+              >
+                <CardHeader className="pb-2">
+                  <div className="flex justify-between items-start">
+                    <div className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+                      {tool.icon}
                     </div>
-                    
-                    <div className="p-6 flex-grow flex flex-col">
-                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                        {tool.title}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-300 mb-6 flex-grow">
-                        {tool.description}
-                      </p>
-                      <div className="mt-auto flex items-center justify-between">
-                        <span className="inline-flex items-center text-blue-600 dark:text-blue-400 font-medium group-hover:underline">
-                          开始使用
-                          <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </span>
-                        <span className="bg-blue-50 dark:bg-blue-900/30 p-2 rounded-full">
-                          <Zap className="w-4 h-4 text-blue-500 dark:text-blue-400" />
-                        </span>
-                      </div>
-                    </div>
+                    <Badge className={badgeStyles}>
+                      {tool.status} {tool.statusLabel}
+                    </Badge>
                   </div>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
+                  <CardTitle className="mt-4 text-xl">{tool.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-base">
+                    {tool.description}
+                  </CardDescription>
+                </CardContent>
+                <CardFooter className="flex justify-between items-center">
+                  <Button variant="ghost" asChild className="p-0 h-auto text-blue-600 dark:text-blue-400 hover:text-blue-700">
+                    <Link href={tool.link} className="flex items-center gap-2">
+                      开始使用
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </Button>
+                  <div className="bg-blue-50 dark:bg-blue-900/30 p-2 rounded-full">
+                    <Zap className="w-4 h-4 text-blue-500 dark:text-blue-400" />
+                  </div>
+                </CardFooter>
+              </Card>
+            );
+          })}
+        </div>
 
-        <motion.div 
-          className="mt-16 text-center"
-          initial={{ opacity: 0 }}
-          animate={isVisible ? { opacity: 1 } : {}}
-          transition={{ delay: 1, duration: 1 }}
-        >
-          <p className="text-gray-500 dark:text-gray-400 italic">
-            基于实际项目经验开发的专业工具，持续优化中
-          </p>
-        </motion.div>
+        <div className="max-w-3xl mx-auto bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-100 dark:border-blue-800">
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+            <div className="bg-blue-100 dark:bg-blue-800 p-3 rounded-full">
+              <Sparkles className="h-6 w-6 text-blue-600 dark:text-blue-300" />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
+                更多专业工具正在开发中
+              </h4>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
+                基于实际项目经验构建的数据分析工具集，致力于为您提供高效便捷的专业解决方案
+              </p>
+            </div>
+            <Button variant="outline" asChild>
+              <Link href="/tools">
+                浏览全部工具
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
       </div>
     </section>
   );

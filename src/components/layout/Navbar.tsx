@@ -123,8 +123,7 @@ const Navbar = () => {
                   { href: "/good-sites", label: "好站分享" },
                   { href: "/after-scene", label: "散场之后" },
                   { href: "/todo", label: "Todo应用" },
-                  { href: "/about", label: "关于" },
-                  { href: "/contact", label: "联系" }
+                  { href: "/about", label: "关于" }
                 ].map((item, index) => (
                   <Link 
                     key={item.href}
@@ -216,8 +215,7 @@ const Navbar = () => {
               { href: "/good-sites", label: "好站分享" },
               { href: "/after-scene", label: "散场之后" },
               { href: "/todo", label: "Todo应用" },
-              { href: "/about", label: "关于" },
-              { href: "/contact", label: "联系" }
+              { href: "/about", label: "关于" }
             ].map((item) => (
               <Link 
                 key={item.href}

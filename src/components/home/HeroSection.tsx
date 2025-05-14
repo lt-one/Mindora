@@ -40,9 +40,11 @@ const HeroSection = () => {
     <p key="14" className="ml-8"><span className="text-cyan-300"># 核心功能列表</span></p>,
     <p key="15" className="ml-8"><span className="text-pink-400">return</span> {'{'}</p>,
     <p key="16" className="ml-12"><span className="text-cyan-300">"博客系统"</span>: <span className="text-yellow-300">BlogSystem</span>(</p>,
-    <p key="17" className="ml-16">categories=[<span className="text-cyan-300">"技术教程"</span>, <span className="text-cyan-300">"舆情分析"</span>, <span className="text-cyan-300">"项目复盘"</span>],</p>,
-    <p key="18" className="ml-16">update_frequency=<span className="text-cyan-300">"每周1-2篇"</span></p>,
-    <p key="19" className="ml-12">),</p>,
+    <p key="17" className="ml-16">categories=[<span className="text-cyan-300">"个人成长"</span>, <span className="text-cyan-300">"职业发展"</span>, <span className="text-cyan-300">"技术分享"</span>, <span className="text-cyan-300">"AI工具指南"</span>, <span className="text-cyan-300">"项目复盘"</span>],</p>,
+    <p key="18" className="ml-16">update_frequency=<span className="text-cyan-300">"每周1-2篇"</span>,</p>,
+    <p key="19" className="ml-16">style=<span className="text-cyan-300">"深度原创内容"</span>,</p>,
+    <p key="19.1" className="ml-16">description=<span className="text-cyan-300">"分享真实经历与深度思考，记录从校园到职场的成长之路，以及AI时代的技术探索"</span></p>,
+    <p key="19.2" className="ml-12">),</p>,
     <p key="20" className="ml-12"><span className="text-cyan-300">"项目展示"</span>: <span className="text-yellow-300">ProjectGallery</span>(</p>,
     <p key="21" className="ml-16">categories=[<span className="text-cyan-300">"数据分析"</span>, <span className="text-cyan-300">"AI应用"</span>, <span className="text-cyan-300">"产品设计"</span>],</p>,
     <p key="22" className="ml-16">display_mode=<span className="text-cyan-300">"卡片式轮播"</span></p>,
@@ -175,10 +177,10 @@ const HeroSection = () => {
                 查看我的项目
               </Link>
               <Link
-                href="/contact"
+                href="/about"
                 className="px-4 py-2 md:px-6 md:py-3 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white text-sm md:text-base border border-gray-300 dark:border-gray-600 font-medium rounded-lg transition-transform hover:scale-105 flex items-center gap-2 shadow-sm hover:shadow-md"
               >
-                联系我
+                关于我
                 <ArrowRight className="w-3 h-3 md:w-4 md:h-4" />
               </Link>
             </div>

@@ -1,8 +1,8 @@
 import HeroSection from "@/components/home/HeroSection";
-import FeaturedProjects from "@/components/home/FeaturedProjects";
-import LatestPosts from "@/components/home/LatestPosts";
-import DataInsight from "@/components/home/DataInsight";
-import ToolsSection from "@/components/home/ToolsSection";
+import ExpertiseSection from "@/components/home/ExpertiseSection";
+import SkillJourneySection from "@/components/home/SkillJourneySection";
+import FunFactsSection from "@/components/home/FunFactsSection";
+import PhilosophySection from "@/components/home/PhilosophySection";
 
 export default function Home() {
   return (
@@ -10,17 +10,18 @@ export default function Home() {
       {/* 个人品牌展示区 - Hero Section */}
       <HeroSection />
       
-      {/* 精选项目展示区 */}
-      <FeaturedProjects />
+      {/* 专业技能区 */}
+      <ExpertiseSection />
       
-      {/* 最新博客文章区 */}
-      <LatestPosts />
+      {/* 技能成长与旅程 */}
+      <SkillJourneySection />
       
-      {/* 数据可视化概览区 */}
-      <DataInsight />
+      {/* 趣味事实 */}
+      <FunFactsSection />
       
-      {/* 效率工具入口区 */}
-      <ToolsSection />
+      {/* 个人理念/使命 */}
+      <PhilosophySection />
+      
     </main>
   );
 }

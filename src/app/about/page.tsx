@@ -208,10 +208,6 @@ export default function AboutPage() {
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col sm:flex-row justify-center gap-2 pb-6 pt-4">
-                <Button variant="outline" className="w-full sm:w-auto">
-                  <Mail className="mr-2 h-4 w-4" />
-                  联系我
-                </Button>
                 <Button 
                   variant="default" 
                   className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
