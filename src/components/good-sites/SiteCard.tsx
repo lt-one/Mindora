@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { MotionDiv } from '@/components/motion';
 import { ExternalLink, Bookmark, Star } from 'lucide-react';
 
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -91,7 +91,7 @@ export default function SiteCard({ name, url, logo, description, tags, screensho
   };
   
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -127,7 +127,7 @@ export default function SiteCard({ name, url, logo, description, tags, screensho
             <div className="absolute top-3 left-3 z-10" onClick={handleCategoryClick}>
               <Badge 
                 variant="secondary" 
-                className="bg-background/80 backdrop-blur-sm border-border text-xs cursor-pointer hover:bg-background/80 hover:!bg-background/80"
+                className="bg-background/80 backdrop-blur-sm border-border text-xs cursor-pointer hover:bg-background/80"
               >
                 {category}
               </Badge>
@@ -174,6 +174,6 @@ export default function SiteCard({ name, url, logo, description, tags, screensho
           </CardFooter>
         </Card>
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 }

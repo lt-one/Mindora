@@ -11,7 +11,8 @@ import {
   Star, StarHalf, BookMarked, BookText, BookOpenCheck, Briefcase, Calendar, Award, GraduationCap,
   Lock, Server, Smartphone
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+import { MotionDiv, MotionButton } from "@/components/motion";
 import Image from "next/image";
 // @ts-ignore
 import Tree from 'react-d3-tree';
@@ -1585,7 +1586,7 @@ const SkillJourneySection = () => {
                   </h3>
                   <div className="space-y-7">
                     {technicalSkills.map((skill, index) => (
-                      <motion.div 
+                      <MotionDiv 
                         key={index} 
                         initial={{ opacity: 0, y: 20 }}
                         animate={skillsVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -1606,7 +1607,7 @@ const SkillJourneySection = () => {
                           </div>
                           <div className="relative ml-12">
                             <div className="h-2 w-full bg-slate-200/70 dark:bg-slate-700/50 rounded-full overflow-hidden shadow-inner">
-                              <motion.div 
+                              <MotionDiv 
                                 className={`h-full rounded-full ${skill.color}`}
                                 initial={{ width: 0 }}
                                 animate={{ width: `${skillsVisible ? skill.progress : 0}%` }}
@@ -1616,7 +1617,7 @@ const SkillJourneySection = () => {
                             <div className="mt-1.5 text-xs text-slate-600 dark:text-slate-400 line-clamp-1">{skill.description}</div>
                           </div>
                         </div>
-                      </motion.div>
+                      </MotionDiv>
                     ))}
                   </div>
                 </CardContent>
@@ -1635,7 +1636,7 @@ const SkillJourneySection = () => {
                   </h3>
                   <div className="space-y-7">
                     {toolSkills.map((skill, index) => (
-                      <motion.div 
+                      <MotionDiv 
                         key={index} 
                         initial={{ opacity: 0, y: 20 }}
                         animate={skillsVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -1656,7 +1657,7 @@ const SkillJourneySection = () => {
                           </div>
                           <div className="relative ml-12">
                             <div className="h-2 w-full bg-slate-200/70 dark:bg-slate-700/50 rounded-full overflow-hidden shadow-inner">
-                              <motion.div 
+                              <MotionDiv 
                                 className={`h-full rounded-full ${skill.color}`}
                                 initial={{ width: 0 }}
                                 animate={{ width: `${skillsVisible ? skill.progress : 0}%` }}
@@ -1666,7 +1667,7 @@ const SkillJourneySection = () => {
                             <div className="mt-1.5 text-xs text-slate-600 dark:text-slate-400 line-clamp-1">{skill.description}</div>
                           </div>
                         </div>
-                      </motion.div>
+                      </MotionDiv>
                     ))}
                   </div>
                 </CardContent>
@@ -1679,7 +1680,7 @@ const SkillJourneySection = () => {
             <div className="skill-tree-section bg-white/30 dark:bg-slate-800/20 rounded-xl border border-blue-100/30 dark:border-blue-800/20 shadow-lg backdrop-blur-md overflow-hidden">
               {/* 技能树过滤器 */}
               <div className="filter-container flex justify-center gap-3 flex-wrap p-5 border-b border-blue-100/30 dark:border-blue-800/20">
-                <motion.button 
+                <MotionButton 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setToolCategory("all")}
@@ -1693,8 +1694,8 @@ const SkillJourneySection = () => {
                     <Sparkles className="w-3.5 h-3.5 mr-1.5" />
                     所有技能
                   </div>
-                </motion.button>
-                <motion.button 
+                </MotionButton>
+                <MotionButton 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setToolCategory("development")}
@@ -1708,8 +1709,8 @@ const SkillJourneySection = () => {
                     <Code className="w-3.5 h-3.5 mr-1.5" />
                     开发技能
                   </div>
-                </motion.button>
-                <motion.button 
+                </MotionButton>
+                <MotionButton 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setToolCategory("data")}
@@ -1723,8 +1724,8 @@ const SkillJourneySection = () => {
                     <Database className="w-3.5 h-3.5 mr-1.5" />
                     数据技能
                   </div>
-                </motion.button>
-                <motion.button 
+                </MotionButton>
+                <MotionButton 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setToolCategory("design")}
@@ -1738,7 +1739,7 @@ const SkillJourneySection = () => {
                     <Laptop className="w-3.5 h-3.5 mr-1.5" />
                     设计技能
                   </div>
-                </motion.button>
+                </MotionButton>
               </div>
               
               <div className="p-6">
@@ -1753,7 +1754,7 @@ const SkillJourneySection = () => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* 第一层：核心技能 - 仅当未选中任何技能或选中的是核心技能时显示完整卡片 */}
                     <div className="md:col-span-3">
-                      <motion.div 
+                      <MotionDiv 
                         whileHover={{ scale: 1.03 }}
                         onClick={() => handleSkillNodeClick(getSkillTreeData())}
                         className={`core-skill-card p-5 rounded-xl border shadow-md cursor-pointer transition-all duration-300 relative overflow-hidden group 
@@ -1785,12 +1786,12 @@ const SkillJourneySection = () => {
                             </div>
                           )}
                         </div>
-                      </motion.div>
+                      </MotionDiv>
                     </div>
                     
                     {/* 第二层：主要分支技能 */}
                     {getSkillTreeData().children?.map((skillNode: SkillNode, index: number) => (
-                      <motion.div
+                      <MotionDiv
                         key={skillNode.name}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -1877,7 +1878,7 @@ const SkillJourneySection = () => {
                             </div>
                           )}
                         </div>
-                      </motion.div>
+                      </MotionDiv>
                     ))}
                     
                     {/* 如果无数据显示提示 */}
@@ -1897,7 +1898,7 @@ const SkillJourneySection = () => {
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         {activeSkillNode.children.map((childNode: SkillNode, index: number) => (
-                          <motion.div
+                          <MotionDiv
                             key={childNode.name}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -1984,7 +1985,7 @@ const SkillJourneySection = () => {
                                 </div>
                               )}
                             </div>
-                          </motion.div>
+                          </MotionDiv>
                         ))}
                       </div>
                     </div>
@@ -1993,7 +1994,7 @@ const SkillJourneySection = () => {
                 
                 {/* 技能详情面板 - 仅当选中技能时显示 */}
                 {(activeSkillNode || activeChildNode) && (
-                  <motion.div 
+                  <MotionDiv 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
@@ -2600,7 +2601,7 @@ const SkillJourneySection = () => {
                       return level > 0 && 
                         maxLevel !== undefined &&
                         level < maxLevel && (
-                      <motion.button
+                      <MotionButton
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         className="w-full mt-6 py-3 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium shadow-md flex items-center justify-center"
@@ -2609,10 +2610,10 @@ const SkillJourneySection = () => {
                           <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                         提升技能等级
-                      </motion.button>
+                      </MotionButton>
                         )
                     })()}
-                  </motion.div>
+                  </MotionDiv>
                 )}
               </div>
             </div>
@@ -2682,7 +2683,7 @@ const SkillJourneySection = () => {
                   <TabsContent key={category.category} value={category.category} className="animate-fadeIn">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {category.books.map(book => (
-                        <motion.div
+                        <MotionDiv
                           key={book.id}
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -2749,7 +2750,7 @@ const SkillJourneySection = () => {
                               </div>
                             </CardContent>
                           </Card>
-                        </motion.div>
+                        </MotionDiv>
                       ))}
                     </div>
                   </TabsContent>

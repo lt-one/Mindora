@@ -2,7 +2,8 @@
 
 import React from 'react';
 import SiteCard, { SiteCardProps } from './SiteCard';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
+import { MotionDiv } from '@/components/motion';
 
 interface SiteGridProps {
   sites: SiteCardProps[];
@@ -34,7 +35,7 @@ export default function SiteGrid({ sites }: SiteGridProps) {
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <MotionDiv
         key={sites.length} // 用于在站点列表变化时触发动画
         variants={container}
         initial="hidden"
@@ -42,15 +43,15 @@ export default function SiteGrid({ sites }: SiteGridProps) {
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
       >
         {sites.map((site, index) => (
-          <motion.div 
+          <MotionDiv 
             key={site.name + index} 
             variants={item}
             className="h-full"
           >
             <SiteCard {...site} />
-          </motion.div>
+          </MotionDiv>
         ))}
-      </motion.div>
+      </MotionDiv>
     </AnimatePresence>
   );
 } 

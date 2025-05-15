@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { MotionDiv, MotionButton } from '@/components/motion';
 import { Filter, X, ChevronDown } from 'lucide-react';
 import { siteCategories } from '@/lib/data/good-sites';
 
@@ -50,7 +50,7 @@ export default function CategoryFilter({ onCategoryChange }: CategoryFilterProps
         </button>
 
         {isOpen && (
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
@@ -87,7 +87,7 @@ export default function CategoryFilter({ onCategoryChange }: CategoryFilterProps
                 </button>
               ))}
             </div>
-          </motion.div>
+          </MotionDiv>
         )}
       </div>
 
@@ -107,7 +107,7 @@ export default function CategoryFilter({ onCategoryChange }: CategoryFilterProps
         </div>
         <div className="flex flex-wrap gap-2">
           {siteCategories.map((category) => (
-            <motion.button
+            <MotionButton
               key={category}
               onClick={() => handleCategoryClick(category)}
               whileHover={{ scale: 1.05 }}
@@ -119,7 +119,7 @@ export default function CategoryFilter({ onCategoryChange }: CategoryFilterProps
               }`}
             >
               {category}
-            </motion.button>
+            </MotionButton>
           ))}
         </div>
       </div>

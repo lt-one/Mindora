@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { MotionDiv, MotionSpan, MotionPath, MotionSvg } from "@/components/motion";
 
 interface MindoraLogoProps {
   className?: string;
@@ -54,7 +54,7 @@ const MindoraLogo: React.FC<MindoraLogoProps> = ({
             className="relative z-10"
           >
             {/* Subtle background glow */}
-            <motion.path
+            <MotionPath
               d="M6 5L6 19L9 16L12 19L15 16L18 19V5"
               stroke="url(#mindora-glow)"
               strokeWidth="4"
@@ -67,7 +67,7 @@ const MindoraLogo: React.FC<MindoraLogoProps> = ({
             />
             
             {/* Main M path - cleaner, more balanced */}
-            <motion.path
+            <MotionPath
               d="M6 5L6 19L9 16L12 19L15 16L18 19V5"
               stroke="url(#mindora-gradient)"
               strokeWidth="2.5"
@@ -106,13 +106,13 @@ const MindoraLogo: React.FC<MindoraLogoProps> = ({
           </svg>
           
           {/* Subtle aurora animation in background */}
-          <motion.div 
+          <MotionDiv 
             className="absolute inset-0 rounded-md bg-gradient-to-b from-transparent to-violet-950/20 overflow-hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.7 }}
             transition={{ duration: 1 }}
           >
-            <motion.div 
+            <MotionDiv 
               className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-500/20 to-transparent"
               animate={{ 
                 y: [size, -size], 
@@ -126,32 +126,32 @@ const MindoraLogo: React.FC<MindoraLogoProps> = ({
                 repeatType: "reverse"
               }}
             />
-          </motion.div>
+          </MotionDiv>
         </div>
       </div>
 
       {showText && (
-        <motion.div
+        <MotionDiv
           className="relative"
           initial={{ opacity: 0, x: -5 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <motion.span
+          <MotionSpan
             className={cn(
               "font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-blue-500",
               textSizeClasses[textSize]
             )}
           >
             Mindora
-          </motion.span>
-          <motion.div 
+          </MotionSpan>
+          <MotionDiv 
             className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-blue-500 via-purple-400 to-blue-500 rounded-full"
             initial={{ width: "0%" }}
             animate={{ width: "100%" }}
             transition={{ duration: 0.8, delay: 0.5 }}
           />
-        </motion.div>
+        </MotionDiv>
       )}
     </div>
   );

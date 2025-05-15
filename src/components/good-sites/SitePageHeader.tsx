@@ -1,11 +1,11 @@
 "use client";
 import React from 'react';
-import { motion as Motion } from 'framer-motion';
+import { MotionDiv } from '@/components/motion';
 import { Compass, Bookmark, Globe, Search, Star, Heart } from 'lucide-react';
 
 export default function SitePageHeader() {
   return (
-    <Motion.div 
+    <MotionDiv 
       className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden mb-12"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -83,6 +83,6 @@ export default function SitePageHeader() {
           </div>
         </div>
       </div>
-    </Motion.div>
+    </MotionDiv>
   );
 } 
