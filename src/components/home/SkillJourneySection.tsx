@@ -2439,13 +2439,13 @@ const SkillJourneySection = () => {
                                               <li className="flex items-start">
                                                 <div className="w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
                                                   <span className="text-xs text-green-600 dark:text-green-400 font-bold">1</span>
-                                                </div>
+                          </div>
                                                 <span>掌握数据基础：学习统计学基础（描述性统计、概率分布、假设检验）；熟悉SQL查询语言，能够处理复杂数据提取；精通至少一种数据分析编程语言（Python/R），重点掌握pandas、numpy等核心库。</span>
                                               </li>
                                               <li className="flex items-start">
                                                 <div className="w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
                                                   <span className="text-xs text-green-600 dark:text-green-400 font-bold">2</span>
-                                                </div>
+                        </div>
                                                 <span>数据可视化能力：学习数据可视化原理，掌握图表类型选择原则；熟练使用可视化工具（Tableau、Power BI）或编程库（Matplotlib、Seaborn、Plotly）；能够创建交互式仪表板，讲述数据故事。</span>
                                               </li>
                                               <li className="flex items-start">
