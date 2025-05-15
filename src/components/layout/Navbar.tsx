@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Menu, X, Search, Sun, Moon, Github, Twitter, Linkedin, UserCircle } from "lucide-react";
+import { Menu, X, Search, Sun, Moon, Github, UserCircle } from "lucide-react";
 import { usePathname } from "next/navigation";
 import MindoraLogo from "../ui/MindoraLogo";
 
@@ -172,11 +172,6 @@ const Navbar = () => {
                   aria-label="GitHub">
                   <Github className="w-4 h-4" />
                 </a>
-                <a href="https://space.bilibili.com/51125264" target="_blank" rel="noopener noreferrer"
-                  className="p-1.5 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
-                  aria-label="Bilibili">
-                  <Twitter className="w-4 h-4" />
-                </a>
               </div>
             </div>
 
@@ -249,16 +244,6 @@ const Navbar = () => {
                   className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
                   aria-label="GitHub">
                   <Github className="w-5 h-5" />
-                </a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
-                  className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
-                  aria-label="Twitter">
-                  <Twitter className="w-5 h-5" />
-                </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
-                  className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
-                  aria-label="LinkedIn">
-                  <Linkedin className="w-5 h-5" />
                 </a>
               </div>
             </div>

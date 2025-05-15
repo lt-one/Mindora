@@ -32,6 +32,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
+import { MotionDiv, MotionP, MotionLi } from "@/components/motion";
 
 export default function AboutPage() {
   // 定义页面内容数据
@@ -127,7 +128,7 @@ export default function AboutPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 md:py-8 mt-4 relative">
         {/* 页面标题和描述 */}
         <div className="text-center mb-10 relative">
-          <motion.div 
+          <MotionDiv 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
@@ -140,9 +141,9 @@ export default function AboutPage() {
             <h1 className="text-3xl md:text-5xl mt-6 font-bold tracking-[0.3em] bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500 dark:from-primary dark:to-blue-400">
               关于我
             </h1>
-          </motion.div>
+          </MotionDiv>
           
-          <motion.p 
+          <MotionP 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
@@ -150,14 +151,14 @@ export default function AboutPage() {
           >
             结合<span className="font-semibold text-blue-500">产品思维</span>与<span className="font-semibold text-purple-500">数据分析</span>，
             用技术创造价值
-          </motion.p>
+          </MotionP>
           
           <Separator className="mx-auto w-2/3 md:w-1/3 my-4 bg-gradient-to-r from-blue-400/30 via-purple-500 to-blue-400/30" />
         </div>
 
         {/* 个人资料卡片 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <motion.div 
+          <MotionDiv 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -218,9 +219,9 @@ export default function AboutPage() {
                 </Button>
               </CardFooter>
             </Card>
-          </motion.div>
+          </MotionDiv>
 
-          <motion.div 
+          <MotionDiv 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -243,7 +244,7 @@ export default function AboutPage() {
                   </h3>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                     {skills.slice(0, 6).map((skill, index) => (
-                      <motion.div 
+                      <MotionDiv 
                         key={index} 
                         className="flex flex-col" 
                         initial={{ opacity: 0, x: -10 }}
@@ -255,7 +256,7 @@ export default function AboutPage() {
                           <span className="text-xs text-muted-foreground">{skill.level}%</span>
                         </div>
                         <div className="w-full h-2 bg-muted rounded-full overflow-hidden shadow-inner">
-                          <motion.div 
+                          <MotionDiv 
                             className={`h-full rounded-full ${
                               skill.category === 'analytics' ? 'bg-gradient-to-r from-blue-500 to-blue-300' :
                               skill.category === 'programming' ? 'bg-gradient-to-r from-purple-600 to-purple-400' :
@@ -267,16 +268,16 @@ export default function AboutPage() {
                             initial={{ width: 0 }}
                             animate={{ width: `${skill.level}%` }}
                             transition={{ duration: 1, delay: 0.3 + index * 0.1 }}
-                          ></motion.div>
+                          ></MotionDiv>
                         </div>
-                      </motion.div>
+                      </MotionDiv>
                     ))}
                   </div>
                 </div>
                 
                 <div className="mt-8 flex flex-wrap gap-2">
                   {skills.map((skill, index) => (
-                    <motion.div
+                    <MotionDiv
                       key={index}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -295,16 +296,16 @@ export default function AboutPage() {
                       >
                         {skill.name}
                       </Badge>
-                    </motion.div>
+                    </MotionDiv>
                   ))}
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </MotionDiv>
         </div>
 
         {/* 选项卡内容 */}
-        <motion.div 
+        <MotionDiv 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -328,7 +329,7 @@ export default function AboutPage() {
             {/* 工作经历内容 */}
             <TabsContent value="experience" className="space-y-8">
               {experiences.map((exp, index) => (
-                <motion.div
+                <MotionDiv
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -370,7 +371,7 @@ export default function AboutPage() {
                       </h4>
                       <ul className="space-y-3">
                         {exp.achievements.map((achievement, i) => (
-                          <motion.li 
+                          <MotionLi 
                             key={i} 
                             className="flex items-start group"
                             initial={{ opacity: 0, x: -10 }}
@@ -381,19 +382,19 @@ export default function AboutPage() {
                               index === 0 ? 'text-blue-500' : 'text-indigo-500'
                             } flex-shrink-0 group-hover:translate-x-1 transition-transform`} />
                             <span className="text-sm text-muted-foreground">{achievement}</span>
-                          </motion.li>
+                          </MotionLi>
                         ))}
                       </ul>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </MotionDiv>
               ))}
             </TabsContent>
             
             {/* 教育背景内容 */}
             <TabsContent value="education" className="space-y-6">
               {education.map((edu, index) => (
-                <motion.div
+                <MotionDiv
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -439,14 +440,14 @@ export default function AboutPage() {
                       </div>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </MotionDiv>
               ))}
             </TabsContent>
             
             {/* 项目经验内容 */}
             <TabsContent value="projects" className="space-y-8">
               {projects.map((project, index) => (
-                <motion.div
+                <MotionDiv
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -504,11 +505,11 @@ export default function AboutPage() {
                       </div>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </MotionDiv>
               ))}
             </TabsContent>
           </Tabs>
-        </motion.div>
+        </MotionDiv>
       </div>
     </div>
   );

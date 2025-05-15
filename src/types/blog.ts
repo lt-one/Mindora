@@ -38,9 +38,7 @@ export type BlogAuthor = {
   bio?: string;
   email?: string;
   social?: {
-    twitter?: string;
     github?: string;
-    linkedin?: string;
     website?: string;
   };
 };
