@@ -1126,7 +1126,7 @@ export default function MarketOverview() {
             </Badge>
           </div>
           
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
             {/* 涨跌对比指标 */}
             <div className="border rounded-md p-2 bg-card relative overflow-hidden">
               <div className="flex justify-between items-center">
@@ -1184,28 +1184,6 @@ export default function MarketOverview() {
               </div>
               <div className="text-xs mt-1 text-muted-foreground">
                 {new Date().toLocaleDateString('zh-CN')} 
-              </div>
-            </div>
-            
-            {/* 行业板块指标 - 保留现有的 */}
-            <div className="border rounded-md p-2 bg-card">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-sm text-muted-foreground">强势行业</span>
-              </div>
-              {!isLoading && (
-                <div className="text-xs grid grid-cols-2 gap-1">
-                  <Badge variant="outline" className="justify-between">
-                    <span>金融</span>
-                    <span className="text-rose-500">+1.2%</span>
-                  </Badge>
-                  <Badge variant="outline" className="justify-between">
-                    <span>科技</span>
-                    <span className="text-rose-500">+0.8%</span>
-                  </Badge>
-                </div>
-              )}
-              <div className="text-xs mt-1 text-muted-foreground">
-                最大涨幅板块
               </div>
             </div>
             

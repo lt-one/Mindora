@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { BookOpen, Code, Coffee, Laptop, Music, Mountain, RotateCw, Search, Lightbulb, Share2 } from "lucide-react";
-import { MotionDiv } from "@/components/motion";
+import { MotionDiv, MotionH3, MotionP, MotionSpan } from "@/components/motion";
 
 const FunFactsSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -137,6 +137,96 @@ const FunFactsSection = () => {
     }
   ];
 
+  // 定义动画变体
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3
+      }
+    }
+  };
+  
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 },
+    hover: { 
+      scale: 1.03, 
+      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      transition: { 
+        type: "spring", 
+        stiffness: 400, 
+        damping: 17 
+      }
+    }
+  };
+  
+  const workPhilosophyCardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 },
+    hover: {
+      scale: 1.05,
+      y: -8,
+      boxShadow: "0 30px 40px -15px rgba(0, 0, 0, 0.2), 0 20px 20px -15px rgba(0, 0, 0, 0.15)",
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 15
+      }
+    }
+  };
+  
+  const iconVariants = {
+    hidden: { opacity: 0, scale: 0 },
+    show: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { 
+        type: "spring", 
+        stiffness: 260, 
+        damping: 20 
+      }
+    },
+    hover: { 
+      rotate: [0, 10, -10, 5, -5, 0],
+      transition: { 
+        duration: 0.5, 
+        ease: "easeInOut" 
+      }
+    }
+  };
+
+  const textVariants = {
+    hidden: { opacity: 0, y: 10 },
+    show: { opacity: 1, y: 0 },
+    hover: { scale: 1.05 }
+  };
+
+  const lineVariants = {
+    hidden: { scaleX: 0 },
+    show: { scaleX: 0 },
+    hover: { 
+      scaleX: 1,
+      transition: { duration: 0.4 }
+    }
+  };
+  
+  const glowVariants = {
+    hidden: { opacity: 0.2, scale: 0.8 },
+    show: { opacity: 0.3, scale: 1 },
+    hover: { 
+      opacity: 0.5, 
+      scale: 1.4,
+      transition: { 
+        repeat: Infinity,
+        repeatType: "mirror" as "mirror",
+        duration: 2 
+      }
+    }
+  };
+
   return (
     <section id="funfacts-section" className="relative py-24 overflow-hidden">
       {/* 背景设计 */}
@@ -251,77 +341,124 @@ const FunFactsSection = () => {
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 dark:via-blue-400/20 to-transparent"></div>
           
           <div className="mt-12 mb-14 text-center">
-            <h3 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 mb-4">工作理念</h3>
-            <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-base">
+            <MotionH3 
+              initial={{ opacity: 0, y: -20 }}
+              animate={statsVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+              transition={{ duration: 0.7 }}
+              className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 mb-4"
+            >
+              工作理念
+            </MotionH3>
+            <MotionP 
+              initial={{ opacity: 0 }}
+              animate={statsVisible ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-base"
+            >
               指引我日常工作和持续成长的核心原则
-            </p>
+            </MotionP>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <MotionDiv
+            variants={containerVariants}
+            initial="hidden"
+            animate={statsVisible ? "show" : "hidden"}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          >
             {workPhilosophies.map((philosophy) => (
               <MotionDiv
                 key={philosophy.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={statsVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.6, delay: philosophy.delay / 1000 }}
+                variants={workPhilosophyCardVariants}
+                whileHover="hover"
                 className="group"
               >
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 p-6 h-full shadow-lg border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl transition-all duration-300">
-                        {/* 抽象背景 */}
-                        <div className={`absolute -right-24 -bottom-24 w-48 h-48 rounded-full ${
-                          philosophy.color === 'blue' ? 'bg-blue-100/30 dark:bg-blue-900/20' :
-                          philosophy.color === 'indigo' ? 'bg-indigo-100/30 dark:bg-indigo-900/20' :
-                          philosophy.color === 'green' ? 'bg-green-100/30 dark:bg-green-900/20' :
-                          philosophy.color === 'purple' ? 'bg-purple-100/30 dark:bg-purple-900/20' :
-                          'bg-slate-100/30 dark:bg-slate-900/20'
-                        } blur-3xl transition-all duration-500 group-hover:scale-125`}></div>
-                        
-                        <div className="relative text-center mb-4">
-                          <div className={`inline-flex items-center justify-center w-16 h-16 mb-6 rounded-full ${
-                            philosophy.color === 'blue' ? 'bg-blue-50 dark:bg-blue-900/30' :
-                            philosophy.color === 'indigo' ? 'bg-indigo-50 dark:bg-indigo-900/30' :
-                            philosophy.color === 'green' ? 'bg-green-50 dark:bg-green-900/30' :
-                            philosophy.color === 'purple' ? 'bg-purple-50 dark:bg-purple-900/30' :
-                            'bg-slate-50 dark:bg-slate-900/30'
-                          } shadow-sm group-hover:shadow-md transition-all duration-300`}>
-                            <div className={`${
-                              philosophy.color === 'blue' ? 'text-blue-500 dark:text-blue-400' :
-                              philosophy.color === 'indigo' ? 'text-indigo-500 dark:text-indigo-400' :
-                              philosophy.color === 'green' ? 'text-green-500 dark:text-green-400' :
-                              philosophy.color === 'purple' ? 'text-purple-500 dark:text-purple-400' :
-                              'text-slate-500 dark:text-slate-400'
-                            }`}>
-                              {philosophy.icon}
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="relative text-center z-10">
-                          <h4 className={`text-3xl font-bold mb-2 ${
-                            philosophy.color === 'blue' ? 'bg-gradient-to-r from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600' :
-                            philosophy.color === 'indigo' ? 'bg-gradient-to-r from-indigo-500 to-indigo-700 dark:from-indigo-400 dark:to-indigo-600' :
-                            philosophy.color === 'green' ? 'bg-gradient-to-r from-green-500 to-green-700 dark:from-green-400 dark:to-green-600' :
-                            philosophy.color === 'purple' ? 'bg-gradient-to-r from-purple-500 to-purple-700 dark:from-purple-400 dark:to-purple-600' :
-                            'bg-gradient-to-r from-slate-500 to-slate-700 dark:from-slate-400 dark:to-slate-600'
-                          } bg-clip-text text-transparent`}>{philosophy.value}</h4>
-                          <p className="text-slate-700 dark:text-slate-200 font-medium">{philosophy.label}</p>
-                        </div>
-                        
-                        {/* 互动装饰线 */}
-                        <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-blue-500 dark:via-blue-400 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700"></div>
+                <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-800/80 dark:backdrop-blur-md p-6 h-full shadow-lg border border-slate-200/50 dark:border-slate-700/60 hover:dark:border-slate-500/70 hover:shadow-xl transition-all duration-300">
+                  {/* 抽象背景 */}
+                  <MotionDiv
+                    variants={glowVariants}
+                    className={`absolute -right-24 -bottom-24 w-48 h-48 rounded-full ${
+                      philosophy.color === 'blue' ? 'bg-blue-100/30 dark:bg-blue-900/20' :
+                      philosophy.color === 'indigo' ? 'bg-indigo-100/30 dark:bg-indigo-900/20' :
+                      philosophy.color === 'green' ? 'bg-green-100/30 dark:bg-green-900/20' :
+                      philosophy.color === 'purple' ? 'bg-purple-100/30 dark:bg-purple-900/20' :
+                      'bg-slate-100/30 dark:bg-slate-900/20'
+                    } blur-3xl`}
+                  ></MotionDiv>
+                  
+                  <div className="relative text-center mb-4">
+                    <MotionDiv
+                      variants={iconVariants}
+                      whileHover="hover"
+                      className={`inline-flex items-center justify-center w-16 h-16 mb-6 rounded-full ${
+                        philosophy.color === 'blue' ? 'bg-blue-50 dark:bg-blue-700/40' :
+                        philosophy.color === 'indigo' ? 'bg-indigo-50 dark:bg-indigo-700/40' :
+                        philosophy.color === 'green' ? 'bg-green-50 dark:bg-green-700/40' :
+                        philosophy.color === 'purple' ? 'bg-purple-50 dark:bg-purple-700/40' :
+                        'bg-slate-50 dark:bg-slate-700/40'
+                      } shadow-sm`}
+                    >
+                      <div className={`${
+                        philosophy.color === 'blue' ? 'text-blue-500 dark:text-blue-400' :
+                        philosophy.color === 'indigo' ? 'text-indigo-500 dark:text-indigo-400' :
+                        philosophy.color === 'green' ? 'text-green-500 dark:text-green-400' :
+                        philosophy.color === 'purple' ? 'text-purple-500 dark:text-purple-400' :
+                        'text-slate-500 dark:text-slate-400'
+                      }`}>
+                        {philosophy.icon}
                       </div>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" className="p-4 max-w-xs bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-700 shadow-xl">
-                      <p>{philosophy.description}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                    </MotionDiv>
+                  </div>
+                  
+                  <div className="relative text-center z-10">
+                    <MotionH3
+                      variants={textVariants}
+                      className={`text-3xl font-bold mb-2 ${
+                        philosophy.color === 'blue' ? 'bg-gradient-to-r from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600' :
+                        philosophy.color === 'indigo' ? 'bg-gradient-to-r from-indigo-500 to-indigo-700 dark:from-indigo-400 dark:to-indigo-600' :
+                        philosophy.color === 'green' ? 'bg-gradient-to-r from-green-500 to-green-700 dark:from-green-400 dark:to-green-600' :
+                        philosophy.color === 'purple' ? 'bg-gradient-to-r from-purple-500 to-purple-700 dark:from-purple-400 dark:to-purple-600' :
+                        'bg-gradient-to-r from-slate-500 to-slate-700 dark:from-slate-400 dark:to-slate-600'
+                      } bg-clip-text text-transparent`}
+                    >{philosophy.value}</MotionH3>
+                    <MotionP 
+                      variants={textVariants}
+                      className="text-slate-700 dark:text-slate-200 font-medium"
+                    >{philosophy.label}</MotionP>
+                    
+                    {/* 渐变显示描述 */}
+                    <MotionDiv
+                      initial={{ opacity: 0, height: 0 }}
+                      whileHover={{ opacity: 1, height: 'auto', transition: { duration: 0.3 } }}
+                      className="mt-4 overflow-hidden"
+                    >
+                      <MotionP 
+                        variants={textVariants}
+                        className={`text-sm ${
+                          philosophy.color === 'blue' ? 'text-blue-700 dark:text-blue-300' :
+                          philosophy.color === 'indigo' ? 'text-indigo-700 dark:text-indigo-300' :
+                          philosophy.color === 'green' ? 'text-green-700 dark:text-green-300' :
+                          philosophy.color === 'purple' ? 'text-purple-700 dark:text-purple-300' :
+                          'text-slate-700 dark:text-slate-300'
+                        }`}
+                      >{philosophy.description}</MotionP>
+                    </MotionDiv>
+                  </div>
+                  
+                  {/* 互动装饰线 */}
+                  <MotionDiv
+                    variants={lineVariants}
+                    className={`absolute inset-x-0 bottom-0 h-1 ${
+                      philosophy.color === 'blue' ? 'bg-gradient-to-r from-blue-400 to-blue-600 dark:from-blue-500 dark:to-blue-700' :
+                      philosophy.color === 'indigo' ? 'bg-gradient-to-r from-indigo-400 to-indigo-600 dark:from-indigo-500 dark:to-indigo-700' :
+                      philosophy.color === 'green' ? 'bg-gradient-to-r from-green-400 to-green-600 dark:from-green-500 dark:to-green-700' :
+                      philosophy.color === 'purple' ? 'bg-gradient-to-r from-purple-400 to-purple-600 dark:from-purple-500 dark:to-purple-700' :
+                      'bg-gradient-to-r from-blue-400 to-blue-600 dark:from-blue-500 dark:to-blue-700'
+                    }`}
+                  ></MotionDiv>
+                </div>
               </MotionDiv>
             ))}
-          </div>
+          </MotionDiv>
         </div>
       </div>
     </section>
