@@ -134,13 +134,15 @@ const HeroSection = () => {
               你好 <span className="animate-wave inline-block">👋</span>
             </p>
             
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-3">
               我是<span className="text-blue-600 dark:text-blue-400 relative">
                 刘涛
                 <span className="absolute -bottom-1 left-0 w-full h-1 bg-blue-600 dark:bg-blue-400 rounded-full opacity-30"></span>
-              </span>，
-              <span className="whitespace-nowrap inline-block mt-2 text-[90%]">{text}<span className={`ml-1 inline-block h-6 md:h-8 w-1 bg-blue-600 dark:bg-blue-400 ${isTyping ? 'animate-blink' : ''}`}></span></span>
+              </span>
             </h1>
+            <h2 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white -mt-1 mb-2">
+              <span className="whitespace-nowrap inline-block text-[90%]">{text}<span className={`ml-1 inline-block h-6 md:h-8 w-1 bg-blue-600 dark:bg-blue-400 ${isTyping ? 'animate-blink' : ''}`}></span></span>
+            </h2>
             
             <div className="grid grid-cols-3 gap-2 sm:gap-4 max-w-lg py-1">
               <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-2 md:p-3 text-center">
