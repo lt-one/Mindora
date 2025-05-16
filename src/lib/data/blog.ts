@@ -1,4 +1,5 @@
 import { BlogCategory, BlogTag, BlogPost, BlogAuthor, TOCItem } from '@/types/blog';
+import * as blogApi from '@/lib/api/blog';
 
 /**
  * 博客分类数据
@@ -158,95 +159,45 @@ export const blogPosts: BlogPost[] = [
     id: '1',
     title: 'Next.js 14深度解析：新特性与最佳实践',
     slug: 'nextjs-14-deep-dive',
-    excerpt: 'Next.js 14带来了哪些改进？本文深度解析其新特性、性能优化和开发体验提升，并提供实用的最佳实践指南。',
+    excerpt: '详细探讨Next.js 14的新特性、性能优化以及最佳实践，帮助开发者构建更高效、更可靠的React应用。',
     content: `
 # Next.js 14深度解析：新特性与最佳实践
 
-## 引言
+Next.js 14带来了许多令人兴奋的新特性和改进，本文将深入探讨这些变化，并分享如何在实际项目中应用这些最佳实践。
 
-Next.js作为React框架的佼佼者，一直在不断创新和优化。最新发布的Next.js 14版本带来了一系列令人兴奋的新特性和改进，从性能优化到开发体验提升，全方位增强了框架能力。本文将深入解析这些变化，并提供实用的最佳实践指南。
+## 服务器组件和客户端组件
 
-## Next.js是什么
+Next.js 14进一步完善了React服务器组件的实现，使开发者能够更灵活地控制组件的渲染位置。
 
-Next.js是一个用于构建现代Web应用的React框架，它提供了丰富的功能和优化，使开发者能够创建高性能、SEO友好的应用。
+## App Router的进一步优化
 
-### 核心特性
+App Router现在更加稳定和高效，本文深入讨论了其架构改进。
 
-Next.js的核心特性包括服务端渲染(SSR)、静态站点生成(SSG)、增量静态再生成(ISR)、文件系统路由、API路由等。这些特性共同构成了Next.js强大的技术基础。
+## Server Actions的增强
 
-### 与其他框架的比较
+Server Actions得到了显著的增强，使表单处理和服务器交互变得更加简单和安全。
 
-与传统的React应用相比，Next.js提供了更完整的解决方案，特别是在服务端渲染和静态生成方面。与Gatsby等其他框架相比，Next.js的混合渲染策略提供了更大的灵活性。
+## 更智能的缓存策略
 
-## 开始使用Next.js
-
-### 安装与项目设置
-
-使用create-next-app快速创建项目是最简单的方式：
-
-\`\`\`bash
-npx create-next-app@latest my-nextjs-app
-cd my-nextjs-app
-npm run dev
-\`\`\`
-
-### 项目结构介绍
-
-Next.js 14推荐的项目结构如下：
-
-\`\`\`
-my-nextjs-app/
-├── app/          # 应用路由目录（App Router）
-├── components/   # 共享组件
-├── lib/          # 工具函数和库
-├── public/       # 静态资源
-└── ...
-\`\`\`
-
-## Next.js路由系统
-
-Next.js 14强化了App Router，完全支持React Server Components、嵌套路由和布局。文件系统路由使得创建和管理路由变得简单直观。
-
-## 数据获取策略
-
-Next.js 14优化了数据获取策略，支持在服务器组件中直接获取数据，无需使用getServerSideProps或getStaticProps。
-
-\`\`\`tsx
-// app/page.tsx
-export default async function Page() {
-  const data = await fetch('https://api.example.com/data');
-  const json = await data.json();
-  
-  return <main>{/* 使用数据渲染UI */}</main>
-}
-\`\`\`
-
-## 部署Next.js应用
-
-Next.js应用可以部署到Vercel平台，享受自动CI/CD、全球CDN等优势。也可以部署到自己的服务器或其他云平台。
-
-## 总结与展望
-
-Next.js 14是一个重要的版本更新，通过改进性能、简化开发流程和增强功能，使框架更加强大和易用。随着Web开发的不断发展，Next.js将继续引领React应用开发的潮流。
+Next.js 14改进了缓存机制，使开发者能够更精细地控制数据和页面的缓存策略。
     `,
-    coverImage: '/images/blog/PlaceImage.png',
-    publishedAt: '2023-10-28T09:00:00Z',
-    updatedAt: '2023-10-30T11:30:00Z',
+    coverImage: '/images/blog/nextjs-14/cover.jpg',
+    publishedAt: '2023-10-28T17:00:00Z',
+    updatedAt: '2023-10-30T09:15:00Z',
     author: author,
     categories: ['frontend-development', 'react-ecosystem'],
-    tags: ['React', 'Next.js', '服务端渲染', '前端架构'],
+    tags: ['Next.js', 'React', '前端框架', 'App Router'],
     featured: true,
     status: 'published',
-    readingTime: '8分钟',
-    viewCount: 1250,
-    likeCount: 78,
-    toc: tocExample1,
-    relatedPosts: ['2', '5'],
+    readingTime: '12分钟',
+    viewCount: 2460,
+    toc: [],
+    relatedPosts: ['2', '9'],
     contentType: 'article',
     seo: {
-      title: 'Next.js 14完全指南：新特性解析与实战经验分享',
-      description: '深入探讨Next.js 14的新特性、性能优化和最佳实践，帮助开发者构建高性能、可维护的现代Web应用。',
-      keywords: 'Next.js 14, React, 服务端渲染, App Router, Server Components',
+      title: 'Next.js 14完全指南：新特性、性能优化与最佳实践',
+      description: '深入解析Next.js 14的核心更新内容，包括服务器组件、App Router优化、缓存策略和性能提升，以及在实际项目中的最佳应用方式。',
+      keywords: 'Next.js 14, React服务器组件, App Router, 前端框架, Server Actions',
     },
   },
   {
@@ -285,7 +236,6 @@ TypeScript允许我们为组件的props和state添加类型定义，提高代码
     status: 'published',
     readingTime: '12分钟',
     viewCount: 890,
-    likeCount: 45,
     toc: [],
     relatedPosts: ['1', '3'],
     contentType: 'tutorial',
@@ -335,7 +285,6 @@ TypeScript允许我们为组件的props和state添加类型定义，提高代码
     status: 'published',
     readingTime: '10分钟',
     viewCount: 1540,
-    likeCount: 94,
     toc: [],
     relatedPosts: ['7', '8'],
     contentType: 'article',
@@ -365,7 +314,6 @@ export const moreBlogPosts: BlogPost[] = [
     status: 'published',
     readingTime: '15分钟',
     viewCount: 2350,
-    likeCount: 137,
     toc: [],
     contentType: 'tutorial',
   },
@@ -385,7 +333,6 @@ export const moreBlogPosts: BlogPost[] = [
     status: 'published',
     readingTime: '11分钟',
     viewCount: 1890,
-    likeCount: 105,
     toc: [],
     relatedPosts: ['8'],
     contentType: 'article',
@@ -406,7 +353,6 @@ export const moreBlogPosts: BlogPost[] = [
     status: 'published',
     readingTime: '13分钟',
     viewCount: 2120,
-    likeCount: 124,
     toc: [],
     relatedPosts: ['2', '5'],
     contentType: 'article',
@@ -427,7 +373,6 @@ export const moreBlogPosts: BlogPost[] = [
     status: 'published',
     readingTime: '18分钟',
     viewCount: 1650,
-    likeCount: 96,
     toc: [],
     relatedPosts: ['3', '8'],
     contentType: 'tutorial',
@@ -448,7 +393,6 @@ export const moreBlogPosts: BlogPost[] = [
     status: 'published',
     readingTime: '14分钟',
     viewCount: 1780,
-    likeCount: 108,
     toc: [],
     relatedPosts: ['3', '4', '7'],
     contentType: 'case-study',
@@ -469,7 +413,6 @@ export const moreBlogPosts: BlogPost[] = [
     status: 'published',
     readingTime: '16分钟',
     viewCount: 2450,
-    likeCount: 142,
     toc: [],
     relatedPosts: ['1', '10'],
     contentType: 'case-study',
@@ -490,7 +433,6 @@ export const moreBlogPosts: BlogPost[] = [
     status: 'published',
     readingTime: '9分钟',
     viewCount: 1920,
-    likeCount: 115,
     toc: [],
     relatedPosts: ['4'],
     contentType: 'article',
@@ -504,103 +446,54 @@ export const allBlogPosts: BlogPost[] = [...blogPosts, ...moreBlogPosts];
  * 获取所有博客文章
  */
 export async function getAllBlogPosts(): Promise<BlogPost[]> {
-  return allBlogPosts;
+  return blogApi.getAllBlogPosts();
 }
 
 /**
  * 获取特定分类的博客文章
  */
 export async function getBlogPostsByCategory(categorySlug: string): Promise<BlogPost[]> {
-  return allBlogPosts.filter(post => post.categories.includes(categorySlug));
+  return blogApi.getBlogPostsByCategory(categorySlug);
 }
 
 /**
  * 获取特定标签的博客文章
  */
 export async function getBlogPostsByTag(tagSlug: string): Promise<BlogPost[]> {
-  // 首先根据slug找到标签名称
-  const tag = tags.find(t => t.slug === tagSlug);
-  if (!tag) return [];
-  
-  // 然后用标签名称筛选文章
-  return allBlogPosts.filter(post => post.tags.includes(tag.name));
+  return blogApi.getBlogPostsByTag(tagSlug);
 }
 
 /**
  * 根据slug获取单篇博客文章
  */
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
-  return allBlogPosts.find(post => post.slug === slug) || null;
+  return blogApi.getBlogPostBySlug(slug);
 }
 
 /**
  * 获取精选博客文章
  */
 export async function getFeaturedBlogPosts(): Promise<BlogPost[]> {
-  return allBlogPosts.filter(post => post.featured);
+  return blogApi.getFeaturedBlogPosts();
 }
 
 /**
  * 获取最新的博客文章
  */
 export async function getLatestBlogPosts(count: number = 5): Promise<BlogPost[]> {
-  return [...allBlogPosts]
-    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-    .slice(0, count);
+  return blogApi.getLatestBlogPosts(count);
 }
 
 /**
  * 获取相关博客文章
  */
 export async function getRelatedBlogPosts(postSlug: string, count: number = 3): Promise<BlogPost[]> {
-  const currentPost = await getBlogPostBySlug(postSlug);
-  if (!currentPost) return [];
-  
-  // 如果有明确指定的相关文章，优先返回这些
-  if (currentPost.relatedPosts && currentPost.relatedPosts.length > 0) {
-    const relatedPosts = await Promise.all(
-      currentPost.relatedPosts.map(async (id) => {
-        const post = allBlogPosts.find(p => p.id === id);
-        return post;
-      })
-    );
-    return relatedPosts.filter(Boolean) as BlogPost[];
-  }
-  
-  // 否则，按相同分类和标签查找相关文章
-  return allBlogPosts
-    .filter(post => post.slug !== postSlug) // 排除当前文章
-    .filter(post => {
-      // 检查是否有共同的分类或标签
-      const commonCategories = post.categories.filter(cat => currentPost.categories.includes(cat));
-      const commonTags = post.tags.filter(tag => currentPost.tags.includes(tag));
-      return commonCategories.length > 0 || commonTags.length > 0;
-    })
-    .sort(() => 0.5 - Math.random()) // 随机排序
-    .slice(0, count);
+  return blogApi.getRelatedBlogPosts(postSlug, count);
 }
 
 /**
  * 获取博客归档数据
  */
 export async function getBlogArchives(): Promise<{[year: string]: {[month: string]: BlogPost[]}}> {
-  const archives: {[year: string]: {[month: string]: BlogPost[]}} = {};
-  
-  allBlogPosts.forEach(post => {
-    const date = new Date(post.publishedAt);
-    const year = date.getFullYear().toString();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    
-    if (!archives[year]) {
-      archives[year] = {};
-    }
-    
-    if (!archives[year][month]) {
-      archives[year][month] = [];
-    }
-    
-    archives[year][month].push(post);
-  });
-  
-  return archives;
+  return blogApi.getBlogArchives();
 } 

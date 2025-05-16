@@ -6,7 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:seed:blog": "ts-node --transpile-only src/lib/db/seed-blog.ts",
+    "db:seed:blog:mjs": "node src/lib/db/seed-blog.mjs",
+    "db:seed:user": "node src/lib/db/seed-user.mjs",
+    "db:check": "ts-node --transpile-only src/lib/db/setup.ts",
+    "prisma:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "node prisma/seed.js"
   },
   "npmConfig": {
     "legacy-peer-deps": true
@@ -46,6 +53,7 @@
     "csv-parse": "^5.6.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
+    "dotenv": "^16.4.5",
     "echarts": "^5.6.0",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
@@ -85,6 +93,7 @@
     "prisma": "^6.6.0",
     "tailwind-scrollbar": "^4.0.2",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "tw-animate-css": "^1.2.8",
     "typescript": "^5"
   }

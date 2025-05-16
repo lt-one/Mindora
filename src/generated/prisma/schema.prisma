@@ -1,0 +1,320 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 用户模型
+model User {
+  id        String     @id @default(cuid())
+  name      String
+  email     String     @unique
+  password  String
+  image     String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  blogPosts BlogPost[]
+  projects  Project[]
+  todoItems TodoItem[]
+  reviews   Review[]
+  notes     NoteCard[]
+  contacts  Contact[] // 接收到的联系请求
+}
+
+// 项目模型
+model Project {
+  id           String   @id @default(cuid())
+  title        String
+  description  String   @db.Text
+  imageUrl     String?
+  demoUrl      String?
+  githubUrl    String?
+  technologies Json // 修改为Json类型
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// 博客文章模型
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  content     String    @db.LongText
+  excerpt     String?   @db.Text
+  coverImage  String?
+  tags        Json // 修改为Json类型
+  categories  Json? // 添加categories字段，使用Json类型
+  published   Boolean   @default(false)
+  isFeatured  Boolean   @default(false) // 添加isFeatured字段
+  viewCount   Int       @default(0) // 添加viewCount字段
+  likeCount   Int       @default(0) // 添加likeCount字段
+  publishedAt DateTime? // 添加publishedAt字段
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([slug])
+}
+
+// 待办事项模型
+model TodoItem {
+  id          String        @id @default(cuid())
+  title       String
+  description String?       @db.Text
+  completed   Boolean       @default(false)
+  priority    String?
+  dueDate     DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId  String?
+  category    TodoCategory? @relation(fields: [categoryId], references: [id])
+
+  @@index([userId])
+  @@index([categoryId])
+}
+
+// Todo分类模型
+model TodoCategory {
+  id        String     @id @default(cuid())
+  name      String
+  color     String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  todoItems TodoItem[]
+}
+
+// 金融数据模型
+model FinancialData {
+  id        String   @id @default(cuid())
+  date      DateTime
+  value     Float
+  source    String?
+  category  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+  @@index([category])
+}
+
+// 市场趋势模型
+model MarketTrend {
+  id          String   @id @default(cuid())
+  date        DateTime
+  trendName   String
+  trendValue  Float
+  description String?  @db.Text
+  source      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
+  @@index([trendName])
+}
+
+// 行业指标模型
+model IndustryMetric {
+  id           String   @id @default(cuid())
+  date         DateTime
+  industryName String
+  metricName   String
+  metricValue  Float
+  source       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([date])
+  @@index([industryName])
+  @@index([metricName])
+}
+
+// 好站分享模型
+model GoodSite {
+  id           String   @id @default(cuid())
+  name         String // 网站名称
+  url          String // 网站URL
+  description  String   @db.Text // 详细描述
+  shortDesc    String // 简短描述（卡片展示用）
+  category     String // 主分类
+  tags         Json // 标签数组，修改为Json类型
+  rating       Float // 评分（1-5）
+  screenshots  Json // 截图URL数组，修改为Json类型
+  useCases     Json // 使用场景，修改为Json类型
+  tips         String?  @db.Text // 使用技巧
+  experience   String?  @db.Text // 个人体验
+  isFree       Boolean // 是否免费
+  hasPremium   Boolean // 是否有付费版本
+  relatedSites Json // 相关网站ID，修改为Json类型
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  isActive     Boolean  @default(true) // 是否仍然有效/活跃
+  viewCount    Int      @default(0) // 查看次数
+  featured     Boolean  @default(false) // 是否为特色资源
+
+  @@index([category])
+}
+
+// 文档卡片模型
+model NoteCard {
+  id        String   @id @default(cuid())
+  title     String // 卡片标题
+  content   String   @db.Text // 卡片内容
+  color     String? // 卡片颜色
+  tags      Json // 标签数组，修改为Json类型
+  status    String   @default("active") // 状态：active, archived, completed
+  priority  Int? // 优先级（可选）
+  position  Int? // 排序位置
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String // 创建者ID
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+}
+
+// 观后感文章模型
+model Review {
+  id             String    @id @default(cuid())
+  title          String // 文章标题
+  slug           String    @unique // URL友好的标识
+  content        String    @db.Text // 文章内容
+  excerpt        String?   @db.Text // 文章摘要
+  coverImage     String? // 封面图片URL
+  rating         Float? // 评分（1-10）
+  isPublished    Boolean   @default(false) // 是否已发布
+  publishedAt    DateTime? // 发布时间
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  viewCount      Int       @default(0) // 浏览次数
+  likeCount      Int       @default(0) // 点赞数
+  categoryId     String // 分类ID
+  category       Category  @relation(fields: [categoryId], references: [id])
+  tags           Tag[]     @relation("ReviewToTag")
+  workId         String // 作品ID
+  work           Work      @relation(fields: [workId], references: [id]) // 关联的作品
+  comments       Comment[] // 评论
+  isFeatured     Boolean   @default(false) // 是否精选
+  spoilerWarning Boolean   @default(false) // 是否有剧透警告
+  userId         String // 创建者ID
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  relatedReviews Review[]  @relation("RelatedReviews")
+  relatedTo      Review[]  @relation("RelatedReviews")
+
+  @@index([userId])
+  @@index([slug])
+  @@index([categoryId])
+  @@index([workId])
+}
+
+model Work {
+  id            String   @id @default(cuid())
+  title         String // 作品标题
+  originalTitle String? // 原始标题（非中文作品）
+  type          String // 类型：movie, series, book, etc.
+  year          Int? // 发行/出版年份
+  creator       String? // 导演/作者
+  imageUrl      String? // 作品图片URL
+  externalLink  String? // 外部链接（豆瓣、IMDb等）
+  description   String?  @db.Text // 作品简介
+  reviews       Review[] // 关联的评论
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([type])
+  @@index([year])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String // 分类名称
+  slug        String   @unique // URL友好的标识
+  description String?  @db.Text // 分类描述
+  reviews     Review[] // 关联的文章
+
+  @@index([slug])
+}
+
+model Tag {
+  id      String   @id @default(cuid())
+  name    String // 标签名称
+  slug    String   @unique // URL友好的标识
+  reviews Review[] @relation("ReviewToTag")
+
+  @@index([slug])
+}
+
+model Comment {
+  id          String    @id @default(cuid())
+  content     String    @db.Text // 评论内容
+  authorName  String // 评论者名称
+  authorEmail String? // 评论者邮箱
+  isApproved  Boolean   @default(false) // 是否已审核
+  reviewId    String // 关联的文章ID
+  review      Review    @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  parentId    String? // 父评论ID（用于回复）
+  parent      Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies     Comment[] @relation("CommentReplies")
+
+  @@index([reviewId])
+  @@index([parentId])
+}
+
+// 联系页面模型
+model Contact {
+  id         String    @id @default(cuid())
+  name       String // 联系人姓名
+  email      String // 联系人邮箱
+  subject    String // 联系主题
+  purpose    String // 联系目的
+  message    String    @db.Text // 消息内容
+  createdAt  DateTime  @default(now()) // 创建时间
+  processed  Boolean   @default(false) // 是否已处理
+  responseId String? // 关联的回复ID
+  response   Response? @relation(fields: [responseId], references: [id])
+  ipAddress  String? // IP地址（可选，用于防滥用）
+  referrer   String? // 来源页面
+  attachment String? // 附件链接（如有）
+  userId     String? // 接收者ID（网站所有者）
+  user       User?     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([responseId])
+  @@index([email])
+}
+
+model Response {
+  id       String    @id @default(cuid())
+  content  String    @db.Text // 回复内容
+  sentAt   DateTime  @default(now()) // 发送时间
+  contacts Contact[] // 关联的联系请求
+}
+
+model SocialLink {
+  id           String  @id @default(cuid())
+  platform     String // 平台名称（LinkedIn, GitHub等）
+  url          String // 链接地址
+  icon         String // 图标
+  displayOrder Int // 显示顺序
+  isActive     Boolean @default(true) // 是否启用
+}

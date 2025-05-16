@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -39,7 +38,7 @@ model Project {
   imageUrl     String?
   demoUrl      String?
   githubUrl    String?
-  technologies String[]
+  technologies Json     // 修改为Json类型
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   userId       String
@@ -50,18 +49,22 @@ model Project {
 
 // 博客文章模型
 model BlogPost {
-  id         String   @id @default(cuid())
-  title      String
-  slug       String   @unique
-  content    String   @db.LongText
-  excerpt    String?  @db.Text
-  coverImage String?
-  tags       String[]
-  published  Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String   @db.LongText
+  excerpt     String?  @db.Text
+  coverImage  String?
+  tags        Json     // 修改为Json类型
+  categories  Json?    // 添加categories字段，使用Json类型
+  published   Boolean  @default(false)
+  isFeatured  Boolean  @default(false) // 添加isFeatured字段
+  viewCount   Int      @default(0)    // 添加viewCount字段
+  publishedAt DateTime? // 添加publishedAt字段
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([slug])
@@ -149,15 +152,15 @@ model GoodSite {
   description  String    @db.Text // 详细描述
   shortDesc    String    // 简短描述（卡片展示用）
   category     String    // 主分类
-  tags         String[]  // 标签数组
+  tags         Json      // 标签数组，修改为Json类型
   rating       Float     // 评分（1-5）
-  screenshots  String[]  // 截图URL数组
-  useCases     String[]  // 使用场景
+  screenshots  Json      // 截图URL数组，修改为Json类型
+  useCases     Json      // 使用场景，修改为Json类型
   tips         String?   @db.Text // 使用技巧
   experience   String?   @db.Text // 个人体验
   isFree       Boolean   // 是否免费
   hasPremium   Boolean   // 是否有付费版本
-  relatedSites String[]  // 相关网站ID
+  relatedSites Json      // 相关网站ID，修改为Json类型
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   isActive     Boolean   @default(true) // 是否仍然有效/活跃
@@ -165,7 +168,6 @@ model GoodSite {
   featured     Boolean   @default(false) // 是否为特色资源
 
   @@index([category])
-  @@index([tags])
 }
 
 // 文档卡片模型
@@ -174,7 +176,7 @@ model NoteCard {
   title       String    // 卡片标题
   content     String    @db.Text // 卡片内容
   color       String?   // 卡片颜色
-  tags        String[]  // 标签数组
+  tags        Json      // 标签数组，修改为Json类型
   status      String    @default("active") // 状态：active, archived, completed
   priority    Int?      // 优先级（可选）
   position    Int?      // 排序位置
@@ -184,7 +186,6 @@ model NoteCard {
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-  @@index([tags])
   @@index([status])
 }
 

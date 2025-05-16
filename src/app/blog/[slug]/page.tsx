@@ -3,11 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { 
-  getBlogPostBySlug, 
-  getRelatedBlogPosts 
-} from "@/lib/data/blog";
+  getBlogPostBySlug
+} from "@/lib/api/blog"; // 修改导入路径，使用API而不是data
+import { getRelatedBlogPosts } from "@/lib/data/blog"; // 保留静态数据作为后备
 import { formatDateTime } from "@/lib/utils";
-import { Calendar, Clock, Eye, Heart, Tag, ArrowLeft, Share2 } from "lucide-react";
+import { Calendar, Clock, Eye, Tag, ArrowLeft, Share2 } from "lucide-react";
 import MarkdownContent from "@/components/blog/MarkdownContent";
 import TableOfContents from "@/components/blog/TableOfContents";
 import BlogPostCard from "@/components/blog/BlogPostCard";
@@ -71,8 +71,18 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
     notFound();
   }
   
-  // 获取相关文章
-  const relatedPosts = await getRelatedBlogPosts(resolvedParams.slug, 3);
+  // 获取相关文章 - 使用try-catch防止失败影响整个页面
+  let relatedPosts: any[] = [];
+  try {
+    // 优先尝试从API获取
+    const relatedFromApi = await getRelatedBlogPosts(resolvedParams.slug, 3);
+    if (relatedFromApi && relatedFromApi.length > 0) {
+      relatedPosts = relatedFromApi;
+    }
+  } catch (error) {
+    console.error('Failed to fetch related posts:', error);
+    // 错误时，不显示相关文章，保持空数组
+  }
   
   // 格式化时间
   const publishedDate = formatDateTime(post.publishedAt);
@@ -132,10 +142,6 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
                   <Eye className="w-4 h-4 mr-1" />
                   <span>{post.viewCount}次阅读</span>
                 </div>
-                <div className="flex items-center">
-                  <Heart className="w-4 h-4 mr-1" />
-                  <span>{post.likeCount}次点赞</span>
-                </div>
               </div>
               
               {/* 文章分类和标签 */}
@@ -144,7 +150,7 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
                   {post.categories.map((categorySlug, index) => (
                     <Link
                       key={index}
-                      href={`/blog?category=${categorySlug}`}
+                      href={`/blog/category/${categorySlug}`}
                       className="px-3 py-1.5 text-sm bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800/30 transition-colors"
                     >
                       {categorySlug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
@@ -153,7 +159,7 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
                   {post.tags.map((tag, index) => (
                     <Link
                       key={index}
-                      href={`/blog?tag=${tag.toLowerCase().replace(/ /g, '-')}`}
+                      href={`/blog/tag/${tag.toLowerCase().replace(/ /g, '-')}`}
                       className="inline-flex items-center px-3 py-1.5 text-sm bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-800/30 transition-colors"
                     >
                       <Tag className="w-3.5 h-3.5 mr-1" />
@@ -204,12 +210,6 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
                     {/* 可添加其他社交分享按钮 */}
                   </div>
                 </div>
-                <div>
-                  <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                    <Heart className="w-5 h-5" />
-                    <span>点赞 ({post.likeCount})</span>
-                  </button>
-                </div>
               </div>
             </div>
           </div>
@@ -225,7 +225,7 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
           </div>
         </div>
         
-        {/* 相关文章 */}
+        {/* 相关文章 - 只在有相关文章时显示 */}
         {relatedPosts.length > 0 && (
           <div className="mt-12">
             <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 dark:border-gray-800">

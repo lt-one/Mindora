@@ -82,7 +82,6 @@ export interface BlogPost {
   status: 'published' | 'draft';
   readingTime: string;
   viewCount: number;
-  likeCount: number;
   toc: TOCItem[];
   relatedPosts?: string[];
   seo?: BlogSEO;
