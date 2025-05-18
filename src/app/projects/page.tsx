@@ -3,10 +3,10 @@ import { Suspense } from "react";
 import { 
   getAllProjects, 
   getProjectsByCategory, 
-  getProjectsByTechnology, 
-  categories, 
-  technologies 
-} from "@/lib/data/projects";
+  getProjectsByTechnology,
+  getAllCategories,
+  getAllTechnologies
+} from "@/lib/api/projects";
 import ProjectFilter from "@/components/projects/ProjectFilter";
 import ProjectGrid from "@/components/projects/ProjectGrid";
 import TechTagList from "@/components/projects/TechTagList";
@@ -63,14 +63,16 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   
   const projects = await getFilteredProjects();
   const allProjects = await getAllProjects();
+  const categories = getAllCategories();
+  const technologies = getAllTechnologies();
   
   // 统计数据
   const projectStats = {
     total: allProjects.length,
     featured: allProjects.filter(p => p.featured).length,
     webApps: allProjects.filter(p => p.categories.includes("web-app")).length,
-    dataViz: allProjects.filter(p => p.categories.includes("data-visualization")).length,
-    aiProjects: allProjects.filter(p => p.categories.includes("ai")).length,
+    dataViz: allProjects.filter(p => p.categories.includes("data-viz")).length,
+    aiProjects: allProjects.filter(p => p.categories.includes("ai-ml")).length,
   };
   
   return (

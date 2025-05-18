@@ -6,8 +6,8 @@ import {
   getBlogPostsByTag,
   getLatestBlogPosts,
   getFeaturedBlogPosts,
-  categories as originalCategories, 
-  tags as originalTags
+  getCategoriesWithCount,
+  getTagsWithCount
 } from "@/lib/data/blog";
 import BlogFilter from "@/components/blog/BlogFilter";
 import BlogList from "@/components/blog/BlogList";
@@ -66,26 +66,11 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     .sort((a, b) => b.viewCount - a.viewCount)
     .slice(0, 4);
   
-  // 动态计算每个分类的文章数量
-  const categories: BlogCategory[] = originalCategories.map(cat => {
-    const categoryPosts = allPosts.filter(post => post.categories.includes(cat.slug));
-    return {
-      ...cat,
-      count: categoryPosts.length // 用实际数量替换硬编码的数量
-    };
-  });
+  // 从数据库获取实际的分类数据
+  const categories = await getCategoriesWithCount();
   
-  // 动态计算每个标签的文章数量
-  const tagsWithCount: BlogTag[] = originalTags.map(tag => {
-    // 计算具有该标签的文章数量
-    const tagPosts = allPosts.filter(post => 
-      post.tags.some(postTag => postTag.toLowerCase().replace(/ /g, '-') === tag.slug)
-    );
-    return {
-      ...tag,
-      count: tagPosts.length // 用实际数量替换硬编码的数量
-    };
-  });
+  // 从数据库获取实际的标签数据
+  const tagsWithCount = await getTagsWithCount();
   
   // 获取筛选后的博客文章
   const getFilteredPosts = async () => {
@@ -158,7 +143,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             <div className="w-full h-[400px] rounded-xl bg-gray-200 dark:bg-gray-800 animate-pulse mb-8"></div>
           }>
             <div className="mb-12">
-              <FeaturedPostsCarouselShadcn posts={latestPosts.slice(0, 3)} />
+              <FeaturedPostsCarouselShadcn posts={featuredPosts.length > 0 ? featuredPosts : latestPosts.slice(0, 3)} />
             </div>
           </Suspense>
         )}
@@ -238,7 +223,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         )}
         
         {/* 订阅区域 */}
-        {!hasActiveFilters && (
+        {/* {!hasActiveFilters && (
           <div className="max-w-7xl mx-auto mb-16">
             <div className="bg-gradient-to-br from-blue-600 to-indigo-700 dark:from-blue-700 dark:to-indigo-800 p-8 md:p-10 rounded-xl border border-blue-400 dark:border-blue-600 shadow-md text-white">
               <div className="md:flex items-center justify-between">
@@ -264,7 +249,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               </div>
           </div>
         </div>
-        )}
+        )} */}
       </div>
     </main>
   );

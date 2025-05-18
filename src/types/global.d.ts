@@ -84,4 +84,7 @@ declare module '@/components/charts/TimeSeriesChart' {
   }
   
   export default function TimeSeriesChart(props: TimeSeriesChartProps): JSX.Element
-} 
+}
+
+declare module 'bcryptjs';
+declare module 'jsonwebtoken'; 

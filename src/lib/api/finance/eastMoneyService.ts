@@ -277,7 +277,19 @@ export async function getMarketIndices() {
         f14: string; // 名称
       }
       
-      const result = response.data.data.diff.map((item: EastMoneyIndexData) => ({
+      // 处理diff字段可能是对象而不是数组的情况
+      let diffData = response.data.data.diff;
+      if (!Array.isArray(diffData) && typeof diffData === 'object') {
+        logger.info('指数数据diff是对象，尝试转换为数组');
+        diffData = Object.values(diffData) as EastMoneyIndexData[];
+      }
+      
+      if (!Array.isArray(diffData)) {
+        logger.error('指数数据diff不是数组，也无法转换为数组');
+        return [];
+      }
+      
+      const result = diffData.map((item: EastMoneyIndexData) => ({
         code: item.f12,
         name: item.f14,
         // 东方财富返回的指数点数放大了100倍，需要除以100显示
@@ -352,7 +364,19 @@ export async function getStockList(market = 'SH') {
         f23: number; // 市净率
       }
       
-      const result = response.data.data.diff.map((item: EastMoneyStockData) => ({
+      // 处理diff字段可能是对象而不是数组的情况
+      let diffData = response.data.data.diff;
+      if (!Array.isArray(diffData) && typeof diffData === 'object') {
+        logger.info(`${market}市场股票列表diff是对象，尝试转换为数组`);
+        diffData = Object.values(diffData) as EastMoneyStockData[];
+      }
+      
+      if (!Array.isArray(diffData)) {
+        logger.error(`${market}市场股票列表diff不是数组，也无法转换为数组`);
+        return [];
+      }
+      
+      const result = diffData.map((item: EastMoneyStockData) => ({
         code: item.f12, // 股票代码
         name: item.f14, // 股票名称
         price: item.f2 / 100, // 当前价格
@@ -468,7 +492,7 @@ export async function getHotStocks(count: number = 20) {
     const szStocks = await getStockList('SZ');
     
     // 合并列表
-    const allStocks = [...shStocks, ...szStocks];
+    const allStocks = [...(shStocks as any[]), ...(szStocks as any[])];
     
     // 按成交额排序
     const sortedStocks = allStocks

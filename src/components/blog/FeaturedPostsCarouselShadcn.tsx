@@ -52,6 +52,9 @@ export default function FeaturedPostsCarouselShadcn({
     return null;
   }
 
+  // 注意：该组件主要用于展示被标记为"精选"(featured)的文章
+  // 如果没有精选文章，可以显示最新文章作为后备方案
+
   return (
     <div className="w-full max-w-7xl mx-auto mb-10">
       <div className="relative">

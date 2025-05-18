@@ -105,14 +105,11 @@ const HeroSection = () => {
 
   // 处理下箭头点击事件
   const handleScrollDown = () => {
-    // 平滑滚动到下一部分
-    const featuredProjectsSection = document.getElementById('featured-projects');
-    if (featuredProjectsSection) {
-      featuredProjectsSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      // 如果没有找到特定ID的元素，则滚动到技术栈部分
-      nextSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
+    window.scrollBy({
+      top: window.innerHeight,
+      left: 0,
+      behavior: 'smooth'
+    });
   };
 
   return (

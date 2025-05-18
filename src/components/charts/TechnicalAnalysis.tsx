@@ -243,8 +243,8 @@ export default function TechnicalAnalysis() {
           if (result.data && result.data.values) {
             // 转换API返回的数据格式
             let rsiData: number[] = [];
-            let avgGains: number[] = [];
-            let avgLosses: number[] = [];
+            const avgGains: number[] = [];
+            const avgLosses: number[] = [];
             
             // 检查数据是否为数组格式或对象数组格式
             if (Array.isArray(result.data.values)) {
@@ -1170,7 +1170,7 @@ export default function TechnicalAnalysis() {
             const value = param.data;
             if (value !== null && value !== '-') {
               // 根据指标类型使用不同颜色
-              let color = param.color;
+              const color = param.color;
               let prefix = '';
               
               // 为MACD值添加趋势指示

@@ -3,8 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Menu, X, Search, Sun, Moon, Github, UserCircle } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { Menu, X, Search, Sun, Moon, Github } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import MindoraLogo from "../ui/MindoraLogo";
 
 const Navbar = () => {
@@ -14,6 +14,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname(); // 用于确定当前页面路径
+  const router = useRouter();
 
   // 将所有客户端逻辑移到useEffect中，确保服务端渲染时不执行这些代码
   useEffect(() => {
@@ -227,31 +228,11 @@ const Navbar = () => {
                 </div>
               </Link>
             ))}
-            
-            {/* 移动端菜单中的登录按钮和社交媒体图标 */}
-            <div className="flex flex-col pt-2 border-t border-gray-200 dark:border-gray-700 mt-2">
-              <Link 
-                href="/login" 
-                className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium rounded-md hover:shadow-md transition-all duration-300"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <UserCircle className="w-5 h-5" />
-                <span>登录 / 注册</span>
-              </Link>
-              
-              <div className="flex justify-center mt-4 space-x-6">
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer"
-                  className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300"
-                  aria-label="GitHub">
-                  <Github className="w-5 h-5" />
-                </a>
-              </div>
-            </div>
           </nav>
         </div>
       )}
     </header>
   );
-};
+}
 
 export default Navbar; 

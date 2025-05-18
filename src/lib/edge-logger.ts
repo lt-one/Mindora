@@ -4,5 +4,5 @@
  */
 
 // 空操作日志函数
-export const logAccess = (_method: string, _url: string, _status: number, _ip: string, _userAgent?: string) => {};
+export const logAccess = (_method: string, _url: string, _status: number, _ip: string, _userAgent?: string, _message?: string) => {};
 export const logError = (_error: Error, _context?: string) => {}; 

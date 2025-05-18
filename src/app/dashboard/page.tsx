@@ -15,53 +15,23 @@ import StockTimeSeries from '@/components/charts/StockTimeSeries';
 import VolatilityAnalysisChart from '@/components/charts/VolatilityAnalysisChart';
 import StockComparisonChart from '@/components/charts/StockComparisonChart';
 import { MAJOR_INDICES } from '@/lib/data/china-stock-api';
+import FinanceSchedulerControl from '@/components/dashboard/FinanceSchedulerControl';
+
+// 定义调度器状态类型
+interface SchedulerStatus {
+  active: boolean;
+  nextRun: string | null;
+  schedule: string;
+  lastUpdateTime: string | null;
+}
 
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedStock, setSelectedStock] = useState("sh000001"); // 默认上证指数
   const [currentTime, setCurrentTime] = useState("");
+  const [schedulerStatus, setSchedulerStatus] = useState<SchedulerStatus | null>(null);
   
-  // 示例数据 - 股票指标数据
-  // const stockMetricsData = [
-  //   {
-  //     symbol: 'sh600519',
-  //     name: '贵州茅台',
-  //     metrics: [
-  //       { name: 'PE', value: 40, max: 100, description: '市盈率，表示股价与每股收益的比率' },
-  //       { name: 'PB', value: 12, max: 20, description: '市净率，表示股价与每股净资产的比率' },
-  //       { name: 'ROE', value: 25, max: 30, description: '净资产收益率，表示净利润与净资产的比率' },
-  //       { name: '营收增长率', value: 10, max: 50, description: '营业收入同比增长率' },
-  //       { name: '利润增长率', value: 15, max: 50, description: '净利润同比增长率' },
-  //       { name: '毛利率', value: 90, max: 100, description: '毛利润占营业收入的比率' }
-  //     ]
-  //   },
-  //   {
-  //     symbol: 'sh601318',
-  //     name: '中国平安',
-  //     metrics: [
-  //       { name: 'PE', value: 8, max: 100, description: '市盈率，表示股价与每股收益的比率' },
-  //       { name: 'PB', value: 1.2, max: 20, description: '市净率，表示股价与每股净资产的比率' },
-  //       { name: 'ROE', value: 15, max: 30, description: '净资产收益率，表示净利润与净资产的比率' },
-  //       { name: '营收增长率', value: 5, max: 50, description: '营业收入同比增长率' },
-  //       { name: '利润增长率', value: 3, max: 50, description: '净利润同比增长率' },
-  //       { name: '毛利率', value: 40, max: 100, description: '毛利润占营业收入的比率' }
-  //     ]
-  //   },
-  //   {
-  //     symbol: 'sh600276',
-  //     name: '恒瑞医药',
-  //     metrics: [
-  //       { name: 'PE', value: 30, max: 100, description: '市盈率，表示股价与每股收益的比率' },
-  //       { name: 'PB', value: 7, max: 20, description: '市净率，表示股价与每股净资产的比率' },
-  //       { name: 'ROE', value: 20, max: 30, description: '净资产收益率，表示净利润与净资产的比率' },
-  //       { name: '营收增长率', value: 15, max: 50, description: '营业收入同比增长率' },
-  //       { name: '利润增长率', value: 10, max: 50, description: '净利润同比增长率' },
-  //       { name: '毛利率', value: 80, max: 100, description: '毛利润占营业收入的比率' }
-  //     ]
-  //   }
-  // ];
-
   // 常用股票列表
   const commonStocks = [
     ...MAJOR_INDICES, // 使用预定义的指数列表
@@ -73,11 +43,28 @@ export default function DashboardPage() {
     { symbol: 'sh600887', name: '伊利股份' },
   ];
 
+  // 获取调度器状态
+  const fetchSchedulerStatus = async () => {
+    try {
+      const response = await fetch('/api/dashboard/finance-scheduler');
+      const result = await response.json();
+      
+      if (result.status === 'success') {
+        setSchedulerStatus(result.data);
+      }
+    } catch (error) {
+      console.error('获取调度器状态失败:', error);
+    }
+  };
+
   useEffect(() => {
     // 模拟加载数据
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);
+
+    // 获取调度器状态
+    fetchSchedulerStatus();
 
     return () => clearTimeout(timer);
   }, []);
@@ -90,10 +77,29 @@ export default function DashboardPage() {
     // 每分钟更新一次时间
     const timer = setInterval(() => {
       setCurrentTime(new Date().toLocaleString('zh-CN'));
-    }, 600000);
+    }, 60000);
     
-    return () => clearInterval(timer);
+    // 每5分钟刷新一次调度器状态
+    const statusTimer = setInterval(() => {
+      fetchSchedulerStatus();
+    }, 300000);
+    
+    return () => {
+      clearInterval(timer);
+      clearInterval(statusTimer);
+    };
   }, []);
+
+  // 格式化日期时间
+  const formatDateTime = (isoString: string | null) => {
+    if (!isoString) return "未知";
+    
+    try {
+      return new Date(isoString).toLocaleString('zh-CN');
+    } catch (e) {
+      return isoString;
+    }
+  };
 
   return (
     <div className="relative min-h-screen">
@@ -110,8 +116,18 @@ export default function DashboardPage() {
       <div className="flex flex-col min-h-screen space-y-3 p-4 pt-0 md:p-6 md:pt-0 relative z-10">
         <div className="flex items-center justify-between mt-3 mb-2">
           <h1 className="text-3xl font-bold tracking-tight">中国股市数据仪表盘</h1>
-          <div className="text-sm text-muted-foreground">
-            {currentTime ? `数据更新时间: ${currentTime}` : "数据加载中..."}
+          <div className="text-sm text-muted-foreground bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 px-3 py-1 rounded-md flex items-center">
+            <span className={`inline-block w-2 h-2 rounded-full ${schedulerStatus?.active ? 'bg-green-500' : 'bg-red-500'} mr-2 animate-pulse`}></span>
+            <span>
+              {schedulerStatus?.lastUpdateTime ? 
+                `数据更新时间: ${formatDateTime(schedulerStatus.lastUpdateTime)}` : 
+                (currentTime ? `数据加载时间: ${currentTime}` : "数据加载中...")}
+              <span className="block text-xs mt-0.5 text-amber-600 dark:text-amber-400">
+                {schedulerStatus?.active ? 
+                  `自动更新已开启 (${schedulerStatus.schedule})，下次更新: ${formatDateTime(schedulerStatus.nextRun)}` : 
+                  "自动更新已关闭，请手动更新或在控制台开启自动更新"}
+              </span>
+            </span>
           </div>
         </div>
 
@@ -120,7 +136,7 @@ export default function DashboardPage() {
             <TabsTrigger value="overview">市场概览</TabsTrigger>
             <TabsTrigger value="hot-stocks">热门股票</TabsTrigger>
             <TabsTrigger value="technical">技术分析</TabsTrigger>
-            {/* <TabsTrigger value="data">数据分析</TabsTrigger> */}
+            <TabsTrigger value="settings">系统设置</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
@@ -146,7 +162,7 @@ export default function DashboardPage() {
                   <div className="flex justify-between items-center">
                     <div>
                       <CardTitle>分时走势图</CardTitle>
-                      <CardDescription>实时价格走势监控</CardDescription>
+                      <CardDescription className="text-sm mt-1">实时价格走势监控</CardDescription>
                     </div>
                   </div>
                   
@@ -296,7 +312,65 @@ export default function DashboardPage() {
               </Card>
             </div>
           </TabsContent> */}
+
+          <TabsContent value="settings" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>数据更新控制</CardTitle>
+                    <CardDescription>
+                      控制金融数据的自动更新计划
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <FinanceSchedulerControl onStatusChange={fetchSchedulerStatus} />
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>系统信息</CardTitle>
+                    <CardDescription>
+                      系统状态和配置信息
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-3 gap-2 text-sm">
+                        <div className="font-medium">系统时间:</div>
+                        <div className="col-span-2">{currentTime}</div>
+                        
+                        <div className="font-medium">自动更新状态:</div>
+                        <div className="col-span-2 flex items-center">
+                          <span className={`inline-block w-2 h-2 rounded-full ${schedulerStatus?.active ? 'bg-green-500' : 'bg-red-500'} mr-2`}></span>
+                          {schedulerStatus?.active ? '已开启' : '已关闭'}
+                        </div>
+                        
+                        <div className="font-medium">更新计划:</div>
+                        <div className="col-span-2">{schedulerStatus?.schedule || '未设置'}</div>
+                        
+                        <div className="font-medium">下次更新:</div>
+                        <div className="col-span-2">{formatDateTime(schedulerStatus?.nextRun)}</div>
+                        
+                        <div className="font-medium">最后更新:</div>
+                        <div className="col-span-2">{formatDateTime(schedulerStatus?.lastUpdateTime)}</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
         </Tabs>
+
+        {/* 添加金融数据定时更新控制面板 */}
+        {/* <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">系统管理</h2>
+          <FinanceSchedulerControl />
+        </div> */}
       </div>
     </div>
   );

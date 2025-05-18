@@ -1,52 +1,44 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { 
-  getBlogPostBySlug
-} from "@/lib/api/blog"; // 修改导入路径，使用API而不是data
-import { getRelatedBlogPosts } from "@/lib/data/blog"; // 保留静态数据作为后备
-import { formatDateTime } from "@/lib/utils";
-import { Calendar, Clock, Eye, Tag, ArrowLeft, Share2 } from "lucide-react";
-import MarkdownContent from "@/components/blog/MarkdownContent";
-import TableOfContents from "@/components/blog/TableOfContents";
-import BlogPostCard from "@/components/blog/BlogPostCard";
+import Link from 'next/link';
+import Image from 'next/image';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { ArrowLeft, Calendar, Clock, Eye, Tag } from 'lucide-react';
+import MarkdownContent from '@/components/blog/MarkdownContent';
+import TableOfContents from '@/components/blog/TableOfContents';
+import BlogPostCard from '@/components/blog/BlogPostCard';
+import { getBlogPostBySlug } from '@/lib/api/blog';
+import { getRelatedBlogPosts } from '@/lib/api/blog';
+import { formatDate, formatDateTime } from '@/lib/utils';
 
 // 重新定义参数类型并确保与Next.js 15的类型系统兼容
 type Params = { slug: string };
 type SearchParams = { [key: string]: string | string[] | undefined };
 
 interface BlogPostPageProps {
-  params: Promise<Params>;
-  searchParams: Promise<SearchParams>;
+  params: {
+    slug: string;
+  };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  // 正确处理异步params
-  const resolvedParams = await params;
-  const post = await getBlogPostBySlug(resolvedParams.slug);
+  const post = await getBlogPostBySlug(params.slug);
   
   if (!post) {
     return {
-      title: "文章未找到 | Mindora",
-      description: "抱歉，您请求的文章不存在。",
+      title: '文章未找到 | Mindora',
+      description: '抱歉，您请求的文章不存在'
     };
   }
   
   return {
-    title: `${post.title} | Mindora博客`,
+    title: `${post.title} | Mindora`,
     description: post.excerpt,
-    keywords: post.tags.join(", "),
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      url: `https://Mindora.dev/blog/${post.slug}`,
-      siteName: "Mindora",
-      locale: "zh_CN",
-      type: "article",
-      publishedTime: post.publishedAt,
-      modifiedTime: post.updatedAt,
-      tags: post.tags,
+      type: 'article',
+      url: `https://mindora.top/blog/${post.slug}`,
       images: [
         {
           url: post.coverImage,
@@ -60,36 +52,26 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 }
 
 export default async function BlogPostPage({ params, searchParams }: BlogPostPageProps) {
-  // 正确处理异步params
-  const resolvedParams = await params;
-  // 在需要使用searchParams时需要await
-  await searchParams;
+  // 从API获取文章数据
+  const post = await getBlogPostBySlug(params.slug);
   
-  const post = await getBlogPostBySlug(resolvedParams.slug);
-  
+  // 如果文章不存在，显示404页面
   if (!post) {
     notFound();
   }
+
+  // 获取相关文章
+  const relatedPosts = await getRelatedBlogPosts(params.slug, 3);
   
-  // 获取相关文章 - 使用try-catch防止失败影响整个页面
-  let relatedPosts: any[] = [];
-  try {
-    // 优先尝试从API获取
-    const relatedFromApi = await getRelatedBlogPosts(resolvedParams.slug, 3);
-    if (relatedFromApi && relatedFromApi.length > 0) {
-      relatedPosts = relatedFromApi;
-    }
-  } catch (error) {
-    console.error('Failed to fetch related posts:', error);
-    // 错误时，不显示相关文章，保持空数组
-  }
+  // 调试输出，查看TOC结构是否正确
+  console.log(`[Blog Page] 文章"${post.title}"的目录结构:`, post.toc);
   
-  // 格式化时间
-  const publishedDate = formatDateTime(post.publishedAt);
-  const updatedDate = formatDateTime(post.updatedAt);
+  // 格式化日期
+  const publishedDate = formatDate(post.publishedAt);
+  const updatedDate = formatDate(post.updatedAt);
   
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-50/50 to-white dark:from-gray-900 dark:to-gray-950">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* 博客文章头部 */}
       <div className="relative">
         {/* 封面图 */}
@@ -103,7 +85,7 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70"></div>
         </div>
-        
+         
         {/* 标题和元信息 */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative -mt-40 md:-mt-56 z-10">
           <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden">
@@ -116,12 +98,12 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
                 <ArrowLeft className="w-4 h-4 mr-1" />
                 返回博客列表
               </Link>
-              
+               
               {/* 文章标题 */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
                 {post.title}
               </h1>
-              
+               
               {/* 文章元信息 */}
               <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-gray-600 dark:text-gray-400">
                 <div className="flex items-center">
@@ -143,7 +125,7 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
                   <span>{post.viewCount}次阅读</span>
                 </div>
               </div>
-              
+               
               {/* 文章分类和标签 */}
               <div className="mb-8">
                 <div className="flex flex-wrap gap-2">
@@ -168,19 +150,21 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
                   ))}
                 </div>
               </div>
-              
-              {/* 作者信息 */}
-              <div className="flex items-center mb-8 p-4 bg-gray-50 dark:bg-gray-800/60 rounded-lg border border-gray-100 dark:border-gray-700">
-                <Image
-                  src={post.author.avatar}
-                  alt={post.author.name}
-                  width={60}
-                  height={60}
-                  className="rounded-full border-2 border-white dark:border-gray-700 shadow-sm"
-                />
-                <div className="ml-4">
-                  <h3 className="font-medium text-gray-900 dark:text-white">{post.author.name}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{post.author.bio}</p>
+               
+              {/* 改进后的作者信息 */}
+              <div className="flex items-start mb-8 p-5 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-100 dark:border-blue-800/30 shadow-sm">
+                <div className="flex-shrink-0">
+                  <Image
+                    src={post.author.avatar}
+                    alt={post.author.name}
+                    width={70}
+                    height={70}
+                    className="rounded-full border-2 border-white dark:border-gray-700 shadow-md"
+                  />
+                </div>
+                <div className="ml-5 flex-1">
+                  <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-1">{post.author.name}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{post.author.bio}</p>
                 </div>
               </div>
             </div>
@@ -192,34 +176,31 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
           {/* 主要内容 */}
-          <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-xl shadow-md p-6 sm:p-8 md:p-10 border border-gray-100 dark:border-gray-800">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-800">
             {/* 文章正文 */}
-            <article className="mb-10">
-              <MarkdownContent content={post.content} />
-            </article>
-            
-            {/* 分享和点赞 */}
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mt-10">
-              <div className="flex flex-wrap justify-between items-center">
-                <div className="mb-4 sm:mb-0">
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">分享这篇文章</h3>
-                  <div className="flex space-x-3">
-                    <button className="p-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-100 dark:hover:bg-blue-800/30 transition-colors">
-                      <Share2 className="w-5 h-5" />
-                    </button>
-                    {/* 可添加其他社交分享按钮 */}
-                  </div>
-                </div>
+            <article className="p-6 sm:p-8 md:p-10">
+              <div className="prose prose-blue dark:prose-invert max-w-none">
+                <MarkdownContent content={post.content} />
               </div>
-            </div>
+            </article>
           </div>
           
-          {/* 侧边栏 */}
-          <div className="lg:space-y-6">
-            {/* 目录 */}
-            {post.toc && post.toc.length > 0 && (
-              <div className="sticky top-20">
-                <TableOfContents toc={post.toc} />
+          {/* 侧边栏 - 只包含目录结构 */}
+          <div>
+            {post.toc && post.toc.length > 0 ? (
+              <div className="sticky top-20 bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-800">
+                <TableOfContents 
+                  toc={post.toc} 
+                  maxHeight="calc(100vh - 150px)" 
+                  className="w-full" 
+                />
+              </div>
+            ) : (
+              // 如果没有目录，显示一个提示
+              <div className="sticky top-20 bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-800 p-4">
+                <p className="text-gray-500 dark:text-gray-400 text-center">
+                  本文没有目录结构
+                </p>
               </div>
             )}
           </div>
@@ -227,8 +208,8 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
         
         {/* 相关文章 - 只在有相关文章时显示 */}
         {relatedPosts.length > 0 && (
-          <div className="mt-12">
-            <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 dark:border-gray-800">
+          <div className="mt-16">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 dark:border-gray-800">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-600 h-6 w-1 rounded-full mr-3"></span>
                 相关文章
@@ -246,6 +227,6 @@ export default async function BlogPostPage({ params, searchParams }: BlogPostPag
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 } 

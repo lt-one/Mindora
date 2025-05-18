@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as blogApi from '@/lib/api/blog';
+import { prisma } from '@/lib/db';
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,6 +12,20 @@ export async function GET(request: NextRequest) {
     const featured = searchParams.get('featured');
     const latest = searchParams.get('latest');
     const count = searchParams.get('count');
+    
+    // 如果请求的是计数，返回文章总数
+    if (count === 'true') {
+      const postCount = await prisma.blogPost.count({
+        where: {
+          published: true,
+        },
+      });
+      
+      return NextResponse.json({
+        success: true,
+        data: { count: postCount }
+      }, { status: 200 });
+    }
     
     let posts;
     
@@ -27,11 +42,11 @@ export async function GET(request: NextRequest) {
       posts = await blogApi.getAllBlogPosts();
     }
     
-    return NextResponse.json({ posts }, { status: 200 });
+    return NextResponse.json({ success: true, data: posts }, { status: 200 });
   } catch (error) {
     console.error('Error in blog posts API:', error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { success: false, error: 'Internal Server Error' },
       { status: 500 }
     );
   }

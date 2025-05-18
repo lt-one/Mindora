@@ -15,67 +15,113 @@ import {
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Project } from "@/types/project";
 
-// 示例项目数据
-const projectsData = [
-  {
-    id: "1",
-    title: "华为终端舆情监测分析",
-    description: "全网监测华为品牌相关信息，预警舆情风险，输出数据报告，支持产品迭代",
-    // 使用本地图片路径
-    image: "/images/projects/sentiment-analysis-cover.png",
-    tags: ["Python", "AI大模型", "数据分析"],
-    slug: "huawei-sentiment-analysis",
-    featured: true,
-    highlightColor: "from-blue-500 to-indigo-500",
-  },
-  {
-    id: "2",
-    title: "脑机接口灯光控制系统",
-    description: "通过脑电采集头环监控脑电信号，检测注意力水平，自动调节室内灯光亮度",
-    // 使用本地图片路径
-    image: "/images/projects/brain-interface-cover.png",
-    tags: ["脑机接口", "Python", "鸿蒙ArkTs"],
-    slug: "brain-interface-lighting",
-    featured: true,
-    highlightColor: "from-purple-500 to-pink-500",
-  },
-  {
-    id: "3",
-    title: "数据可视化平台",
-    description: "交互式数据可视化平台，实时监控和分析关键业务指标，支持多种图表类型",
-    // 使用本地图片路径
-    image: "/images/projects/data-visualization-cover.png",
-    tags: ["Tableau", "Python", "数据可视化"],
-    slug: "data-visualization",
-    featured: false,
-    highlightColor: "from-green-500 to-emerald-500",
-  },
-  {
-    id: "4",
-    title: "AI辅助产品设计工具",
-    description: "结合大模型和UI设计原则，自动生成界面原型和产品设计方案",
-    // 使用本地图片路径
-    image: "/images/projects/ai-design-cover.png",
-    tags: ["AI", "产品设计", "UI/UX"],
-    slug: "ai-design-tool",
-    featured: false,
-    highlightColor: "from-rose-500 to-red-500",
-  },
-];
+// 初始状态：加载中
+const initialState = {
+  featuredProjects: [],
+  regularProjects: [],
+  isLoading: true,
+  error: null
+};
 
 const FeaturedProjects = () => {
   const [mounted, setMounted] = useState(false);
-  const featuredProjects = projectsData.filter(project => project.featured);
-  const regularProjects = projectsData.filter(project => !project.featured);
+  const [state, setState] = useState<{
+    featuredProjects: Project[];
+    regularProjects: Project[];
+    isLoading: boolean;
+    error: string | null;
+  }>(initialState);
 
   useEffect(() => {
     setMounted(true);
+    
+    // 获取项目数据
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('/api/projects');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch projects');
+        }
+        
+        const data = await response.json();
+        
+        // 更新状态
+        setState({
+          featuredProjects: data.filter((project: Project) => project.featured),
+          regularProjects: data.filter((project: Project) => !project.featured).slice(0, 4), // 只显示4个常规项目
+          isLoading: false,
+          error: null
+        });
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+        setState(prev => ({
+          ...prev,
+          isLoading: false,
+          error: error instanceof Error ? error.message : '获取项目数据失败'
+        }));
+      }
+    };
+    
+    fetchProjects();
   }, []);
 
   // 避免水合不匹配
   if (!mounted) {
     return null;
+  }
+
+  // 显示加载状态
+  if (state.isLoading) {
+    return (
+      <section className="py-20 relative">
+        <div className="container mx-auto text-center">
+          <div className="animate-pulse">
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 w-48 mx-auto mb-4 rounded"></div>
+            <div className="h-10 bg-gray-200 dark:bg-gray-700 w-96 mx-auto mb-6 rounded"></div>
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 w-full max-w-2xl mx-auto rounded"></div>
+            
+            <div className="mt-12 h-80 bg-gray-200 dark:bg-gray-700 w-full rounded-xl"></div>
+            
+            <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-64 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // 显示错误信息
+  if (state.error) {
+    return (
+      <section className="py-20 relative">
+        <div className="container mx-auto text-center">
+          <p className="text-red-500">获取项目数据出错: {state.error}</p>
+        </div>
+      </section>
+    );
+  }
+
+  // 如果没有特色项目，显示备用消息
+  if (state.featuredProjects.length === 0) {
+    return (
+      <section className="py-20 relative">
+        <div className="container mx-auto text-center">
+          <h3 className="text-3xl font-bold mb-4">暂无精选项目</h3>
+          <Button asChild>
+            <Link href="/projects">
+              查看全部项目
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </section>
+    );
   }
 
   return (
@@ -125,11 +171,11 @@ const FeaturedProjects = () => {
             className="w-full"
           >
             <CarouselContent>
-              {featuredProjects.map((project) => (
+              {state.featuredProjects.map((project) => (
                 <CarouselItem key={project.id}>
                   <div className="relative h-[450px] w-full overflow-hidden rounded-xl">
                     <Image
-                      src={project.image}
+                      src={project.thumbnailUrl}
                       alt={project.title}
                       className="object-cover"
                       fill
@@ -141,14 +187,14 @@ const FeaturedProjects = () => {
                         <div className="container mx-auto px-8 md:px-16">
                           <div className="max-w-xl text-white space-y-4">
                             <div className="flex flex-wrap gap-2 mb-4">
-                              {project.tags.map(tag => (
+                              {project.technologies.slice(0, 3).map(tag => (
                                 <Badge key={tag} className="bg-blue-600 text-xs font-medium rounded-full text-white hover:bg-blue-700">
                                   {tag}
                                 </Badge>
                               ))}
                             </div>
                             <h4 className="text-3xl md:text-4xl font-bold">{project.title}</h4>
-                            <p className="text-lg opacity-90">{project.description}</p>
+                            <p className="text-lg opacity-90">{project.summary}</p>
                             <Button asChild className="mt-4">
                               <Link href={`/projects/${project.slug}`}>
                                 查看详情
@@ -169,54 +215,56 @@ const FeaturedProjects = () => {
         </div>
 
         {/* 其他项目展示 */}
-        <div className="mt-16">
-          <div className="flex items-center mb-8">
-            <h3 className="text-2xl font-bold text-gray-800 dark:text-white">其他项目</h3>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {regularProjects.map((project) => (
-              <Card key={project.id} className="overflow-hidden group hover:shadow-lg transition-all duration-300">
-                <div className="relative h-48 w-full">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-                  />
-                  <div className="absolute top-0 right-0 p-4">
-                    <div className="flex gap-2">
-                      {project.tags.slice(0, 2).map(tag => (
-                        <Badge key={tag} variant="secondary" className="bg-black/60 text-white text-xs hover:bg-black/70">
-                          {tag}
-                        </Badge>
-                      ))}
+        {state.regularProjects.length > 0 && (
+          <div className="mt-16">
+            <div className="flex items-center mb-8">
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-white">其他项目</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {state.regularProjects.map((project) => (
+                <Card key={project.id} className="overflow-hidden group hover:shadow-lg transition-all duration-300">
+                  <div className="relative h-48 w-full">
+                    <Image
+                      src={project.thumbnailUrl}
+                      alt={project.title}
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                    />
+                    <div className="absolute top-0 right-0 p-4">
+                      <div className="flex gap-2">
+                        {project.technologies.slice(0, 2).map(tag => (
+                          <Badge key={tag} variant="secondary" className="bg-black/60 text-white text-xs hover:bg-black/70">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    {project.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base line-clamp-2">
-                    {project.description}
-                  </CardDescription>
-                </CardContent>
-                <CardFooter className="pt-0 flex justify-between">
-                  <Button variant="outline" asChild size="sm">
-                    <Link href={`/projects/${project.slug}`}>
-                      查看详情
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-xl group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {project.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-base line-clamp-2">
+                      {project.summary}
+                    </CardDescription>
+                  </CardContent>
+                  <CardFooter className="pt-0 flex justify-between">
+                    <Button variant="outline" asChild size="sm">
+                      <Link href={`/projects/${project.slug}`}>
+                        查看详情
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="text-center mt-12">
           <Button asChild>

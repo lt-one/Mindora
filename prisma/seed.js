@@ -3,6 +3,34 @@ const { PrismaClient } = require('../src/generated/prisma');
 
 const prisma = new PrismaClient();
 
+// 从 src/lib/data/blog.ts 导入静态数据（注意路径调整和模块系统差异）
+// 这是简化的导入，实际项目中可能需要更复杂的处理来共享TS和JS模块间的数据
+// 这里我们直接在脚本内部定义一个 minimalTagsMap 来辅助转换
+const staticTags = [
+  { id: '1', name: 'JavaScript', slug: 'javascript', color: '#f7df1e', count: 6 },
+  { id: '2', name: 'TypeScript', slug: 'typescript', color: '#3178c6', count: 5 },
+  { id: '3', name: 'React', slug: 'react', color: '#61dafb', count: 7 },
+  { id: '4', name: 'Next.js', slug: 'nextjs', color: '#000000', count: 4 },
+  { id: '5', name: 'CSS', slug: 'css', color: '#264de4', count: 3 },
+  { id: '6', name: 'Tailwind CSS', slug: 'tailwind-css', color: '#06b6d4', count: 5 },
+  { id: '7', name: 'D3.js', slug: 'd3js', color: '#f9a03c', count: 2 },
+  { id: '8', name: 'ECharts', slug: 'echarts', color: '#aa314d', count: 3 },
+  { id: '9', name: '性能优化', slug: '性能优化', color: '#4caf50', count: 2 }, // slug 可能需要调整为英文
+  { id: '10', name: '前端架构', slug: '前端架构', color: '#9c27b0', count: 3 }, // slug 可能需要调整为英文
+  { id: '11', name: '状态管理', slug: '状态管理', color: '#ff5722', count: 4 }, // slug 可能需要调整为英文
+  { id: '12', name: '服务端渲染', slug: '服务端渲染', color: '#03a9f4', count: 2 }, // slug 可能需要调整为英文
+];
+
+const tagNameToSlugMap = staticTags.reduce((acc, tag) => {
+  acc[tag.name] = tag.slug;
+  return acc;
+}, {});
+
+const convertTagNamesToSlugs = (tagNames) => {
+  if (!Array.isArray(tagNames)) return [];
+  return tagNames.map(name => tagNameToSlugMap[name] || name.toLowerCase().replace(/ /g, '-')).filter(slug => slug);
+};
+
 /**
  * 创建测试用户
  */
@@ -96,7 +124,7 @@ async function seedBlogPosts() {
           content: post.content,
           excerpt: post.excerpt,
           coverImage: post.coverImage,
-          tags: post.tags,
+          tags: JSON.stringify(convertTagNamesToSlugs(post.tags)),
           categories: post.categories,
           publishedAt: new Date(post.publishedAt),
           updatedAt: new Date(post.updatedAt || post.publishedAt),
@@ -117,7 +145,7 @@ async function seedBlogPosts() {
           content: post.content,
           excerpt: post.excerpt,
           coverImage: post.coverImage,
-          tags: post.tags,
+          tags: JSON.stringify(convertTagNamesToSlugs(post.tags)),
           categories: post.categories,
           publishedAt: new Date(post.publishedAt),
           updatedAt: new Date(post.updatedAt || post.publishedAt),

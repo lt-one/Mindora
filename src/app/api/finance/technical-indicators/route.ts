@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
     // 获取K线数据
     // 根据不同的period参数决定获取的数据数量和周期类型
     let klineCount = 250; // 默认获取更多数据，确保有足够的历史数据
-    let klinePeriod: 'daily' | 'weekly' | 'monthly' | '60min' | '30min' | '15min' | '5min' = 'daily'; // 默认使用日K
+    const klinePeriod: 'daily' | 'weekly' | 'monthly' | '60min' | '30min' | '15min' | '5min' = 'daily'; // 默认使用日K
     
     // 对于RSI，可以根据周期参数调整获取的数据量
     if (indicator === 'rsi' && period) {
@@ -127,7 +127,7 @@ export async function GET(request: NextRequest) {
     const klineData = await getKLineData(symbol, klinePeriod, klineCount, source, forceRefresh);
     
     let result: any;
-    let extraData = {};
+    const extraData = {};
     
     // 计算相应的技术指标
     switch (indicator) {

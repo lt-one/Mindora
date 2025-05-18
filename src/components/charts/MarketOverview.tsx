@@ -1060,7 +1060,7 @@ export default function MarketOverview() {
         </div>
         
         {/* 图表容器 */}
-        <div className="h-[300px] w-full rounded-lg border relative shadow-sm">
+        <div className="h-[290px] w-full rounded-lg border relative shadow-sm">
           {isLoading ? (
             <Skeleton className="h-full w-full rounded-lg" />
           ) : (
@@ -1082,7 +1082,7 @@ export default function MarketOverview() {
           {isLoading ? (
             <>
               <Skeleton className="h-[110px] rounded-lg" />
-              <Skeleton className="h-[110px] rounded-lg" />
+              <Skeleton className="h-[110] rounded-lg" />
               <Skeleton className="h-[110px] rounded-lg" />
               <Skeleton className="h-[110px] rounded-lg" />
             </>

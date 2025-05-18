@@ -9,7 +9,7 @@ const nextConfig = {
     // 请尽快解决类型错误
     ignoreBuildErrors: true,
   },
-  transpilePackages: ['axios', 'axios-cookiejar-support', 'tough-cookie'],
+  transpilePackages: ['axios', 'axios-cookiejar-support', 'tough-cookie', 'framer-motion'],
   images: {
     remotePatterns: [
       {
@@ -38,7 +38,7 @@ const nextConfig = {
   outputFileTracingExcludes: {
     '**': ['./src/generated/prisma/**/*']
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
     // 处理Node.js模块，使其在浏览器环境中不报错
     if (!isServer) {
       config.resolve.fallback = {
@@ -46,7 +46,29 @@ const nextConfig = {
         fs: false,
         path: false,
         os: false,
+        crypto: require.resolve('crypto-browserify'),
+        stream: require.resolve('stream-browserify'),
+        buffer: require.resolve('buffer'),
+        util: require.resolve('util'),
         child_process: false,
+      };
+      
+      // 为 Buffer 添加 polyfill
+      config.plugins.push(
+        new webpack.ProvidePlugin({
+          Buffer: ['buffer', 'Buffer'],
+        })
+      );
+      
+      // 处理 node: 协议导入
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'node:crypto': 'crypto-browserify',
+        'node:stream': 'stream-browserify',
+        'node:buffer': 'buffer',
+        'node:util': 'util',
+        'node:path': false,
+        'node:os': false,
       };
     }
     return config;

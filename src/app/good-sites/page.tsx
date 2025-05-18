@@ -1,9 +1,6 @@
-"use client";
-
-import React, { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
-import SiteGrid from '@/components/good-sites/SiteGrid';
-import { goodSites } from '@/lib/data/good-sites';
+import React, { Suspense } from 'react';
+import { Metadata } from 'next';
+import SiteGridContainer from '@/components/good-sites/SiteGridContainer';
 import { Compass, Globe, Heart, Filter, Search, Sparkles, ArrowRight, BarChart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,108 +12,28 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { siteCategories } from '@/lib/data/good-sites';
+import { getGoodSiteCategories, getGoodSiteStats } from '@/lib/api/good-sites';
 
-// 客户端组件不能导出metadata
-const metadata = {
+// 服务器组件可以导出metadata
+export const metadata: Metadata = {
   title: '好站分享 | Mindora',
   description: '这里汇集了我个人偏好并经常使用的优质网站、实用工具与设计资源，希望能为我的数字生活带来便利和启发。'
 };
 
-// 将使用useSearchParams的部分提取到一个单独的组件中
-const SearchParamsWrapper = ({ children }: { children: React.ReactNode }) => {
-  return <Suspense fallback={
-    <div className="flex justify-center items-center py-16">
-      <div className="loading-spinner w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-    </div>
-  }>
-    {children}
-  </Suspense>;
-};
+// 页面组件现在是服务器组件
+export default async function GoodSitesPage() {
+  // 从API获取站点统计数据
+  const statsData = await getGoodSiteStats();
+  const categories = await getGoodSiteCategories();
 
-function CategoryFilter() {
-  const searchParams = useSearchParams();
-  const urlCategory = searchParams.get('category');
-  const [selectedCategory, setSelectedCategory] = useState<string>(
-    urlCategory && siteCategories.includes(urlCategory) ? urlCategory : "all"
-  );
-  
-  // 当URL参数变化时更新选中的分类
-  useEffect(() => {
-    const category = searchParams.get('category');
-    if (category && siteCategories.includes(category)) {
-      setSelectedCategory(category);
-    } else if (!category) {
-      setSelectedCategory("all");
-    }
-  }, [searchParams]);
-  
-  // 筛选显示的站点
-  const filteredSites = selectedCategory === "all" 
-    ? goodSites 
-    : goodSites.filter(site => site.category === selectedCategory);
-    
-  return (
-    <section className="mb-8 relative overflow-visible">
-      <div className="p-6 rounded-xl max-w-7xl mx-auto">
-        <div className="flex items-center mb-4">
-          <Filter className="mr-2 h-4 w-4 text-muted-foreground" />
-          {/* 为分类标题添加文本阴影 */}
-          <h2 
-            className="text-lg font-semibold"
-            style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.05)' }}
-          >
-            分类筛选
-          </h2>
-        </div>
-        
-        {/* 修改Badge组件的悬停样式 */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          <Badge 
-            variant={selectedCategory === "all" ? "default" : "outline"}
-            className={`cursor-pointer px-4 py-1.5 text-sm transition-colors duration-200 hover:no-underline ${
-              selectedCategory === "all" 
-                ? "" 
-                : "hover:bg-slate-100 dark:hover:bg-slate-800"
-            }`}
-            onClick={() => setSelectedCategory("all")}
-          >
-            全部
-          </Badge>
-          {siteCategories.map((category) => (
-            <Badge 
-              key={category} 
-              variant={selectedCategory === category ? "default" : "outline"}
-              className={`cursor-pointer px-4 py-1.5 text-sm transition-colors duration-200 hover:no-underline ${
-                selectedCategory === category 
-                  ? "" 
-                  : "hover:bg-slate-100 dark:hover:bg-slate-800"
-              }`}
-              onClick={() => setSelectedCategory(category)}
-            >
-              {category}
-            </Badge>
-          ))}
-        </div>
-        
-        <SiteGrid sites={filteredSites} />
-      </div>
-    </section>
-  );
-}
-
-export default function GoodSitesPage() {
   // 计算站点统计数据
-  const totalSites = goodSites.length;
+  const totalSites = statsData.totalSites;
   
   // 获取前三个主要分类的站点数量
-  const categoryStats = siteCategories.slice(0, 3).map(category => ({
-    name: category,
-    count: goodSites.filter(site => site.category === category).length
-  }));
+  const categoryStats = statsData.categoryStats.slice(0, 3);
   
-  // 查找标签为"免费"的站点数量（替代Web应用）
-  const freeResourcesCount = goodSites.filter(site => site.tags.includes("免费")).length;
+  // 获取免费资源数量
+  const freeResourcesCount = statsData.freeResourcesCount;
   
   return (
     <div className="relative min-h-screen">
@@ -181,36 +98,40 @@ export default function GoodSitesPage() {
                   <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{totalSites}</div>
                 </div>
                 
-                {/* 第一个主要分类 */}
-                {categoryStats[0] && (
-                  <div className="bg-purple-50/80 dark:bg-purple-950/50 rounded-md p-3">
-                    <div className="text-xs text-muted-foreground mb-1">{categoryStats[0].name}</div>
-                    <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{categoryStats[0].count}</div>
-                  </div>
-                )}
+                {/* 主要分类 */}
+                {categoryStats.map((category, index) => {
+                  const colorClasses = [
+                    "bg-purple-50/80 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400", 
+                    "bg-green-50/80 dark:bg-green-950/50 text-green-600 dark:text-green-400",
+                    "bg-amber-50/80 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400"
+                  ];
+                  
+                  return (
+                    <div key={category.name} className={`rounded-md p-3 ${colorClasses[index % colorClasses.length]}`}>
+                      <div className="text-xs text-muted-foreground mb-1">{category.name}</div>
+                      <div className={`text-2xl font-bold`}>{category.count}</div>
+                    </div>
+                  );
+                })}
                 
-                {/* 第二个主要分类 */}
-                {categoryStats[1] && (
-                  <div className="bg-green-50/80 dark:bg-green-950/50 rounded-md p-3">
-                    <div className="text-xs text-muted-foreground mb-1">{categoryStats[1].name}</div>
-                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">{categoryStats[1].count}</div>
-                  </div>
-                )}
-                
-                {/* Web应用数量 - 替换为免费资源数量 */}
-                <div className="bg-amber-50/80 dark:bg-amber-950/50 rounded-md p-3">
+                {/* 免费资源数量 */}
+                <div className="bg-pink-50/80 dark:bg-pink-950/50 rounded-md p-3">
                   <div className="text-xs text-muted-foreground mb-1">免费资源</div>
-                  <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">{freeResourcesCount}</div>
+                  <div className="text-2xl font-bold text-pink-600 dark:text-pink-400">{freeResourcesCount}</div>
                 </div>
               </div>
             </div>
           </div>
         </section>
         
-        {/* 分类筛选部分使用Suspense包裹 */}
-        <SearchParamsWrapper>
-          <CategoryFilter />
-        </SearchParamsWrapper>
+        {/* 使用客户端组件容器包装分类筛选和站点展示 */}
+        <Suspense fallback={
+          <div className="flex justify-center items-center py-16">
+            <div className="loading-spinner w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+          </div>
+        }>
+          <SiteGridContainer categories={categories} />
+        </Suspense>
       </main>
     </div>
   );

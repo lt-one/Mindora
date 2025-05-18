@@ -29,7 +29,7 @@ const Footer = () => {
               <MindoraLogo size={40} textSize="lg" />
             </Link>
             <p className="text-gray-400 text-sm max-w-xs mb-6">
-              Mindora致力于创造连接数据与人类的体验，结合技术与创意，打造有深度和价值的数字解决方案。
+              记录一些个人生活、学习、工作、思考的碎片，记下每一次思考的火花。
             </p>
             <div className="flex md:justify-start justify-center space-x-4">
               <Link
@@ -137,28 +137,20 @@ const Footer = () => {
                 <MapPin className="w-4 h-4 text-blue-400 mr-2 mt-0.5" />
                 <span className="text-gray-300">广东省广州市，中国</span>
               </li>
-              <li className="flex items-center justify-center md:justify-start text-sm">
-                <Calendar className="w-4 h-4 text-blue-400 mr-2" />
-                <span className="text-gray-300">周一至周五: 9:00 - 18:00</span>
-              </li>
+              
             </ul>
           </div>
         </div>
 
         {/* 版权信息 */}
         <div className="flex flex-col items-center border-t border-gray-800 pt-10">
-          <p className="text-gray-400 text-xs mb-4">
-            © {currentYear} <span className="font-medium text-white">刘涛</span> | Mindora
+          <p className="text-gray-400 text-sm mb-4">
+            © {currentYear} <span className="font-medium border-gray-800">刘涛</span> | Mindora
           </p>
           
-          <div className="flex space-x-6 text-xs">
-            <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
-              隐私政策
-            </Link>
-            <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
-              服务条款
-            </Link>
-          </div>
+          <p className="text-gray-500 text-sm max-w-md text-center">
+            用心记录生活点滴，见证每一次成长
+          </p>
         </div>
       </div>
     </footer>

@@ -496,4 +496,18 @@ export async function getRelatedBlogPosts(postSlug: string, count: number = 3): 
  */
 export async function getBlogArchives(): Promise<{[year: string]: {[month: string]: BlogPost[]}}> {
   return blogApi.getBlogArchives();
+}
+
+/**
+ * 获取所有标签（带有文章计数）
+ */
+export async function getTagsWithCount(): Promise<BlogTag[]> {
+  return blogApi.getBlogTagsWithCount();
+}
+
+/**
+ * 获取所有分类（带有文章计数）
+ */
+export async function getCategoriesWithCount(): Promise<BlogCategory[]> {
+  return blogApi.getBlogCategoriesWithCount();
 } 

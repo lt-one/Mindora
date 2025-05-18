@@ -45,68 +45,79 @@ export default function BlogFilter({
   /**
    * 更新筛选参数
    */
-  const updateFilters = (category: string, tag: string) => {
-    // 如果在分类页面，不更改URL中的分类参数
-    const categorySlug = isCategoryPage ? getCategorySlugFromPath() : category;
-    
-    // 基于当前URL构建新的URL
+  const updateFilters = (newCategory: string, newTag: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    
-    // 只有在非分类页面上才设置分类参数
-    if (!isCategoryPage && !isAllCategoryPage) {
-      if (category !== "all") {
-        params.set("category", category);
-      } else {
+
+    // 更新分类参数
+    if (newCategory !== "all") {
+      params.set("category", newCategory);
+    } else {
       params.delete("category");
-      }
     }
-    
+
     // 更新标签参数
-    if (tag !== "all") {
-      params.set("tag", tag);
+    if (newTag !== "all") {
+      params.set("tag", newTag);
     } else {
       params.delete("tag");
     }
-    
-    // 保留搜索查询参数
-    if (searchQuery.trim()) {
-      params.set("q", searchQuery);
+
+    // 保留搜索查询参数 (如果存在)
+    const currentQuery = searchParams.get("q");
+    if (currentQuery) {
+      params.set("q", currentQuery);
     } else {
-      params.delete("q");
+      params.delete("q"); // 确保如果没有就不设置
     }
-    
-    let url;
-    
-    // 如果在分类页面上并更改了分类
-    if (isCategoryPage && category !== "all" && category !== categorySlug) {
-      // 跳转到新的分类页面
-      url = `/blog/category/${category}`;
-      // 如果有其他参数，添加到URL
-      if (params.toString()) {
-        url += `?${params.toString()}`;
+
+    let targetPath = pathname || "/blog"; // 默认或当前路径
+
+    // 判定目标路径的逻辑
+    // 1. 如果是从某个分类页面 (e.g., /blog/category/A) 点击了 "全部" 分类按钮
+    if (isCategoryPage && newCategory === "all") {
+      targetPath = "/blog/all";
+    }
+    // 2. 如果最终实际上没有分类被选中 (无论是初始就是 all，还是被清除了)
+    //    并且标签也被设为 "all" (即也没有标签筛选)
+    //    并且当前不是一个特定的分类页面 (避免与逻辑1冲突)
+    else if (!params.has("category") && newTag === "all" && !isCategoryPage) {
+      targetPath = "/blog/all";
+    }
+    // 3. 如果选择了某个特定的分类 (newCategory !== "all")
+    else if (newCategory !== "all") {
+      // 无论当前在什么页面，如果选了特定分类，目标就是该分类的页面
+      targetPath = `/blog/category/${newCategory}`;
+    }
+    // 4. 如果分类是 "all" (可能是从特定分类页清除，或本来就在 /blog 或 /blog/all)
+    //    但仍然有标签被选中 (newTag !== "all")
+    else if (newCategory === "all" && newTag !== "all") {
+      // 此时应该停留在基础的博客列表页，让标签参数生效
+      // 如果之前在 /blog/category/A, isCategoryPage会是true, 但newCategory是all,会走逻辑1或这里
+      // 如果之前是 /blog/all 或 /blog, pathname已经是期望值
+      if (isCategoryPage) { // 如果是从分类页清除了分类但选了标签
+          targetPath = "/blog/all"; // 或者 /blog，取决于 /blog/all?tag=X 和 /blog?tag=X 哪个是标准
       }
-      router.push(url);
-      return;
+      // 如果本来就在 /blog 或 /blog/all, targetPath 已经是它们之一
+    }
+    // 5. 如果所有筛选都移除了 (newCategory === 'all' && newTag === 'all')，确保去 /blog/all
+    if (newCategory === 'all' && newTag === 'all' && !isCategoryPage) { // isCategoryPage 的情况已由1覆盖
+        targetPath = '/blog/all';
+    }
+
+
+    const queryString = params.toString();
+    let url = queryString ? `${targetPath}?${queryString}` : targetPath;
+
+    // 清理末尾可能出现的 '?'
+    if (url.endsWith('?')) {
+      url = url.slice(0, -1);
     }
     
-    // 如果选择了"全部"分类并在特定分类页面上
-    if (isCategoryPage && category === "all") {
-      if (isAllCategoryPage) {
-        // 如果已在"所有文章"页面，只更新参数
-        url = params.toString() ? `${pathname}?${params.toString()}` : pathname;
-      } else {
-        // 跳转到"所有文章"页面
-        url = `/blog/all`;
-        if (params.toString()) {
-          url += `?${params.toString()}`;
-        }
-      }
-      router.push(url);
-      return;
+    // 确保 /blog/all 和 /blog 不会因为空参数而错误导航
+    if ((targetPath === "/blog/all" || targetPath === "/blog") && !queryString) {
+        url = targetPath;
     }
-    
-    // 常规参数更新
-    url = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+
     router.push(url, { scroll: false });
   };
   

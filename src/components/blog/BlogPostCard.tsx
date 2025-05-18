@@ -3,10 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { ArrowUpRight, Calendar, Clock, Eye, Heart } from "lucide-react";
+import { ArrowUpRight, Calendar, Clock, Eye } from "lucide-react";
 import { BlogPost } from "@/types/blog";
 import { formatDate } from "@/lib/utils";
-import { tags } from "@/lib/data/blog";
 
 interface BlogPostCardProps {
   post: BlogPost;
@@ -94,10 +93,6 @@ export default function BlogPostCard({
             <Eye className="w-3.5 h-3.5" />
             <span>{post.viewCount}次阅读</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Heart className="w-3.5 h-3.5" />
-            <span>{post.likeCount}次点赞</span>
-          </div>
         </div>
         
         {/* 文章摘要 */}
@@ -110,9 +105,8 @@ export default function BlogPostCard({
         {/* 标签 */}
         <div className="flex flex-wrap gap-1.5 my-3">
           {post.tags.slice(0, 3).map((tag, index) => {
-            // 查找对应的标签对象以获取slug
-            const tagObj = tags.find(t => t.name === tag);
-            const tagSlug = tagObj ? tagObj.slug : tag.replace(/ /g, '-').toLowerCase();
+            // 直接基于标签名称创建slug
+            const tagSlug = tag.replace(/ /g, '-').toLowerCase();
             
             return (
               <Link

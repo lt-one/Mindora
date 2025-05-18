@@ -1,0 +1,147 @@
+{
+  "projects": [
+    {
+      "id": "1",
+      "title": "华为终端舆情监测分析",
+      "slug": "huawei-sentiment-analysis",
+      "summary": "全网监测华为品牌相关信息，预警舆情风险，输出数据报告，支持产品迭代",
+      "description": "# 华为终端舆情监测分析\n\n## 项目背景\n针对华为手机、平板等终端产品，开发实时舆情监测系统，及时发现并预警负面舆情，为产品迭代提供数据支持。\n\n## 技术实现\n- 基于Python的多渠道信息采集系统\n- 结合大模型的情感分析与分类\n- Flask后端API服务\n- React前端展示\n- 自动化报告生成系统\n\n## 核心功能\n- 多渠道舆情采集（社交媒体、新闻、论坛）\n- 实时舆情监测与分析\n- 舆情态势可视化大屏\n- 情感分析与主题提取\n- 自动预警机制",
+      "thumbnailUrl": "/images/projects/sentiment-analysis-cover.png",
+      "images": [
+        "/images/projects/sentiment-analysis-cover.png",
+        "/images/projects/ai-sentiment-cover.png"
+      ],
+      "technologies": ["Python", "AI大模型", "数据分析", "Flask", "React"],
+      "categories": ["data-viz", "ai-ml"],
+      "featured": true,
+      "highlightColor": "from-blue-500 to-indigo-500",
+      "completionDate": "2023-10-15",
+      "duration": "6个月",
+      "role": "数据分析师 & 前端开发",
+      "client": "华为消费者业务部",
+      "challenges": [
+        "海量数据实时处理",
+        "复杂情感分析",
+        "多渠道信息整合"
+      ],
+      "solutions": [
+        "分布式爬虫架构",
+        "基于BERT的情感分析模型",
+        "数据仓库设计最佳实践"
+      ],
+      "results": [
+        "舆情预警准确率提升30%",
+        "负面舆情处理时间缩短50%",
+        "为3款产品迭代提供数据支持"
+      ],
+      "order": 1
+    },
+    {
+      "id": "2",
+      "title": "脑机接口灯光控制系统",
+      "slug": "brain-interface-lighting",
+      "summary": "通过脑电采集头环监控脑电信号，检测注意力水平，自动调节室内灯光亮度",
+      "description": "# 脑机接口灯光控制系统\n\n## 项目背景\n探索脑机接口在智能家居领域的应用，开发基于脑电信号的智能灯光控制系统，通过检测用户的注意力水平，自动调节灯光亮度和色温。\n\n## 技术实现\n- 使用NeuroSky脑电头环采集脑电信号\n- Python处理脑电原始数据\n- 鸿蒙ArkTs开发智能家居控制App\n- 自定义蓝牙通信协议\n- 注意力算法模型\n\n## 核心功能\n- 脑电信号实时采集\n- 注意力水平检测与分析\n- 智能灯光自动调节\n- 用户数据记录与分析\n- 场景模式定制",
+      "thumbnailUrl": "/images/projects/brain-interface-cover.png",
+      "images": [
+        "/images/projects/brain-interface-cover.png",
+        "/images/projects/smart-home-cover.png"
+      ],
+      "technologies": ["脑机接口", "Python", "鸿蒙ArkTs", "蓝牙通信"],
+      "categories": ["ai-ml", "web-app"],
+      "featured": true,
+      "highlightColor": "from-purple-500 to-pink-500",
+      "completionDate": "2023-08-20",
+      "duration": "4个月",
+      "role": "全栈开发者",
+      "client": "研究项目",
+      "challenges": [
+        "脑电信号噪音过滤",
+        "实时信号处理",
+        "跨设备通信稳定性"
+      ],
+      "solutions": [
+        "自适应滤波算法",
+        "边缘计算优化",
+        "稳定性优先的通信协议"
+      ],
+      "results": [
+        "注意力检测准确率达85%",
+        "灯光响应延迟<200ms",
+        "用户体验满意度评分4.8/5"
+      ],
+      "order": 2
+    },
+    {
+      "id": "3",
+      "title": "数据可视化平台",
+      "slug": "data-visualization",
+      "summary": "交互式数据可视化平台，实时监控和分析关键业务指标，支持多种图表类型",
+      "description": "# 数据可视化平台\n\n## 项目背景\n为企业开发专业的数据可视化平台，提供直观、交互式的数据展示和分析工具，帮助决策者快速理解数据趋势和洞察。\n\n## 技术实现\n- 基于React和TypeScript的前端架构\n- ECharts和D3.js实现复杂可视化\n- Node.js后端API服务\n- PostgreSQL数据库\n- 实时数据处理管道\n\n## 核心功能\n- 多维数据展示仪表盘\n- 实时数据更新与监控\n- 自定义图表组件\n- 数据钻取与过滤\n- 报表导出与分享",
+      "thumbnailUrl": "/images/projects/data-visualization-cover.png",
+      "images": [
+        "/images/projects/data-visualization-cover.png"
+      ],
+      "technologies": ["React", "TypeScript", "ECharts", "D3.js", "Node.js"],
+      "categories": ["data-viz", "web-app"],
+      "featured": false,
+      "highlightColor": "from-green-500 to-emerald-500",
+      "completionDate": "2023-05-10",
+      "duration": "5个月",
+      "role": "前端开发工程师",
+      "client": "某金融科技公司",
+      "challenges": [
+        "大规模数据渲染性能",
+        "复杂交互设计",
+        "数据准确性保障"
+      ],
+      "solutions": [
+        "数据分片与虚拟滚动",
+        "组件化交互系统",
+        "端到端数据验证"
+      ],
+      "results": [
+        "仪表盘加载速度提升60%",
+        "用户分析效率提高40%",
+        "支持同时展示100+指标"
+      ],
+      "order": 3
+    },
+    {
+      "id": "4",
+      "title": "AI辅助产品设计工具",
+      "slug": "ai-design-tool",
+      "summary": "结合大模型和UI设计原则，自动生成界面原型和产品设计方案",
+      "description": "# AI辅助产品设计工具\n\n## 项目背景\n开发AI驱动的产品设计辅助工具，帮助设计师和产品经理快速生成界面原型，提高设计效率和创新能力。\n\n## 技术实现\n- 基于Python的后端服务\n- OpenAI API集成\n- React前端界面\n- 设计系统库\n- 矢量图形渲染引擎\n\n## 核心功能\n- 文本描述生成UI原型\n- 智能设计建议\n- 设计风格迁移\n- 组件库集成\n- 协作设计工作流",
+      "thumbnailUrl": "/images/projects/ai-design-cover.png",
+      "images": [
+        "/images/projects/ai-design-cover.png"
+      ],
+      "technologies": ["Python", "AI大模型", "React", "Figma API", "UI/UX"],
+      "categories": ["ai-ml", "ui-ux"],
+      "featured": false,
+      "highlightColor": "from-rose-500 to-red-500",
+      "completionDate": "2023-12-05",
+      "duration": "3个月",
+      "role": "全栈开发",
+      "client": "设计工作室",
+      "challenges": [
+        "AI生成内容的质量与一致性",
+        "设计原则的自动化应用",
+        "用户与AI协作流程"
+      ],
+      "solutions": [
+        "自定义提示工程",
+        "设计系统规则化",
+        "迭代反馈机制"
+      ],
+      "results": [
+        "界面设计时间减少65%",
+        "设计方案满意度提高40%",
+        "减少了90%的重复设计工作"
+      ],
+      "order": 4
+    }
+  ]
+} 
+ 

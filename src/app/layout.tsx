@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 // import { getMindoraIconDataURL } from "@/components/ui/MindoraIconSVG"; // THIS LINE IS REMOVED
 import DOMProtection from "@/components/layout/DOMProtection";
+import AuthSessionProvider from "@/components/auth/AuthSessionProvider"; // 使用空实现
 
 // const inter = Inter({
 //   subsets: ["latin"],
@@ -56,9 +57,11 @@ export default function RootLayout({
         {/* <div className="crt-lines pointer-events-none"></div> */}
         <div className="fixed inset-0 bg-neural pointer-events-none z-[-1]"></div>
         
-        <Navbar />
-        <main className="flex-grow pt-0 relative z-10">{children}</main>
-        <Footer />
+        <AuthSessionProvider>
+          <Navbar />
+          <main className="flex-grow pt-0 relative z-10">{children}</main>
+          <Footer />
+        </AuthSessionProvider>
       </body>
     </html>
   );

@@ -33,6 +33,7 @@ export type BlogTag = {
  * 博客作者类型
  */
 export type BlogAuthor = {
+  id?: string;
   name: string;
   avatar: string;
   bio?: string;
@@ -86,6 +87,46 @@ export interface BlogPost {
   relatedPosts?: string[];
   seo?: BlogSEO;
   contentType: 'article' | 'tutorial' | 'note' | 'case-study';
+  metaDescription?: string;
+  seoKeywords?: string;
+}
+
+/**
+ * 博客文章创建输入类型
+ */
+export interface BlogPostCreateInput {
+  title: string;
+  slug: string;
+  content: string;
+  excerpt?: string;
+  coverImage?: string;
+  tags?: string[] | string;
+  categories?: string[] | string;
+  status: 'published' | 'draft';
+  featured?: boolean;
+  contentType?: 'article' | 'tutorial' | 'note' | 'case-study';
+  metaDescription?: string;
+  seoKeywords?: string;
+  authorId?: string;
+}
+
+/**
+ * 博客文章更新输入类型
+ */
+export interface BlogPostUpdateInput {
+  title?: string;
+  slug?: string;
+  content?: string;
+  excerpt?: string;
+  coverImage?: string;
+  tags?: string[] | string;
+  categories?: string[] | string;
+  status?: 'published' | 'draft';
+  featured?: boolean;
+  contentType?: 'article' | 'tutorial' | 'note' | 'case-study';
+  metaDescription?: string;
+  seoKeywords?: string;
+  authorId?: string;
 }
 
 /**

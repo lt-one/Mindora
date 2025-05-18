@@ -1,5 +1,20 @@
-import { prisma } from './prisma';
-import { blogPosts, moreBlogPosts } from '@/lib/data/blog';
+import { PrismaClient } from '@prisma/client';
+import { blogPosts as staticBlogPosts, moreBlogPosts as staticMoreBlogPosts, author as staticAuthor, tags as staticTagsConfig } from '@/lib/data/blog'; // 导入静态标签配置
+import { BlogPost as SeedBlogPost } from '@/types/blog';
+
+const prisma = new PrismaClient();
+
+// 创建从标签名到 slug 的映射
+const tagNameToSlugMap: { [key: string]: string } = {};
+staticTagsConfig.forEach(tag => {
+  tagNameToSlugMap[tag.name] = tag.slug;
+});
+
+// 将标签名数组转换为 slug 数组的辅助函数
+const convertTagNamesToSlugs = (tagNames: string[] | undefined): string[] => {
+  if (!Array.isArray(tagNames)) return [];
+  return tagNames.map(name => tagNameToSlugMap[name] || name.toLowerCase().replace(/ /g, '-')).filter(slug => slug);
+};
 
 /**
  * 将硬编码的博客文章数据添加到数据库中
@@ -8,13 +23,13 @@ export async function seedBlogPosts() {
   console.log('开始向数据库添加博客文章...');
 
   // 合并所有硬编码的博客文章
-  const allPosts = [...blogPosts, ...moreBlogPosts];
+  const allPosts = [...staticBlogPosts, ...staticMoreBlogPosts];
 
   try {
     // 创建计数器
     let created = 0;
     let updated = 0;
-    let skipped = 0;
+    const skipped = 0;
 
     // 检查默认用户是否存在，如不存在则创建
     let defaultUser = await prisma.user.findFirst({
@@ -50,8 +65,8 @@ export async function seedBlogPosts() {
             content: post.content,
             excerpt: post.excerpt,
             coverImage: post.coverImage,
-            tags: post.tags, // 将作为JSON存储
-            categories: post.categories, // 将作为JSON存储
+            tags: JSON.stringify(convertTagNamesToSlugs(post.tags as string[])), // 转换为 slug 数组
+            categories: JSON.stringify(post.categories), // 假设 categories 已经是 slug 数组
             publishedAt: new Date(post.publishedAt),
             updatedAt: new Date(post.updatedAt || post.publishedAt),
             published: post.status === 'published',
@@ -70,8 +85,8 @@ export async function seedBlogPosts() {
             content: post.content,
             excerpt: post.excerpt,
             coverImage: post.coverImage,
-            tags: post.tags, // 将作为JSON存储
-            categories: post.categories, // 将作为JSON存储
+            tags: JSON.stringify(convertTagNamesToSlugs(post.tags as string[])), // 转换为 slug 数组
+            categories: JSON.stringify(post.categories), // 假设 categories 已经是 slug 数组
             publishedAt: new Date(post.publishedAt),
             updatedAt: new Date(post.updatedAt || post.publishedAt),
             published: post.status === 'published',

@@ -123,8 +123,8 @@ export async function getOrderBookDepth(symbol: string) {
 
     // 从缓存中获取上一次的有效盘口数据（主要用于判断是否历史数据和填充时间戳）
     const cacheKey = `orderbook_${symbol}`;
-    let lastValidData = orderBookCache.get(cacheKey);
-    let isHistoricalData = false;
+    const lastValidData = orderBookCache.get(cacheKey);
+    const isHistoricalData = false;
 
     // 检查获取到的盘口数据是否有效
     if (!orderBookData || (!orderBookData.bids?.length && !orderBookData.asks?.length)) {

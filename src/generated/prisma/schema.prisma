@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  nodeApi  = "classic"
   output   = "../src/generated/prisma"
 }
 
@@ -16,36 +17,69 @@ datasource db {
 
 // 用户模型
 model User {
-  id        String     @id @default(cuid())
-  name      String
-  email     String     @unique
-  password  String
-  image     String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  blogPosts BlogPost[]
-  projects  Project[]
-  todoItems TodoItem[]
-  reviews   Review[]
-  notes     NoteCard[]
-  contacts  Contact[] // 接收到的联系请求
+  id               String    @id @default(cuid())
+  name             String
+  email            String    @unique
+  emailVerified    DateTime? // 添加邮箱验证时间字段
+  password         String
+  role             String    @default("user") // 用户角色: user, admin, editor
+  image            String?
+  bio              String?   @db.Text // 用户简介
+  provider         String? // 认证提供者（local, google, github等）
+  providerId       String? // 第三方认证ID
+  refreshToken     String?   @db.Text // 刷新令牌
+  tokenExpiry      DateTime? // 令牌过期时间
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  lastLogin        DateTime? // 最后登录时间
+  isActive         Boolean   @default(true) // 账户是否激活
+  twoFactorEnabled Boolean   @default(false) // 是否启用两因素认证
+  twoFactorSecret  String? // 两因素认证密钥
+
+  // 关联
+  blogPosts     BlogPost[]
+  projects      Project[]
+  todoItems     TodoItem[]
+  reviews       Review[]
+  notes         NoteCard[]
+  contacts      Contact[] // 接收到的联系请求
+  sessions      Session[] // 用户会话
+  verifications Verification[] // 验证记录
 }
 
 // 项目模型
 model Project {
-  id           String   @id @default(cuid())
-  title        String
-  description  String   @db.Text
-  imageUrl     String?
-  demoUrl      String?
-  githubUrl    String?
-  technologies Json // 修改为Json类型
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  summary         String   @db.Text // 简短描述
+  description     String   @db.Text // 详细描述
+  thumbnailUrl    String // 缩略图URL
+  images          Json // 项目图片列表，使用Json类型存储
+  videoUrl        String? // 视频URL（可选）
+  demoUrl         String? // 演示URL（可选）
+  sourceCodeUrl   String? // 源代码URL（可选）
+  technologies    Json // 使用的技术，使用Json类型存储
+  categories      Json // 项目分类，使用Json类型存储
+  featured        Boolean  @default(false) // 是否为精选项目
+  highlightColor  String? // 高亮颜色
+  completionDate  String? // 完成日期
+  duration        String? // 项目持续时间
+  role            String? // 担任角色
+  client          String? // 客户
+  challenges      Json? // 项目挑战，使用Json类型存储
+  solutions       Json? // 解决方案，使用Json类型存储
+  results         Json? // 项目成果，使用Json类型存储
+  relatedProjects Json? // 相关项目，使用Json类型存储
+  relatedPosts    Json? // 相关博客文章，使用Json类型存储
+  order           Int? // 项目排序
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([slug])
 }
 
 // 博客文章模型
@@ -61,7 +95,6 @@ model BlogPost {
   published   Boolean   @default(false)
   isFeatured  Boolean   @default(false) // 添加isFeatured字段
   viewCount   Int       @default(0) // 添加viewCount字段
-  likeCount   Int       @default(0) // 添加likeCount字段
   publishedAt DateTime? // 添加publishedAt字段
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -317,4 +350,34 @@ model SocialLink {
   icon         String // 图标
   displayOrder Int // 显示顺序
   isActive     Boolean @default(true) // 是否启用
+}
+
+// 会话模型 - 存储用户登录会话
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expires   DateTime
+  userAgent String? // 用户浏览器/设备信息
+  ipAddress String? // 用户IP地址
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+// 验证记录模型 - 存储邮箱验证、密码重置等验证码
+model Verification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String // verification_types: email, password_reset, two_factor
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
 }

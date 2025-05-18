@@ -25,10 +25,63 @@ body {
   height: 133.33%;
 }
 
+/* 
+ * 管理系统布局样式
+ * 由于管理系统需要更多的空间来展示数据和表单内容，
+ * 我们取消全局75%缩放效果，使管理界面显示正常大小。
+ * 这允许管理界面拥有更合适的表单、表格和内容密度。
+ */
+
+/* 管理系统取消缩放样式 */
+body.admin-page {
+  transform: none !important; /* 取消缩放 */
+  width: 100% !important; /* 恢复正常宽度 */
+  height: 100% !important; /* 恢复正常高度 */
+  font-size: 16px !important; /* 直接使用默认字体大小 */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* 管理系统中表格样式调整 */
+body.admin-page table {
+  font-size: 0.875rem; /* 14px */
+}
+
+body.admin-page th,
+body.admin-page td {
+  padding: 0.75rem 1rem;
+}
+
+/* 管理系统中卡片组件样式 */
+body.admin-page .card,
+body.admin-page [class*="bg-white"],
+body.admin-page [class*="bg-gray"] {
+  transform: none; /* 确保卡片不受缩放影响 */
+}
+
+/* 修复管理系统中可能的定位问题 */
+body.admin-page [class*="fixed"],
+body.admin-page [class*="absolute"] {
+  transform: none; /* 确保定位元素不受缩放影响 */
+}
+
+/* 修复管理系统中可能的弹窗定位问题 */
+body.admin-page [role="dialog"],
+body.admin-page .modal,
+body.admin-page .drawer {
+  transform: none;
+}
+
 /* 图标和SVG元素的尺寸调整 */
 svg, .icon {
   transform-origin: center;
   transform: scale(1.1); /* 稍微放大图标以平衡整体缩放效果 */
+}
+
+/* 管理系统中不需要调整图标大小 */
+body.admin-page svg, 
+body.admin-page .icon {
+  transform: none; /* 取消图标缩放 */
 }
 
 /* 调整按钮和交互元素大小 */
@@ -607,4 +660,81 @@ blockquote {
 /* z-index 负值 */
 .-z-5 {
   z-index: -5;
+}
+
+/* 管理系统中UI元素的尺寸调整 */
+body.admin-page button, 
+body.admin-page .btn, 
+body.admin-page input, 
+body.admin-page select, 
+body.admin-page textarea {
+  font-size: 1rem; /* 使用标准字体大小 */
+}
+
+/* 管理系统中标题的大小 */
+body.admin-page h1 {
+  font-size: 2rem; /* 标准大小 */
+}
+
+body.admin-page h2 {
+  font-size: 1.5rem;
+}
+
+body.admin-page h3 {
+  font-size: 1.25rem;
+}
+
+/* 管理系统特定的布局调整 */
+body.admin-page .min-h-screen {
+  min-height: 100vh !important; /* 确保最小高度正确 */
+}
+
+/* 确保管理系统中的滚动条正常 */
+body.admin-page {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* 管理系统中的Tiptap编辑器样式调整 */
+body.admin-page .admin-tiptap-editor {
+  transform: none !important;
+  font-size: 1rem;
+}
+
+/* Tiptap编辑器的工具栏和弹出菜单 */
+body.admin-page .admin-tiptap-editor button,
+body.admin-page .admin-tiptap-editor [class*="popover"],
+body.admin-page .admin-tiptap-editor [class*="tooltip"] {
+  transform: none !important; 
+  font-size: 0.875rem;
+}
+
+/* 管理系统中的编辑器内容区域 */
+body.admin-page .admin-tiptap-editor .ProseMirror,
+body.admin-page .admin-tiptap-editor .prose {
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+  transform: none !important;
+}
+
+/* 管理系统中的博客编辑表单 */
+body.admin-page form,
+body.admin-page .card,
+body.admin-page input,
+body.admin-page textarea {
+  transform: none;
+  font-size: 1rem;
+}
+
+/* 修复Tiptap编辑器的图标大小 */
+body.admin-page .tiptap svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* 修复弹出菜单定位 */
+body.admin-page [role="tooltip"],
+body.admin-page [role="dialog"] {
+  transform: none !important;
+  font-size: 0.875rem !important;
 }

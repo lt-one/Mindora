@@ -221,7 +221,7 @@ const FunFactsSection = () => {
       scale: 1.4,
       transition: { 
         repeat: Infinity,
-        repeatType: "mirror" as "mirror",
+        repeatType: "mirror" as const,
         duration: 2 
       }
     }

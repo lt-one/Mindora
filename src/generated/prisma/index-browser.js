@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.7.0
- * Query Engine version: 3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
+ * Prisma Client JS version: 6.8.2
+ * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
  */
 Prisma.prismaVersion = {
-  client: "6.7.0",
-  engine: "3cff47a7f5d65c3ea74883f1d736e41d68ce91ed"
+  client: "6.8.2",
+  engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -124,20 +124,48 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
+  emailVerified: 'emailVerified',
   password: 'password',
+  role: 'role',
   image: 'image',
+  bio: 'bio',
+  provider: 'provider',
+  providerId: 'providerId',
+  refreshToken: 'refreshToken',
+  tokenExpiry: 'tokenExpiry',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  lastLogin: 'lastLogin',
+  isActive: 'isActive',
+  twoFactorEnabled: 'twoFactorEnabled',
+  twoFactorSecret: 'twoFactorSecret'
 };
 
 exports.Prisma.ProjectScalarFieldEnum = {
   id: 'id',
   title: 'title',
+  slug: 'slug',
+  summary: 'summary',
   description: 'description',
-  imageUrl: 'imageUrl',
+  thumbnailUrl: 'thumbnailUrl',
+  images: 'images',
+  videoUrl: 'videoUrl',
   demoUrl: 'demoUrl',
-  githubUrl: 'githubUrl',
+  sourceCodeUrl: 'sourceCodeUrl',
   technologies: 'technologies',
+  categories: 'categories',
+  featured: 'featured',
+  highlightColor: 'highlightColor',
+  completionDate: 'completionDate',
+  duration: 'duration',
+  role: 'role',
+  client: 'client',
+  challenges: 'challenges',
+  solutions: 'solutions',
+  results: 'results',
+  relatedProjects: 'relatedProjects',
+  relatedPosts: 'relatedPosts',
+  order: 'order',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId'
@@ -342,6 +370,26 @@ exports.Prisma.SocialLinkScalarFieldEnum = {
   isActive: 'isActive'
 };
 
+exports.Prisma.SessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  expires: 'expires',
+  userAgent: 'userAgent',
+  ipAddress: 'ipAddress',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.VerificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  token: 'token',
+  expires: 'expires',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -366,7 +414,13 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   name: 'name',
   email: 'email',
   password: 'password',
-  image: 'image'
+  role: 'role',
+  image: 'image',
+  bio: 'bio',
+  provider: 'provider',
+  providerId: 'providerId',
+  refreshToken: 'refreshToken',
+  twoFactorSecret: 'twoFactorSecret'
 };
 
 exports.Prisma.JsonNullValueFilter = {
@@ -383,10 +437,18 @@ exports.Prisma.QueryMode = {
 exports.Prisma.ProjectOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
+  slug: 'slug',
+  summary: 'summary',
   description: 'description',
-  imageUrl: 'imageUrl',
+  thumbnailUrl: 'thumbnailUrl',
+  videoUrl: 'videoUrl',
   demoUrl: 'demoUrl',
-  githubUrl: 'githubUrl',
+  sourceCodeUrl: 'sourceCodeUrl',
+  highlightColor: 'highlightColor',
+  completionDate: 'completionDate',
+  duration: 'duration',
+  role: 'role',
+  client: 'client',
   userId: 'userId'
 };
 
@@ -526,6 +588,21 @@ exports.Prisma.SocialLinkOrderByRelevanceFieldEnum = {
   icon: 'icon'
 };
 
+exports.Prisma.SessionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  userAgent: 'userAgent',
+  ipAddress: 'ipAddress'
+};
+
+exports.Prisma.VerificationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  token: 'token'
+};
+
 
 exports.Prisma.ModelName = {
   User: 'User',
@@ -545,7 +622,9 @@ exports.Prisma.ModelName = {
   Comment: 'Comment',
   Contact: 'Contact',
   Response: 'Response',
-  SocialLink: 'SocialLink'
+  SocialLink: 'SocialLink',
+  Session: 'Session',
+  Verification: 'Verification'
 };
 
 /**
